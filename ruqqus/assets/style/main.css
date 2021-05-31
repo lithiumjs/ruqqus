@@ -684,8 +684,8 @@ pre {
   max-width: 100%; }
 
 .col-13 {
-  padding-right: 10px;
-  padding-left: 10px;
+  padding-right: 10px !important;
+  padding-left: 10px !important;
   flex: 0 0 100%;
   max-width: 100%; }
 

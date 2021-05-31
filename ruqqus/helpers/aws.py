@@ -33,7 +33,7 @@ def check_phash(db, name):
     return db.query(BadPic).filter(
         func.levenshtein(
             BadPic.phash,
-            hex2bin(str(imagehash.phash(Image.open(name))))
+            hex2bin(str(imagehash.phash(IImage.open(name))))
             ) < 10
         ).first()
 
@@ -97,7 +97,7 @@ def upload_file(name, file, resize=None):
         if tempname.split('.')[-1] in ['jpg', 'jpeg']:
             piexif.remove(tempname)
 
-        i = Image.open(tempname)
+        i = IImage.open(tempname)
         i = crop_and_resize(i, resize)
         img = io.BytesIO()
         i.save(img, format='PNG')
@@ -124,7 +124,7 @@ def upload_from_file(name, filename, resize=None):
     if filename.split('.')[-1] in ['jpg', 'jpeg']:
         piexif.remove(tempname)
 
-    i = Image.open(tempname)
+    i = IImage.open(tempname)
     i = crop_and_resize(i, resize)
     img = io.BytesIO()
     i.save(img, format='PNG')

@@ -22,17 +22,12 @@
 
 <h1 class="article-title">Contact Us</h1>
 
-<p>Use this form to contact Drama Admins.</p>
-
-<label class="mt-3">Your Email</label>
-<input class="form-control" value="{{ v.email }}" readonly="readonly" disabled>
+<p>Use this form to contact Drama Admins. Please make sure your email is included so we can get back to you.</p>
 
 <form id="contactform" action="/submit_contact" method="post">
 <label for="input-inquiry" class="mt-3">Your inquiry</label>
 <textarea id="input-inquiry" form="contactform" name="inquiry" maxlength="10000" class="form-control" required></textarea>
-
 <input type="submit" value="Submit" class="btn btn-primary mt-3">
-
 </form>
 
 <p>If you can see this line, we haven't been contacted by any law enforcement or governmental organizations yet.</p>

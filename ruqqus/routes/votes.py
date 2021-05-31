@@ -87,7 +87,7 @@ def api_vote_post(post_id, x, v):
         
     now = int(time.time())
     cutoff = now - 3600
-    posts = g.db.query(Submission).options(lazyload('*')).filter_by(is_banned=False, deleted_utc=0).filter(Submission.created_utc > cutoff).order_by(Submission.id.desc()).limit(5).all()
+    posts = g.db.query(Submission).options(lazyload('*')).filter_by(is_banned=False, deleted_utc=0).filter(Submission.created_utc > cutoff).all()
 
     for post in posts:
         post.upvotes = post.ups

@@ -14,7 +14,7 @@ class Category(Base, Stndrd):
     name = Column(String(20), default="")
     description = Column(String(250), default="")
     icon = Column(String(256), default="")
-    color = Column(String(128), default="805ad5")
+    color = Column(String(128), default="FF66AC")
     visible = Column(Boolean, default=True)
     is_nsfw = Column(Boolean, default=False)
     _subcats = relationship("SubCategory", lazy="joined", primaryjoin="SubCategory.cat_id==Category.id")
@@ -58,9 +58,7 @@ class SubCategory(Base, Stndrd):
             "name": self.name
         }
 
-db=db_session()
-CATEGORIES = [i for i in db.query(Category).order_by(Category.name.asc()).all()]
-db.close()
+CATEGORIES = [i for i in db_session().query(Category).order_by(Category.name.asc()).all()]
 
 # class GuildCategory(Base, Stndrd, Age_times):
 #     __tablename__ = "guildcategories"

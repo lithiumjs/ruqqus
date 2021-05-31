@@ -8,16 +8,23 @@
     <meta name="description" content="Sign up in under 27 seconds.">
     <meta name="author" content="">
     <meta property="og:type" content="article" />
-    <meta property="og:title" content="{{ 'SITE_NAME' | app_config }}: Awesome Online Communities, Without Censorship" />
-    <meta property="og:image" content="{{ '/assets/images/preview-images/ruqqus_og_image.png' | full_link }}" />
-    <meta property="og:description" name="description" content="Sign up now! {{ 'SITE_NAME' | app_config }} is an open-source platform for online communities, free of censorship and moderator abuse by design.">
+    <meta property="og:title" content="Drama" />
+    <meta property="og:site_name" content="rdrama.net" />
+    <meta property="og:image" content="{{ '/assets/images/preview-images/preview3.png' | full_link }}" />
+    <meta property="og:url" content="https://rdrama.net">
+    <meta property="og:description" name="description" content="Sign up now! Dude bussy lmao">
+    <meta property="og:author" name="author" content="@ruqqus" />
+    <meta property="og:site_name" content="rdrama.net" />
 
     <meta name="twitter:card" content="summary_large_image"/>
-    <meta name="twitter:title" content="{{ 'SITE_NAME' | app_config }}: Awesome Online Communities, Without Censorship" />
-    <meta name="twitter:description" content="Sign up now! {{ 'SITE_NAME' | app_config }} is an open-source platform for online communities, free of censorship and moderator abuse by design." />
-    <meta name="twitter:image" content="{{ '/assets/images/preview-images/ruqqus_og_image.png' | full_link }}" />
+    <meta name="twitter:site" content="@ruqqus">
+    <meta name="twitter:title" content="Drama" />
+    <meta name="twitter:creator" content="@ruqqus">
+    <meta name="twitter:description" content="Sign up now! Dude bussy lmao" />
+    <meta name="twitter:image" content="{{ '/assets/images/preview-images/preview3.png' | full_link }}" />
+    <meta name="twitter:url" content="https://rdrama.net" />
 
-    <title>{% if ref_user %}{{ ref_user.username }} invites you to {{ 'SITE_NAME' | app_config }}{% else %}{{ 'SITE_NAME' | app_config }}: the open, free-speech social platform{% endif %}</title>
+    <title>{% if ref_user %}{{ ref_user.username }} invites you to Drama{% else %}Drama: the open, free-speech social platform{% endif %}</title>
 
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,600&display=swap" rel="stylesheet">
 
@@ -32,8 +39,8 @@
     integrity="sha384-L469/ELG4Bg9sDQbl0hvjMq8pOcqFgkSpwhwnslzvVVGpDjYJ6wJJyYjvG3u8XW7"
     crossorigin="anonymous"></script>
 
-    <!-- Ruqqus CSS -->
-    <link rel="stylesheet" href="assets/style/main.css">
+    <!-- Drama CSS -->
+    <link rel="stylesheet" href="https://rdrama.net/assets/style/main.css">
 
 </head>
 
@@ -46,19 +53,6 @@
             aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
-        <div class="collapse navbar-collapse" id="navbarResponsive">
-            <ul class="navbar-nav ml-auto">
-                <li class="nav-item">
-                    <a class="nav-link" href="/help/about">About</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/help/terms">Terms</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/help/contact">Contact</a>
-                </li>
-            </ul>
-        </div>
     </div>
 </nav>
 
@@ -74,14 +68,14 @@
                 <div class="col-10 col-md-7">
 
                     <div class="text-center mb-5">
-                        <a href="/" class="text-decoration-none"><span class="h3 text-primary">{{ 'SITE_NAME' | app_config | lower }}</span></a>
+                        <a href="/" class="text-decoration-none"><span class="h3 text-primary">ruqqus</span></a>
                     </div>
 
                     <div id="register-form" class="">
                         <h1 class="h4 font-weight-normal text-center">Whoops! You can't refer yourself!</h1>
                         <p class="text-center text-muted mb-md-5">Send this link to a friend instead :)</p>
                         <label>Referral code</label>
-                        <input type="text" class="form-control copy-link" readonly value="{{ ('/signup?ref='+ request.args.get('ref')) | full_link }}" data-clipboard-text="{{ ('/signup?ref='+ request.args.get('ref')) | full_link }}">
+                        <input type="text" class="form-control copy-link" readonly value="https://rdrama.net/signup?ref={{ request.args.get('ref') }}" data-clipboard-text="https://rdrama.net/signup?ref={{ request.args.get('ref') }}">
 
                         <div class="text-center mt-5 mb-3">
                             Already have an account? <a href="/login" class="font-weight-bold text-small toggle-login">Log in.</a>
@@ -99,10 +93,6 @@
                 <div class="splash-wrapper">
 
                     <div class="splash-overlay"></div>
-
-                    <h6 class="splash-text">
-                        {{ i.text }}
-                    </h6>
 
                     <img class="splash-img" src="{{ i.path }}"></img>
                 </div>
@@ -151,7 +141,7 @@
 });
 </script>
 
-<!-- Ruqqus JS -->
+<!-- Drama JS -->
 
 <script src="/assets/js/all_js.js"></script>
 

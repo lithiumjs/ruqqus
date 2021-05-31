@@ -4,7 +4,7 @@
   <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content">
       <div class="modal-header position-relative border-0" style="background-image: url({{ board.banner_url }}); height: 100px; overflow: hidden; object-fit: cover; background-size: cover;">
-        <div class="white-overlay position-absolute w-100 h-100" style="left: 0; top: 0; background-color: rgba(255, 255, 255, 0.5); background-image: linear-gradient(180deg, #ffffff00 25%, #ffffff 100%);"></div>
+        <div class="white-overlay position-absolute w-100 h-100" style="left: 0; top: 0; background-color: rgba(255, 255, 255, 0); background-image: linear-gradient(180deg, #cfcfcf00 25%, #cfcfcf 100%);"></div>
         <div style="z-index: 1" class="d-flex align-items-center my-auto">
           <img src="{{ board.profile_url }}" class="profile-pic-65 bg-white mr-3"><h5 class="modal-title h4">+{{ board.name }}
           {% if board.over_18 %}
@@ -31,7 +31,7 @@
 
         <div class="">
           <div class="font-weight-bold text-small text-uppercase text-muted mb-1" style="letter-spacing: 0.025rem;">Members</div>
-          <div>{{ board.stored_subscriber_count }}</div>
+          <div>{{ board.subscriber_count }}</div>
         </div>
 
       {% if v %}
@@ -64,7 +64,7 @@
           <li>
             <span class="text-black font-weight-bold">Do not harass other users</span>
             <p style="padding: 0 0 0 22px;">
-              Do not harass or threaten others on Ruqqus. You are not allowed to share or publish personal information, either yours or another person.
+              Do not harass or threaten others on Drama. You are not allowed to share or publish personal information, either yours or another person.
             </p>
           </li>
           <li>
@@ -76,7 +76,7 @@
           <li>
             <span class="text-black font-weight-bold">Check for duplicates</span>
             <p style="padding: 0 0 0 22px;">
-              Nobody likes reposts. Please make sure the content you're posting hasn't been posted on Ruqqus before.
+              Nobody likes reposts. Please make sure the content you're posting hasn't been posted on Drama before.
             </p>
           </li>
         </ol>
@@ -87,7 +87,7 @@
 
     </div>
 
-    <div class="modal-footer" style="background-color: transparent; background-image: linear-gradient(180deg, #ffffff00 25%, #ffffff 100%);">
+    <div class="modal-footer" style="background-color: transparent; background-image: linear-gradient(180deg, #cfcfcf00 25%, #cfcfcf 100%);">
 
     </div>
 

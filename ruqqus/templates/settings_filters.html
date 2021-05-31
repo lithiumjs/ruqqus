@@ -1,6 +1,6 @@
 {% extends "settings.html" %}
 
-{% block pagetitle %}Profile Settings - {{ 'SITE_NAME' | app_config }}{% endblock %}
+{% block pagetitle %}Profile Settings - Drama{% endblock %}
 
 {% block content %}
 
@@ -10,6 +10,51 @@
   <div class="col col-lg-8">
 
     <div class="settings">
+
+      <h2 class="h5" name="referral">Default Sorting and Time Filter</h2>
+
+      <div class="settings-section rounded">
+
+          <div class="d-lg-flex border-bottom">
+            <div class="title w-lg-25">
+              <label for="defaultsorting">Default Sorting</label>
+            </div>
+
+            <div class="body w-lg-100">
+              <p>Change the default sorting for posts.</p>
+              <div class="input-group mb2">
+                <select id='defaultsorting' class="form-control" form="profile-settings" name="defaultsorting" onchange="post_toast('/settings/profile?defaultsorting='+document.getElementById('defaultsorting').value)">
+                 {% for entry in ["hot", "new", "old", "top", "disputed", "activity"] %}
+                 <option value="{{ entry }}"{{ ' selected' if v.defaultsorting==entry else '' }}>{{ entry }}</option>
+                 {% endfor %}
+               </select>
+              </div>
+
+            </div>
+
+         </div>
+
+          <div class="d-lg-flex border-bottom">
+            <div class="title w-lg-25">
+              <label for="defaulttime">Default Time Filter</label>
+            </div>
+
+            <div class="body w-lg-100">
+              <p>Change the default time filter for posts.</p>
+              <div class="input-group mb2">
+                <select id='defaulttime' class="form-control" form="profile-settings" name="defaulttime" onchange="post_toast('/settings/profile?defaulttime='+document.getElementById('defaulttime').value)">
+                 {% for entry in ["day", "week", "month", "year", "all"] %}
+                 <option value="{{ entry }}"{{ ' selected' if v.defaulttime==entry else '' }}>{{ entry }}</option>
+                 {% endfor %}
+               </select>
+              </div>
+
+            </div>
+
+        </div>
+
+      </div>
+
 
           <h2 class="h5">Content Filters</h2>
 
@@ -29,16 +74,6 @@
                   </div>
 
                   <span class="text-small-extra text-muted">Enable if you are 18+ and are ok with viewing NSFW content.</span>
-                  <div id="filter-nsfw-option" {% if not v.over_18 %}class="d-none"{% endif %}>
-                    <hr>
-
-                    <div class="custom-control custom-switch">
-                      <input type="checkbox" class="custom-control-input" id="filter-nsfw" name="filter_nsfw"{% if not v.filter_nsfw %} checked{% endif %} onchange="post_toast('/settings/profile?filter_nsfw='+document.getElementById('filter-nsfw').checked)">
-                      <label class="custom-control-label" for="filter-nsfw"></label>
-                    </div>
-
-                    <span class="text-small-extra text-muted">Enable if you also want to see NSFW content in All/Trending.</span>
-                  </div>
 
                 </div>
 
@@ -58,44 +93,6 @@
                   </div>
 
                   <span class="text-small-extra text-muted">Enable if you are ok with viewing NSFL content. We recommend keeping this off if you are under 18.</span>
-
-                </div>
-
-              </div>
-
-              <div class="d-lg-flex border-bottom">
-
-                <div class="title w-lg-25">
-                  <label for="hideoffensive">Hide offensive speech</label>
-                </div>
-
-                <div class="body w-lg-100">
-
-                  <div class="custom-control custom-switch">
-                    <input type="checkbox" class="custom-control-input" id="hideoffensive" name="hide_offensive"{% if v.hide_offensive %} checked{% endif %} onchange="post_toast('/settings/profile?hide_offensive='+document.getElementById('hideoffensive').checked)">
-                    <label class="custom-control-label" for="hideoffensive"></label>
-                  </div>
-
-                  <span class="text-small-extra text-muted">Hide posts or collapse comments that include racial slurs. A full list of words can be found <a href="/slurs.txt" target="_blank">here</a>.</span>
-
-                </div>
-
-              </div>
-			  
-              <div class="d-lg-flex border-bottom">
-
-                <div class="title w-lg-25">
-                  <label for="hidebot">Hide bot content</label>
-                </div>
-
-                <div class="body w-lg-100">
-
-                  <div class="custom-control custom-switch">
-                    <input type="checkbox" class="custom-control-input" id="hidebot" name="hide_bot"{% if v.hide_bot %} checked{% endif %} onchange="post_toast('/settings/profile?hide_bot='+document.getElementById('hidebot').checked)">
-                    <label class="custom-control-label" for="hidebot"></label>
-                  </div>
-
-                  <span class="text-small-extra text-muted">Hide posts or collapse comments that are made by bots.</span>
 
                 </div>
 

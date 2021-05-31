@@ -6,48 +6,58 @@
 {% if v %}
         <div class="col px-0">
             <a href="/" class="text-decoration-none" role="button">
-                <div class="text-center {% if request.path=='/' %}text-purple{% else %}text-muted{% endif %}">
+                <div class="text-center {% if request.path=='/' and request.full_path!='/?sort=hot&t=all' and request.full_path!='/?sort=new&t=all' %}text-purple{% else %}text-muted{% endif %}">
                     <i class="fas fa-home-alt text-lg d-block"></i>
                     <div class="text-small">Home</div>
                 </div>
             </a>
         </div>
 {% endif %}
+{% if v and v.defaultsorting == 'new' %}
         <div class="col px-0">
-            <a href="/all?sort=new" class="text-decoration-none" role="button">
-                <div class="text-center {% if request.path=='/all' and sort_method=='new' %}text-purple{% else %}text-muted{% endif %}">
-                    <i class="fas fa-globe-americas text-lg d-block"></i>
-                    <div class="text-small">New</div>
-                </div>
-            </a>
-        </div>
-        <div class="col px-0">
-            <a href="/all?sort=hot" class="text-decoration-none" role="button">
-                <div class="text-center {% if request.path=='/all' and sort_method=='hot' %}text-purple{% else %}text-muted{% endif %}">
+            <a href="/?sort=hot&t=all" class="text-decoration-none" role="button">
+                <div class="text-center {% if request.full_path=='/?sort=hot&t=all' %}text-purple{% else %}text-muted{% endif %}">
                     <i class="fas fa-fire text-lg d-block"></i>
-                    <div class="text-small">Trending</div>
+                    <div class="text-small">Hot</div>
                 </div>
             </a>
         </div>
-{% if v %}
+{% else %}
         <div class="col px-0">
-            <a href="{% if v %}/mine{% else %}/login{% endif %}" class="text-decoration-none" role="button">
-                <div class="text-center {% if request.path=='/mine' %}text-purple{% else %}text-muted{% endif %}">
-                    <i class="fas fa-chess-rook text-lg d-block"></i>
-                    <div class="text-small">Guilds</div>
+            <a href="/?sort=new&t=all" class="text-decoration-none" role="button">
+                <div class="text-center {% if request.full_path=='/?sort=new&t=all' %}text-purple{% else %}text-muted{% endif %}">
+                    <i class="fas fa-sparkles text-lg d-block"></i>
+                    <div class="text-small">New</div>
                 </div>
             </a>
         </div>
 {% endif %}
         <div class="col px-0">
-            <a href="/browse" class="text-decoration-none" role="button">
-                <div class="text-center {% if request.path=='/browse' %}text-purple{% else %}text-muted{% endif %}">
-                    <i class="fas fa-compass text-lg d-block"></i>
-                    <div class="text-small">Browse</div>
+            <a href="/comments" class="text-decoration-none" role="button">
+                <div class="text-center {% if request.path=='/comments' %}text-purple{% else %}text-muted{% endif %}">
+                    <i class="fas fa-comment-dots text-lg d-block"></i>
+                    <div class="text-small">Comments</div>
                 </div>
             </a>
         </div>
-{% if not v %}
+        <div class="col px-0">
+            <a href="/leaderboard" class="text-decoration-none" role="button">
+                <div class="text-center {% if request.path=='/leaderboard' %}text-purple{% else %}text-muted{% endif %}">
+                    <i class="fas fa-trophy text-lg d-block"></i>
+                    <div class="text-small">Users</div>
+                </div>
+            </a>
+        </div>
+{% if v %}
+        <div class="col px-0">
+            <a href="{{v.permalink}}" class="text-decoration-none" role="button">
+                <div class="text-center {% if request.path==v.permalink %}text-purple{% else %}text-muted{% endif %}">
+                    <i class="fas fa-user-circle text-lg d-block"></i>
+                    <div class="text-small">Profile</div>
+                </div>
+            </a>
+        </div>
+{% else %}
         <div class="col px-0">
             <a href="/signup" class="text-decoration-none" role="button">
                 <div class="text-center text-muted">

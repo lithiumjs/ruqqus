@@ -79,14 +79,14 @@ def legal_final(v):
                            v=v)
 
 
-@app.route("/help/dmca", methods=["POST"])
+@app.route("/dmca", methods=["POST"])
 @is_not_banned
 @validate_formkey
 def dmca_post(v):
 
     data = {x: request.form[x] for x in request.form if x != "formkey"}
 
-    email_text = render_template("help/dmca_email.md", v=v, **data)
+    email_text = render_template("dmca_email.md", v=v, **data)
 
     with CustomRenderer() as renderer:
         email_html = renderer.render(mistletoe.Document(email_text))
@@ -98,17 +98,17 @@ def dmca_post(v):
                   email_html
                   )
     except BaseException:
-        return render_template("/help/dmca.html",
+        return render_template("/dmca.html",
                                error="Unable to save your request. Please try again later.",
                                v=v)
 
-    post_text = render_template("help/dmca_notice.md", v=v, **data)
+    post_text = render_template("dmca_notice.md", v=v, **data)
     with CustomRenderer() as renderer:
         post_html = renderer.render(mistletoe.Document(post_text))
     post_html = sanitize(post_html, linkgen=True)
 
-    # create +RuqqusDMCA post
-    new_post = Submission(author_id=1,
+    # create +DramaDMCA post
+    new_post = Submission(author_id=1046,
                           domain_ref=None,
                           board_id=1000,
                           original_board_id=1000,
@@ -137,7 +137,7 @@ def dmca_post(v):
         c_html = renderer.render(mistletoe.Document(comment_text))
     c_html = sanitize(c_html, linkgen=True)
 
-    c = Comment(author_id=1,
+    c = Comment(author_id=1046,
                 parent_submission=new_post.id,
                 parent_fullname=new_post.fullname,
                 parent_comment_id=None,
@@ -161,12 +161,12 @@ def dmca_post(v):
     g.db.add(c_aux)
     g.db.commit()
 
-    return render_template("/help/dmca.html",
+    return render_template("/dmca.html",
                            msg="Your request has been saved.",
                            v=v)
 
 
-@app.route("/help/counter_dmca", methods=["POST"])
+@app.route("/counter_dmca", methods=["POST"])
 @is_not_banned
 @validate_formkey
 def counter_dmca_post(v):
@@ -184,10 +184,10 @@ def counter_dmca_post(v):
                   plaintext=str(data)
                   )
     except BaseException:
-        return render_template("/help/counter_dmca.html",
+        return render_template("/counter_dmca.html",
                                error="Unable to save your request. Please try again later.",
                                v=v)
 
-    return render_template("/help/counter_dmca.html",
+    return render_template("/counter_dmca.html",
                            msg="Your request has been saved.",
                            v=v)

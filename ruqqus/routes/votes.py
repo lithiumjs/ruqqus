@@ -22,7 +22,7 @@ def api_vote_post(post_id, x, v):
         abort(400)
 
     # disallow bots
-    if request.headers.get("X-User-Type","").lower()=="bot":
+    if request.headers.get("X-User-Type","") == "Bot":
         abort(403)
 
     x = int(x)
@@ -40,13 +40,7 @@ def api_vote_post(post_id, x, v):
         if count >=15:
             return jsonify({"error": "You're doing that too much. Try again later."}), 403
 
-    post = get_post(post_id, v=v, no_text=True)
-
-    if post.is_blocking:
-        return jsonify({"error":"You can't vote on posts made by users who you are blocking."}), 403
-    if post.is_blocked:
-        return jsonify({"error":"You can't vote on posts made by users who are blocking you."}), 403
-
+    post = get_post(post_id)
 
     if post.is_banned:
         return jsonify({"error":"That post has been removed."}), 403
@@ -72,8 +66,6 @@ def api_vote_post(post_id, x, v):
 
         g.db.add(vote)
 
-
-
     try:
         g.db.flush()
     except:
@@ -85,14 +77,27 @@ def api_vote_post(post_id, x, v):
     g.db.add(post)
     g.db.flush()
 
-    #post.score_hot = post.rank_hot
     post.score_disputed = post.rank_fiery
     post.score_top = post.score
-    # post.score_activity=post.rank_activity
     post.score_best = post.rank_best
 
     g.db.add(post)
 
+    g.db.commit()
+        
+    now = int(time.time())
+    cutoff = now - 3600
+    posts = g.db.query(Submission).options(lazyload('*')).filter_by(is_banned=False, deleted_utc=0).filter(Submission.created_utc > cutoff).order_by(Submission.id.desc()).limit(5).all()
+
+    for post in posts:
+        post.upvotes = post.ups
+        post.downvotes = post.downs
+        g.db.add(post)
+        g.db.flush()
+        post.score_disputed = post.rank_fiery
+        post.score_top = post.score
+        post.score_best = post.rank_best
+        g.db.add(post)
     g.db.commit()
 
     # print(f"Vote Event: @{v.username} vote {x} on post {post_id}")
@@ -112,17 +117,12 @@ def api_vote_comment(comment_id, x, v):
         abort(400)
 
     # disallow bots
-    if request.headers.get("X-User-Type","").lower()=="bot":
+    if request.headers.get("X-User-Type","") == "Bot":
         abort(403)
 
     x = int(x)
 
-    comment = get_comment(comment_id, v=v, no_text=True)
-
-    if comment.is_blocking:
-        return jsonify({"error":"You can't vote on comments made by users who you are blocking."}), 403
-    if comment.is_blocked:
-        return jsonify({"error":"You can't vote on comments made by users who are blocking you."}), 403
+    comment = get_comment(comment_id)
 
     if comment.is_banned:
         return jsonify({"error":"That comment has been removed."}), 403

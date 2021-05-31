@@ -9,7 +9,7 @@
     <meta name="author" content="">
 
     {% block title %}
-    <title>Create a post - Ruqqus</title>
+    <title>Create a post - Drama</title>
     {% endblock %}
   
   <link rel="icon" type="image/png" href="/assets/images/logo/favicon.png">
@@ -20,7 +20,7 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
     integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 
-    <!-- Ruqqus Board CSS -->
+    <!-- Drama Board CSS -->
 
     {% block stylesheets %}
     {% if b %}
@@ -31,15 +31,15 @@
     {% endif %}
     {% else %}
     {% if v and v.can_use_darkmode and session.get("dark_mode_enabled") %}
-    <link id="css-link" rel="stylesheet" href="/assets/style/main_dark.css">
+    <link id="css-link" rel="stylesheet" href="https://rdrama.net/assets/style/main_dark.css">
     {% else %}
-    <link id="css-link" rel="stylesheet" href="/assets/style/main.css">
+    <link id="css-link" rel="stylesheet" href="https://rdrama.net/assets/style/main.css">
     {% endif %}
     {% endif %}
     {% endblock %}
 
     <!-- Font Awesome -->
-    <link href="https://fa.ruqqus.com/assets/fontawesome/css/all.css" rel="stylesheet"> <!--load all styles -->
+    <link href="https://rdrama.net/assets/style/fa.css" rel="stylesheet"> <!--load all styles -->
 
     {% if v %}
 
@@ -105,11 +105,9 @@
                         <div id="image-upload-block">
                             <div><label class="mt-3">Image Upload</label></div>
 
-                            <img id="image-preview" class="w-100 d-block">
-
                             <label class="btn btn-secondary m-0" for="file-upload">
                                 <div id="filename-show">Select Image</div>
-                                <input id="file-upload" type="file" name="file" accept="image/*" hidden>
+                                <input id="file-upload" type="file" name="file" accept="image/*" onchange="document.getElementById('urlblock').classList.add('d-none');document.getElementById('filename-show').innerHTML=document.getElementById('file-upload').files[0].name;checkForRequired()" hidden>
                             </label>
 
                             <small class="form-text text-muted">Images uploaded will be public. Optional if you have text.</small>
@@ -118,12 +116,12 @@
                         <div id="image-upload-block">
                             <div><label class="mt-3">Image Upload</label></div>
 
-                            <label class="btn btn-secondary m-0 disabled" for="file-upload">
+                            <label class="btn btn-secondary m-0" for="file-upload">
                                 <div id="filename-show">Select Image</div>
                                 <input id="file-upload" type="file" accept="image/*" hidden disabled>
                             </label>
 
-                            <small class="form-text text-muted">You can upload images directly at 1000 Rep.{% if request.headers.get("cf-ipcountry")=="T1" and not v.is_activated %} Additionally, you must have a verified email address to upload images via Tor.{% endif %}</small>
+                            <small class="form-text text-muted">You can upload images directly at 1000 Dramacoins.{% if request.headers.get("cf-ipcountry")=="T1" and not v.is_activated %} Additionally, you must have a verified email address to upload images via Tor.{% endif %}</small>
                         </div>
                         {% endif %}
                         </div>
@@ -144,10 +142,7 @@
                             </div>
                         </div>
 
-                        <div class="form-text text-small"><a href="/help/formatting" target="_blank">Formatting help</a></div>
-
-                        <label for="board" class="mt-3">Post in guild<i class="fas fa-info-circle text-gray-400 ml-1" data-toggle="tooltip" data-placement="top" title="Guilds are Ruqqus communities. Enter a guild you would like your post to belong to."></i></label>
-                        <input class="form-control" name="board" value="{{ b.name if b else request.args.get('guild','') }}" required>
+                        <div class="form-text text-small"><a href="/formatting" target="_blank">Formatting help</a></div>
 
                         <label for="over_18" class="text-danger mt-3">NSFW?</label>
 
@@ -156,67 +151,6 @@
                             <label class="custom-control-label" for="nsfwCheck">This post contains adult material.</label>
                         </div>
 
-
-                    </div>
-
-                </div>
-
-                <!-- Right Sidebar (hidden on devices smaller than "large") -->
-
-                <div class="col sidebar text-left d-none d-lg-block pt-3">
-
-                    <div class="sidebar-section sidebar-rules">
-                        <div class="title bg-purple"><span><i class="fas fa-scroll-old mr-2"></i>Rules and guidelines</span></div>
-                        <div class="body">
-                            <ol class="pl-0 mb-0">   
-                                <li>
-                                    <a class="text-black font-weight-bold collapsed" data-toggle="collapse" href="#ruleCollapse1" role="button" aria-expanded="false" aria-controls="ruleCollapse1">Comply with US law<span class="float-right"><i class="fa"></i></span>
-                                    </a>
-                                </li>
-                                <div id="ruleCollapse1" class="collapse">
-                                    <p style="padding: 0 0 0 22px;">Do not post copyrighted material that you are not authorized to distribute. Do not post anything not legal to publish within, or export from, the United States of America.</p>
-                                </div>
-                                <li>
-                                    <a class="text-black font-weight-bold collapsed" data-toggle="collapse" href="#ruleCollapse2" role="button" aria-expanded="false" aria-controls="ruleCollapse2">Do not harass other users<span class="float-right"><i class="fa"></i></span>
-                                    </a>
-                                </li>
-                                <div id="ruleCollapse2" class="collapse">
-                                    <p style="padding: 0 0 0 22px;">Do not harass or threaten others on Ruqqus. You are not allowed to share or publish personal information, either yours or another person.</p>
-                                </div>
-                                <li>
-                                    <a class="text-black font-weight-bold collapsed" data-toggle="collapse" href="#ruleCollapse3" role="button" aria-expanded="false" aria-controls="ruleCollapse3">No inciting violence<span class="float-right"><i class="fa"></i></span>
-                                    </a>
-                                </li>
-                                <div id="ruleCollapse3" class="collapse">
-                                    <p style="padding: 0 0 0 22px;">No incitement, planning or execution of unlawful or violent activity. This does not include the exercise of human rights that may be considered unlawful in a user's home country but protected in the United States.</p>
-                                </div>
-                                <li>
-                                    <a class="text-black font-weight-bold collapsed" data-toggle="collapse" href="#ruleCollapse4" role="button" aria-expanded="false" aria-controls="ruleCollapse4">Check for duplicates
-                                        <span class="float-right"><i class="fa"></i></span>
-                                    </a>
-                                </li>
-                                <div id="ruleCollapse4" class="collapse">
-                                    <p style="padding: 0 0 0 22px;">Nobody likes reposts. Please make sure the content you're posting hasn't been posted on Ruqqus before.</p>
-                                </div>
-                            </ol>
-                        </div>
-                    </div>
-
-                    <div class="d-none d-md-block">
-                        <ul class="list-inline text-small mb-0">
-                            <li class="list-inline-item"><a href="/help/about" class="text-gray-500">About</a></li>
-                            <li class="list-inline-item d-none"><a href="/help/contact" class="text-gray-500">Contact</a></li>
-                            <li class="list-inline-item"><a href="/help/terms" class="text-gray-500">Terms</a></li>
-                            <li class="list-inline-item"><a href="/help/privacy" class="text-gray-500">Privacy Policy</a></li>
-                            <li class="list-inline-item"><a href="/help/donate" class="text-gray-500">Donate</a></li>
-                            <li class="list-inline-item"><a href="/help/press" class="text-gray-500">Press</a></li>
-                            <li class="list-inline-item"><a href="/help" class="text-gray-500">Help</a></li>
-                            <li class="list-inline-item"><a href="https://www.twitter.com/ruqqus" class="text-gray-500">Twitter</a></li>
-                            <li class="list-inline-item"><a href="https://github.com/ruqqus/ruqqus" class="text-gray-500">GitHub</a></li>
-                            <li class="list-inline-item"><a href="/discord" class="text-gray-500">Discord</a></li>
-                        </ul>
-
-                        <div class="text-muted text-small-extra mt-1">v. 2.36.3, © 2021 Ruqqus, LLC</div>
 
                     </div>
 
@@ -244,9 +178,9 @@
 
     {% include "bootstrap.html" %}
 
-    <!-- Ruqqus JS -->
+    <!-- Drama JS -->
 
-    <script src="/assets/js/all_js.js?v=2.36.3"></script>
+    <script src="/assets/js/all_js.js?v=2.35.62"></script>
 
     <!-- ClipboardJS -->
 
@@ -270,40 +204,6 @@
             console.log(e);
         });
     </script>
-
-    {% if v.can_submit_image %}
-    <script>
-    document.onpaste = function(event) {
-        f=document.getElementById('file-upload');
-        f.files = event.clipboardData.files;
-        $('#filename-show').text(f.files[0].name);
-        $('#urlblock').addClass('d-none');
-
-        var fileReader = new FileReader();
-        fileReader.readAsDataURL(f.files[0]);
-        fileReader.addEventListener("load", function () {
-            $('#image-preview').attr('src', this.result);
-    });  
-
-        checkForRequired();
-
-    }
-
-    $('#file-upload').on('change', function(e){
-        f=document.getElementById('file-upload');
-        $('#urlblock').addClass('d-none');
-        $('#filename-show').text($('#file-upload')[0].files[0].name);
-
-        var fileReader = new FileReader();
-        fileReader.readAsDataURL(f.files[0]);
-        fileReader.addEventListener("load", function () {
-            $('#image-preview').attr('src', this.result);
-    });  
-
-        checkForRequired();
-    })
-    </script>
-    {% endif %}
 
 </body>
 

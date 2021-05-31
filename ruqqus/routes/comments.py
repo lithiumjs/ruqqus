@@ -2,6 +2,7 @@ from urllib.parse import urlparse
 import mistletoe
 from sqlalchemy import func, literal
 from bs4 import BeautifulSoup
+from werkzeug.contrib.atom import AtomFeed
 from datetime import datetime
 import secrets
 import threading
@@ -22,7 +23,7 @@ from flask import *
 from ruqqus.__main__ import app, limiter
 
 
-BUCKET=app.config["S3_BUCKET"]
+BUCKET=environ.get("S3_BUCKET",'i.ruqqus.ga')
 
 
 @app.route("/comment/<cid>", methods=["GET"])
@@ -46,11 +47,11 @@ def comment_cid_api_redirect(c_id=None, p_id=None):
     redirect(f'/api/v1/comment/<c_id>')
 
 @app.route("/api/v1/comment/<c_id>", methods=["GET"])
-@app.route("/+<boardname>/post/<p_id>/<anything>/<c_id>", methods=["GET"])
+@app.route("/post/<p_id>/<anything>/<c_id>", methods=["GET"])
 @app.route("/api/vue/comment/<c_id>")
 @auth_desired
 @api("read")
-def post_pid_comment_cid(c_id, p_id=None, boardname=None, anything=None, v=None):
+def post_pid_comment_cid(c_id, p_id=None, anything=None, v=None):
 
     comment = get_comment(c_id, v=v)
     
@@ -60,23 +61,7 @@ def post_pid_comment_cid(c_id, p_id=None, boardname=None, anything=None, v=None)
     
     post = get_post(p_id, v=v)
     board = post.board
-    
-    if not boardname:
-        boardname = board.name
-    
-    # fix incorrect boardname and pid
-    if board.name != boardname or comment.parent_submission != post.id:
-        return redirect(comment.permalink)
-
-    if board.is_banned and not (v and v.admin_level > 3):
-        return {'html': lambda: render_template("board_banned.html",
-                                                v=v,
-                                                b=board),
-
-                'api': lambda: {'error': f'+{board.name} is banned.'}
-
-                }
-
+        
     if post.over_18 and not (
             v and v.over_18) and not session_over18(comment.board):
         t = int(time.time())
@@ -158,18 +143,7 @@ def post_pid_comment_cid(c_id, p_id=None, boardname=None, anything=None, v=None)
                 blocked.c.id,
                 aliased(ModAction, alias=exile)
             ).select_from(Comment).options(
-                lazyload('*'),
-                joinedload(Comment.comment_aux),
-                joinedload(Comment.author),
-                Load(User).lazyload('*'),
-                Load(User).joinedload(User.title),
-                joinedload(Comment.post),
-                Load(Submission).lazyload('*'),
-                Load(Submission).joinedload(Submission.submission_aux),
-                Load(Submission).joinedload(Submission.board),
-                Load(CommentVote).lazyload('*'),
-                Load(UserBlock).lazyload('*'),
-                Load(ModAction).lazyload('*')
+                joinedload(Comment.author).joinedload(User.title)
             ).filter(
                 Comment.parent_comment_id.in_(current_ids)
             ).join(
@@ -196,9 +170,7 @@ def post_pid_comment_cid(c_id, p_id=None, boardname=None, anything=None, v=None)
                 comments = comms.order_by(Comment.score_top.asc()).all()
             elif sort_type == "new":
                 comments = comms.order_by(Comment.created_utc.desc()).all()
-            elif sort_type == "old":
-                comments = comms.order_by(Comment.created_utc.asc()).all()
-            elif sort_type == "disputed":
+            elif sort_type == "controversial":
                 comments = comms.order_by(Comment.score_disputed.asc()).all()
             elif sort_type == "random":
                 c = comms.all()
@@ -236,9 +208,7 @@ def post_pid_comment_cid(c_id, p_id=None, boardname=None, anything=None, v=None)
                 comments = comms.order_by(Comment.score_top.asc()).all()
             elif sort_type == "new":
                 comments = comms.order_by(Comment.created_utc.desc()).all()
-            elif sort_type == "old":
-                comments = comms.order_by(Comment.created_utc.asc()).all()
-            elif sort_type == "disputed":
+            elif sort_type == "controversial":
                 comments = comms.order_by(Comment.score_disputed.asc()).all()
             elif sort_type == "random":
                 c = comms.all()
@@ -264,17 +234,6 @@ def post_pid_comment_cid(c_id, p_id=None, boardname=None, anything=None, v=None)
     return {'html': lambda: post.rendered_page(v=v, comment=top_comment, comment_info=comment_info),
             'api': lambda: top_comment.json
             }
-
-#if the guild name is missing, add it to the url and redirect
-@app.route("/post/<p_id>/<anything>/<c_id>", methods=["GET"])
-@app.route("/api/v1/post/<p_id>/comment/<c_id>", methods=["GET"])
-@auth_desired
-@api("read")
-def post_pid_comment_cid_noboard(p_id, c_id, anything=None, v=None):
-    comment=get_comment(c_id, v=v)
-    
-    return redirect(comment.permalink)
-
 
 @app.route("/api/comment", methods=["POST"])
 @app.route("/api/v1/comment", methods=["POST"])
@@ -303,7 +262,7 @@ def api_comment(v):
         level = parent.level + 1
         parent_id = parent.parent_submission
         parent_submission = parent_id
-        parent_post = get_post(parent_id, v=v)
+        parent_post = get_post(base36encode(parent_id))
     else:
         abort(400)
 
@@ -311,12 +270,9 @@ def api_comment(v):
     body = request.form.get("body", "")[0:10000]
     body = body.lstrip().rstrip()
 
-    if not body and not (v.has_premium and request.files.get('file')):
+    if not body and not request.files.get('file'):
         return jsonify({"error":"You need to actually write something!"}), 400
     
-    if parent_post.board.disallowbots and request.headers.get("X-User-Type")=="Bot":
-        return jsonify({"error":f"403 Not Authorized - +{board.name} disallows bots from posting and commenting!"}), 403
-
     body=preprocess(body)
     with CustomRenderer(post_id=parent_id) as renderer:
         body_md = renderer.render(mistletoe.Document(body))
@@ -353,15 +309,9 @@ def api_comment(v):
         return jsonify(
             {"error": "You can't comment on things that have been deleted."}), 403
 
-    if parent.is_blocking and not v.admin_level>=3 and not parent.board.has_mod(v, "content"):
+    if parent.author.any_block_exists(v) and not v.admin_level>=3 and not parent.post.board.has_mod(v, "content"):
         return jsonify(
-            {"error": "You can't reply to users that you're blocking."}
-            ), 403
-
-    if parent.is_blocked and not v.admin_level>=3 and not parent.board.has_mod(v, "content"):
-        return jsonify(
-            {"error": "You can't reply to users that are blocking you."}
-            ), 403
+            {"error": "You can't reply to users who have blocked you, or users you have blocked."}), 403
 
     # check for archive and ban state
     post = get_post(parent_id)
@@ -370,7 +320,8 @@ def api_comment(v):
         return jsonify({"error": "You can't comment on this."}), 403
 
     # get bot status
-    is_bot = request.headers.get("X-User-Type","").lower()=="bot"
+    is_bot = request.headers.get("X-User-Type","")=="Bot"
+
     # check spam - this should hopefully be faster
     if not is_bot:
         now = int(time.time())
@@ -394,7 +345,7 @@ def api_comment(v):
             threshold *= 2
 
         if len(similar_comments) > threshold:
-            text = "Your Ruqqus account has been suspended for 1 day for the following reason:\n\n> Too much spam!"
+            text = "Your Drama account has been suspended for 1 day for the following reason:\n\n> Too much spam!"
             send_notification(v, text)
 
             v.ban(reason="Spamming.",
@@ -409,7 +360,7 @@ def api_comment(v):
                 comment.ban_reason = "Automatic spam removal. This happened because the post's creator submitted too much similar content too quickly."
                 g.db.add(comment)
                 ma=ModAction(
-                    user_id=1,
+                    user_id=1046,
                     target_comment_id=comment.id,
                     kind="ban_comment",
                     board_id=comment.post.board_id,
@@ -455,7 +406,7 @@ def api_comment(v):
     # create comment
     c = Comment(author_id=v.id,
                 parent_submission=parent_submission,
-                #parent_fullname=parent.fullname,
+                parent_fullname=parent.fullname,
                 parent_comment_id=parent_comment_id,
                 level=level,
                 over_18=post.over_18,
@@ -471,16 +422,16 @@ def api_comment(v):
     g.db.flush()
 
 
-    if v.has_premium:
+    if v.true_score >= 0:
         if request.files.get("file"):
             file=request.files["file"]
             if not file.content_type.startswith('image/'):
                 return jsonify({"error": "That wasn't an image!"}), 400
             
             name = f'comment/{c.base36id}/{secrets.token_urlsafe(8)}'
-            upload_file(name, file)
+            url = upload_file(name, file)
 
-            body = request.form.get("body") + f"\n\n![](https://{BUCKET}/{name})"
+            body = request.form.get("body") + f"\n\n![]({url})"
             body=preprocess(body)
             with CustomRenderer(post_id=parent_id) as renderer:
                 body_md = renderer.render(mistletoe.Document(body))
@@ -494,7 +445,7 @@ def api_comment(v):
                 g.db.commit()
                 
             csam_thread=threading.Thread(target=check_csam_url, 
-                                         args=(f"https://{BUCKET}/{name}", 
+                                         args=(f"https://s3.eu-central-1.amazonaws.com/i.ruqqus.ga/{name}", 
                                                v, 
                                                del_function
                                               )
@@ -672,7 +623,7 @@ def edit_comment(cid, v):
         threshold *= 2
 
     if len(similar_comments) > threshold:
-        text = "Your Ruqqus account has been suspended for 1 day for the following reason:\n\n> Too much spam!"
+        text = "Your Drama account has been suspended for 1 day for the following reason:\n\n> Too much spam!"
         send_notification(v, text)
 
         v.ban(reason="Spamming.",
@@ -699,7 +650,6 @@ def edit_comment(cid, v):
     path = request.form.get("current_page", "/")
 
     return jsonify({"html": c.body_html})
-
 
 @app.route("/delete/comment/<cid>", methods=["POST"])
 @app.route("/api/v1/delete/comment/<cid>", methods=["POST"])
@@ -749,10 +699,8 @@ def embed_comment_cid(cid, pid=None):
     return render_template("embeds/comment.html", c=comment)
 
 @app.route("/mod/comment_pin/<bid>/<cid>", methods=["POST"])
-@app.route("/api/v1/comment_pin/<bid>/<cid>", methods=["POST"])
 @auth_required
 @is_guildmaster("content")
-@api("guildmaster")
 @validate_formkey
 def mod_toggle_comment_pin(bid, cid, board, v):
 

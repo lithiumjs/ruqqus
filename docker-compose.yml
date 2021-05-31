@@ -6,34 +6,28 @@ services:
       context: .
     volumes:
       - "./:/opt/ruqqus/service"
-    environment:
-      - domain=ruqqus.localhost:8000
-      - REDIS_URL=redis://redis
-      - DATABASE_URL=postgres://postgres@postgres:5432/postgres
-      - DATABASE_CONNECTION_POOL_URL=postgres://postgres@postgres:5432/postgres
-      - PYTHONPATH="/opt/ruqqus/service"
-      - MASTER_KEY=${MASTER_KEY:-KTVciAUQFpFh2WdJ/oiHJlxl6FvzRZp8kYzAAv3l2OA=}
-      - HCAPTCHA_SECRET="asdffgfsdfgdfgg1234"
-      - CLOUDFLARE_KEY="vcbxnsdfdfgdfggh455445"
-      - AWS_ACCESS_KEY_ID="asdd34rtsfdgd23"
-      - AWS_SECRET_ACCESS_KEY="12312sdfgfgdfgdfg3"
-      - SESSION_COOKIE_SECURE=false
-      - DISCORD_BOT_TOKEN="asdfsdgsdgsdg45"
-      - GIPHY_KEY="sdgsdg345345345345"
-      - FLASK_DEBUG=1
-      - FLASK_ENV=development
-      - FORCE_HTTPS=0
+    env_file:
+      - /opt/env.env
     links:
       - "redis"
       - "postgres"
     ports:
-      - "8000:8000"
+      - target: 8000
+        published: 80
+        protocol: tcp
+        mode: host
     depends_on:
       - redis
       - postgres
 
   redis:
     image: redis
+    command: bash -c "
+        redis-server /usr/local/etc/redis/redis.conf
+        && redis-server config set dir "/usr/local"
+      "
+    volumes:
+      - ./redis.conf:/usr/local/etc/redis/redis.conf
     ports:
       - "6379:6379"
 

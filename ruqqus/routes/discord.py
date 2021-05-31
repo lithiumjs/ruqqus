@@ -13,11 +13,11 @@ from ruqqus.__main__ import app
 SERVER_ID = environ.get("DISCORD_SERVER_ID",'').rstrip()
 CLIENT_ID = environ.get("DISCORD_CLIENT_ID",'').rstrip()
 CLIENT_SECRET = environ.get("DISCORD_CLIENT_SECRET",'').rstrip()
-BOT_TOKEN = environ.get("DISCORD_BOT_TOKEN",'').rstrip()
+BOT_TOKEN = environ.get("DISCORD_BOT_TOKEN").rstrip()
 DISCORD_ENDPOINT = "https://discordapp.com/api/v6"
 
 
-WELCOME_CHANNEL="775132151498407961"
+WELCOME_CHANNEL="846509313941700618"
 
 
 
@@ -29,7 +29,9 @@ def guilded_server():
 @app.route("/discord", methods=["GET"])
 @auth_required
 def join_discord(v):
-
+    
+    if v.true_score < 70: return "You must earn +70 rep before entering the Discord server"
+    
     now=int(time.time())
 
     state=generate_hash(f"{now}+{v.id}+discord")

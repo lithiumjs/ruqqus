@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg width="311px" height="95px" viewBox="0 0 311 95" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-    <!-- Generator: Sketch 50.2 (55047) - http://www.bohemiancoding.com/sketch -->
+<svg width="311px" height="95px" viewBox="0 0 311 95" version="1.1" xmlns="https://www.w3.org/2000/svg" xmlns:xlink="https://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 50.2 (55047) - https://www.bohemiancoding.com/sketch -->
     <title>UI Card 2</title>
     <desc>Created with Sketch.</desc>
     <defs>
@@ -11,7 +11,7 @@
         <g id="Desktop-HD" transform="translate(-920.000000, -440.000000)">
             <g id="UI-Card-2" transform="translate(920.000000, 440.000000)">
                 <g id="Group" stroke-width="1">
-                    <rect id="Rectangle-3" fill="#FFFFFF" x="0" y="0" width="310.5" height="95.25" rx="6"></rect>
+                    <rect id="Rectangle-3" fill="#cfcfcf" x="0" y="0" width="310.5" height="95.25" rx="6"></rect>
                     <g id="Group-3" transform="translate(60.750000, 11.250000)" fill="#E0E4E9">
                         <rect id="Rectangle-Copy" x="0" y="0" width="232.5" height="10.5" rx="5.25"></rect>
                         <rect id="Rectangle-Copy-2" x="0" y="15.75" width="175.5" height="10.5" rx="5.25"></rect>

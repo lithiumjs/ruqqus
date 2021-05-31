@@ -23,7 +23,6 @@ class UserMention(SpanToken):
     def __init__(self, match_obj):
         self.target = (match_obj.group(1), match_obj.group(2))
 
-
 class BoardMention(SpanToken):
 
     pattern = re.compile("(^|\s|\n)\+(\w{3,25})")
@@ -32,18 +31,42 @@ class BoardMention(SpanToken):
     def __init__(self, match_obj):
 
         self.target = (match_obj.group(1), match_obj.group(2))
+        
+class SubMention(SpanToken):
 
-class ChatMention(SpanToken):
-
-    pattern = re.compile("(^|\s|\n)#(\w{3,25})")
+    pattern = re.compile("(^|\s|\n)r/(\w{3,25})")
     parse_inner = False
 
     def __init__(self, match_obj):
 
         self.target = (match_obj.group(1), match_obj.group(2))
+        
+class RedditorMention(SpanToken):
 
+    pattern = re.compile("(^|\s|\n)u/(\w{3,25})")
+    parse_inner = False
 
+    def __init__(self, match_obj):
 
+        self.target = (match_obj.group(1), match_obj.group(2))
+        
+class SubMention2(SpanToken):
+
+    pattern = re.compile("(^|\s|\n)/r/(\w{3,25})")
+    parse_inner = False
+
+    def __init__(self, match_obj):
+
+        self.target = (match_obj.group(1), match_obj.group(2))
+        
+class RedditorMention2(SpanToken):
+
+    pattern = re.compile("(^|\s|\n)/u/(\w{3,25})")
+    parse_inner = False
+
+    def __init__(self, match_obj):
+
+        self.target = (match_obj.group(1), match_obj.group(2))
 
 # class OpMention(SpanToken):
 
@@ -59,7 +82,10 @@ class CustomRenderer(HTMLRenderer):
     def __init__(self, **kwargs):
         super().__init__(UserMention,
                          BoardMention,
-                         ChatMention #,
+                         SubMention,
+                         RedditorMention,
+                         SubMention2,
+                         RedditorMention2,
                          #OpMention
                          )
 
@@ -94,17 +120,16 @@ class CustomRenderer(HTMLRenderer):
             return f"{space}+{target}"
         else:
             return f'{space}<a href="{board.permalink}" class="d-inline-block"><img src="/+{board.name}/pic/profile" class="profile-pic-20 mr-1">+{board.name}</a>'
-
-    def render_chat_mention(self, token):
+            
+    def render_sub_mention(self, token):
         space = token.target[0]
         target = token.target[1]
-
-        board = get_guild(target, graceful=True)
-
-        if not board or board.is_banned:
-            return f"{space}#{target}"
-        else:
-            return f'{space}<a href="{board.permalink}/chat" class="d-inline-block"><img src="/+{board.name}/pic/profile" class="profile-pic-20 mr-1">#{board.name}</a>'
+        return f'{space}<a href="https://www.reddit.com/r/{target}" class="d-inline-block">r/{target}</a>'
+        
+    def render_redditor_mention(self, token):
+        space = token.target[0]
+        target = token.target[1]
+        return f'{space}<a href="https://www.reddit.com/u/{target}" class="d-inline-block">u/{target}</a>'
 
     # def render_op_mention(self, token):
 

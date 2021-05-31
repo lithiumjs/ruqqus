@@ -17,7 +17,6 @@ from flask_compress import Compress
 from flask_socketio import SocketIO
 from time import sleep
 from collections import deque
-import psycopg2
 
 from flaskext.markdown import Markdown
 from sqlalchemy.ext.declarative import declarative_base
@@ -30,62 +29,22 @@ import requests
 import random
 import redis
 import gevent
-import sys
 
-from redis import BlockingConnectionPool, ConnectionPool
+from redis import BlockingConnectionPool
 
 from werkzeug.middleware.proxy_fix import ProxyFix
 
 
-_version = "2.36.3"
-
-# def time_limit(s):
-#     def wrapper_maker(f):
-#         def wrapper(*args, **kwargs):
-
-#             timeout=gevent.Timeout(s, gevent.Timeout)
-#             timeout.start()
-#             target_thread=gevent.spawn(f, *args, **kwargs)
-#             try:
-#                 target_thread.join()
-#                 return target_thread.value
-#             except gevent.timeout.Timeout as t:
-#                 target_thread.kill()
-#                 try:
-#                     g.db.rollback()
-#                     g.db.invalidate()
-#                 except:
-#                     pass
-#                 abort(500)
-
-#         wrapper.__name__=f.__name__
-#         return wrapper
-#     return wrapper_maker
-
-# class Flask_Timeout(Flask):
-    
-            
-#     def full_dispatch_request(self, *args, **kwargs):
-        
-        
-#         @copy_current_request_context
-#         @time_limit(10)
-#         @copy_current_request_context
-#         def thread_target(self, *args, **kwargs):   
-#             return super(Flask_Timeout, self).full_dispatch_request(*args, **kwargs)
-        
-#         return thread_target(self, *args, **kwargs)
+_version = "2.35.62"
 
 app = Flask(__name__,
             template_folder='./templates',
             static_folder='./static'
             )
-app.wsgi_app = ProxyFix(app.wsgi_app, x_for=3)
+app.wsgi_app = ProxyFix(app.wsgi_app, num_proxies=3)
 app.url_map.strict_slashes = False
 
-app.config["SITE_NAME"]=environ.get("SITE_NAME", "Ruqqus").lstrip().rstrip()
-
-app.config["SITE_COLOR"]=environ.get("SITE_COLOR", "805ad5").lstrip().rstrip()
+app.config["SITE_NAME"]=environ.get("SITE_NAME", "ruqqus").lstrip().rstrip()
 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['DATABASE_URL'] = environ.get(
@@ -101,9 +60,7 @@ app.config['SQLALCHEMY_READ_URIS'] = [
 app.config['SECRET_KEY'] = environ.get('MASTER_KEY')
 app.config["SERVER_NAME"] = environ.get(
     "domain", environ.get(
-        "SERVER_NAME", "")).lstrip().rstrip()
-
-app.config["SHORT_DOMAIN"]=environ.get("SHORT_DOMAIN","").lstrip().rstrip()
+        "SERVER_NAME", None)).lstrip().rstrip()
 app.config["SESSION_COOKIE_NAME"] = "session_ruqqus"
 app.config["VERSION"] = _version
 app.config['MAX_CONTENT_LENGTH'] = 64 * 1024 * 1024
@@ -113,24 +70,21 @@ app.config["SESSION_COOKIE_SAMESITE"] = "Lax"
 app.config["PERMANENT_SESSION_LIFETIME"] = 60 * 60 * 24 * 365
 app.config["SESSION_REFRESH_EACH_REQUEST"] = True
 
-app.config["FORCE_HTTPS"] = int(environ.get("FORCE_HTTPS", 1)) if ("localhost" not in app.config["SERVER_NAME"] and "127.0.0.1" not in app.config["SERVER_NAME"]) else 0
+app.config["FORCE_HTTPS"] = int(environ.get("FORCE_HTTPS", 1))
 app.config["DISABLE_SIGNUPS"]=int(environ.get("DISABLE_SIGNUPS",0))
 
 app.jinja_env.cache = {}
 
 app.config["UserAgent"] = f"Content Aquisition for Porpl message board v{_version}."
 
-if "localhost" in app.config["SERVER_NAME"]:
-    app.config["CACHE_TYPE"] = "null"
-else:
-    app.config["CACHE_TYPE"] = environ.get("CACHE_TYPE", 'filesystem').lstrip().rstrip()
+app.config["CACHE_TYPE"] = environ.get("CACHE_TYPE", 'filesystem').lstrip().rstrip()
 
 app.config["CACHE_DIR"] = environ.get("CACHE_DIR", "ruqquscache")
 
 # captcha configs
-app.config["HCAPTCHA_SITEKEY"] = environ.get("HCAPTCHA_SITEKEY","").lstrip().rstrip()
+app.config["HCAPTCHA_SITEKEY"] = environ.get("HCAPTCHA_SITEKEY")
 app.config["HCAPTCHA_SECRET"] = environ.get(
-    "HCAPTCHA_SECRET","").lstrip().rstrip()
+    "HCAPTCHA_SECRET").lstrip().rstrip()
 app.config["SIGNUP_HOURLY_LIMIT"]=int(environ.get("SIGNUP_HOURLY_LIMIT",0))
 
 # antispam configs
@@ -150,18 +104,17 @@ app.config["CACHE_REDIS_URL"] = environ.get(
 app.config["CACHE_DEFAULT_TIMEOUT"] = 60
 app.config["CACHE_KEY_PREFIX"] = "flask_caching_"
 
-app.config["S3_BUCKET"]=environ.get("S3_BUCKET_NAME","i.ruqqus.com").lstrip().rstrip()
+#app.config["REDIS_POOL_SIZE"]=int(environ.get("REDIS_POOL_SIZE", 30))
 
-app.config["REDIS_POOL_SIZE"]=int(environ.get("REDIS_POOL_SIZE", 10))
+# redispool=BlockingConnectionPool(max_connections=app.config["REDIS_POOL_SIZE"])
+# app.config["CACHE_OPTIONS"]={'connection_pool':redispool}
 
-redispool=ConnectionPool(
-    max_connections=app.config["REDIS_POOL_SIZE"],
-    host=app.config["CACHE_REDIS_URL"][8:]
-    ) if app.config["CACHE_TYPE"]=="redis" else None
-app.config["CACHE_OPTIONS"]={'connection_pool':redispool} if app.config["CACHE_TYPE"]=="redis" else {}
 
-app.config["READ_ONLY"]=bool(int(environ.get("READ_ONLY", False)))
-app.config["BOT_DISABLE"]=bool(int(environ.get("BOT_DISABLE", False)))
+# setup env vars - convenience statement
+
+for x in ["DATABASE_URL", "SECRET_KEY"]:
+    if not app.config.get(x):
+        raise RuntimeError(f"The following environment variable must be defined: {x}")
 
 
 Markdown(app)
@@ -171,22 +124,12 @@ Compress(app)
 class CorsMatch(str):
 
     def __eq__(self, other):
-        if isinstance(other, str):
-            if other in ['https://ruqqus.com', f'https://{app.config["SERVER_NAME"]}']:
-                return True
+        return True
 
-            elif other.endswith(".ruqqus.com"):
-                return True
-
-        elif isinstance(other, list):
-            if f'https://{app.config["SERVER_NAME"]}' in other:
-                return True
-            elif any([x.endswith(".ruqqus.com") for x in other]):
-                return True
-
-        return False
-
-
+socketio=SocketIO(
+	app,
+	cors_allowed_origins=CorsMatch()
+	)
 
 
 # app.config["CACHE_REDIS_URL"]
@@ -211,43 +154,35 @@ limiter = Limiter(
 )
 
 # setup db
-                         
-#engines = {
-#    "leader": create_engine(app.config['DATABASE_URL'], pool_size=pool_size, pool_use_lifo=True),
-#    "followers": [create_engine(x, pool_size=pool_size, pool_use_lifo=True) for x in app.config['SQLALCHEMY_READ_URIS'] if x] if any(i for i in app.config['SQLALCHEMY_READ_URIS']) else [create_engine(app.config['DATABASE_URL'], pool_size=pool_size, pool_use_lifo=True)]
-#}
-_engine=create_engine(
-    app.config['DATABASE_URL'],
-    poolclass=QueuePool,
-    pool_size=int(environ.get("PG_POOL_SIZE",10)),
-    pool_use_lifo=True
-)
+pool_size = int(environ.get("PG_POOL_SIZE", 10))
+engines = {
+    "leader": create_engine(app.config['DATABASE_URL'], pool_size=pool_size, pool_use_lifo=True),
+    "followers": [create_engine(x, pool_size=pool_size, pool_use_lifo=True) for x in app.config['SQLALCHEMY_READ_URIS'] if x] if any(i for i in app.config['SQLALCHEMY_READ_URIS']) else [create_engine(app.config['DATABASE_URL'], pool_size=pool_size, pool_use_lifo=True)]
+}
 
 
 #These two classes monkey patch sqlalchemy
 
-# class RoutingSession(Session):
-#     def get_bind(self, mapper=None, clause=None):
-#         try:
-#             if self._flushing or request.method == "POST":
-#                 return engines['leader']
-#             else:
-#                 return random.choice(engines['followers'])
-#         except BaseException:
-#             if self._flushing:
-#                 return engines['leader']
-#             else:
-#                 return random.choice(engines['followers'])
+class RoutingSession(Session):
+    def get_bind(self, mapper=None, clause=None):
+        try:
+            if self._flushing or request.method == "POST":
+                return engines['leader']
+            else:
+                return random.choice(engines['followers'])
+        except BaseException:
+            if self._flushing:
+                return engines['leader']
+            else:
+                return random.choice(engines['followers'])
 
 
 def retry(f):
-
     def wrapper(self, *args, **kwargs):
+
         try:
             return f(self, *args, **kwargs)
-        except OperationalError as e:
-            #self.session.rollback()
-            raise(DatabaseOverload)
+
         except:
             self.session.rollback()
             return f(self, *args, **kwargs)
@@ -257,6 +192,9 @@ def retry(f):
 
 
 class RetryingQuery(_Query):
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
 
     @retry
     def all(self):
@@ -270,40 +208,39 @@ class RetryingQuery(_Query):
     def first(self):
         return super().first()
 
-#db_session = scoped_session(sessionmaker(class_=RoutingSession))#, query_cls=RetryingQuery))
-db_session=scoped_session(sessionmaker(bind=_engine, query_cls=RetryingQuery))
+
+
+
+db_session = scoped_session(sessionmaker(class_=RoutingSession, query_cls=RetryingQuery))
+# db_session=scoped_session(sessionmaker(bind=engines["leader"]))
 
 Base = declarative_base()
 
 
 #set the shared redis cache for misc stuff
 
-r=redis.Redis(
-    host=app.config["CACHE_REDIS_URL"][8:], 
-    decode_responses=True, 
-    ssl_cert_reqs=None,
-    connection_pool=redispool
-    ) if app.config["CACHE_REDIS_URL"] else None
+r=redis.Redis(host=app.config["CACHE_REDIS_URL"][8:], decode_responses=True, ssl_cert_reqs=None)
 
 
-#import and bind chat function
-#the if statement is needed because chat includes its own db session
-#and if it's not used then every worker connection will spawn a new db session
-#from ruqqus.chat.chat_routes import *
-#if "load_chat" in sys.argv:
-#    socketio=SocketIO(
-#        app,
-#        cors_allowed_origins=CorsMatch()
-#        #message_queue=app.config["CACHE_REDIS_URL"]
-#        )
-#    from ruqqus.chat.chat import *
+@app.before_first_request
+def app_setup():
+    # app.config["databases"]=scoped_session(sessionmaker(class_=RoutingSession))
+    pass
+
+
+IP_BAN_CACHE_TTL = int(environ.get("IP_BAN_CACHE_TTL", 3600))
+UA_BAN_CACHE_TTL = int(environ.get("UA_BAN_CACHE_TTL", 3600))
 
 local_ban_cache={}
 
-#IP_BAN_CACHE_TTL = int(environ.get("IP_BAN_CACHE_TTL", 3600))
-UA_BAN_CACHE_TTL = int(environ.get("UA_BAN_CACHE_TTL", 3600))
 
+#@cache.memoize(IP_BAN_CACHE_TTL)
+def is_ip_banned(remote_addr):
+    """
+    Given a remote address, returns whether or not user is banned
+    """
 
+    return bool(r.get(f"ban_ip_{remote_addr}"))
 
 # import and bind all routing functions
 import ruqqus.classes
@@ -317,9 +254,6 @@ def get_useragent_ban_response(user_agent_str):
     Given a user agent string, returns a tuple in the form of:
     (is_user_agent_banned, (insult, status_code))
     """
-    #if request.path.startswith("/socket.io/"):
-    #    return False, (None, None)
-
     result = g.db.query(
         ruqqus.classes.Agent).filter(
         ruqqus.classes.Agent.kwd.in_(
@@ -329,33 +263,26 @@ def get_useragent_ban_response(user_agent_str):
                       result.status_code or 418)
     return False, (None, None)
 
-def drop_connection():
-
-    g.db.close()
-    gevent.getcurrent().kill()
-
 
 # enforce https
 @app.before_request
 def before_request():
 
-    if request.method.lower() != "get" and app.config["READ_ONLY"]:
-        return jsonify({"error":f"{app.config['SITE_NAME']} is currently in read-only mode."}), 500
+    g.timestamp = int(time.time())
 
-    if app.config["BOT_DISABLE"] and request.headers.get("X-User-Type")=="Bot":
-        abort(503)
+    if is_ip_banned(request.remote_addr):
+        try:
+            print("banned ip", request.remote_addr, session.get("user_id"), session.get("history"))
+        except:
+            pass
 
-
-
-    if r and bool(r.get(f"ban_ip_{request.remote_addr}")):
-        return jsonify({"error":"Too many requests. You are in time out for 1 hour. Rate limit is 100/min; less for authentication and content creation endpoints."}), 429
+        #offensively hold request open for 60s while ignoring user and doing other,
+        #more useful things
+        #gevent.sleep(60)
+        return "", 429
+        #gevent.getcurrent().kill()
 
     g.db = db_session()
-
-    if g.db.query(IP).filter_by(addr=request.remote_addr).first():
-        abort(503)
-
-    g.timestamp = int(time.time())
 
     session.permanent = True
 
@@ -364,9 +291,8 @@ def before_request():
     if ua_banned and request.path != "/robots.txt":
         return response_tuple
 
-    if app.config["FORCE_HTTPS"] and request.url.startswith(
-            "http://") and "localhost" not in app.config["SERVER_NAME"]:
-        url = request.url.replace("http://", "https://", 1)
+    if app.config["FORCE_HTTPS"] and request.url.startswith("https://"):
+        url = request.url.replace("https://", "https://", 1)
         return redirect(url, code=301)
 
     if not session.get("session_id"):
@@ -386,15 +312,13 @@ def before_request():
     else:
         g.system="other/other"
 
-    #try:
-    #    print(session.get('user_id'), request.remote_addr, request.method, request.path)
-    #except:
-    #    pass
 
     # g.db.begin_nested()
 
 
 def log_event(name, link):
+
+    sleep(5)
 
     x = requests.get(link)
 
@@ -418,13 +342,8 @@ def after_request(response):
 
     try:
         g.db.commit()
-        g.db.close()
-    except AttributeError:
-        pass
     except BaseException:
-        g.db.rollback()
-        g.db.close()
-        abort(500)
+        pass  # g.db.close()
 
     response.headers.add('Access-Control-Allow-Headers',
                          "Origin, X-Requested-With, Content-Type, Accept, x-auth"
@@ -440,14 +359,10 @@ def after_request(response):
         response.headers.add("X-Frame-Options",
                              "deny")
 
-    # signups - hit discord webhook
-    # if request.method == "POST" and response.status_code in [
-    #         301, 302] and request.path == "/signup":
-    #     link = f'https://{app.config["SERVER_NAME"]}/@{request.form.get("username")}'
-    #     thread = threading.Thread(
-    #         target=lambda: log_event(
-    #             name="Account Signup", link=link))
-    #     thread.start()
+    try:
+        g.db.close()
+    except AttributeError:
+        pass
 
     # req_stop = time.time()
 
@@ -459,12 +374,8 @@ def after_request(response):
 
     return response
 
-
 @app.route("/<path:path>", subdomain="www")
 def www_redirect(path):
 
     return redirect(f"https://{app.config['SERVER_NAME']}/{path}")
 
-#engines["leader"].dispose()
-#for engine in engines["followers"]:
-#    engine.dispose()

@@ -7,7 +7,7 @@ from ruqqus.__main__ import app
 youtube_regex = re.compile(
     "^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*")
 
-ruqqus_regex = re.compile("^.*ruqqus.com/post/+\w+/(\w+)(/\w+/(\w+))?")
+ruqqus_regex = re.compile("^.*rdrama.net/post/+\w+/(\w+)(/\w+/(\w+))?")
 
 twitter_regex=re.compile("/status/(\d+)")
 
@@ -73,7 +73,7 @@ def instagram_embed(url):
     }
 
     headers={
-        "User-Agent":"Instagram embedder for Ruqqus"
+        "User-Agent":"Instagram embedder for Drama"
     }
 
     x=requests.get(oembed_url, params=params, headers=headers)

@@ -82,31 +82,18 @@ def searchlisting(criteria, v=None, page=1, t="None", sort="top", b=None):
 
     if 'domain' in criteria:
         domain=criteria['domain']
-
-        #sanitize domain by removing anything that isn't [a-z0-9.]
-        domain=domain.lower()
-        domain=re.sub("[^a-z0-9.]","", domain)
-        #escape periods
-        domain=domain.replace(".","\.")
-
         posts=posts.filter(
-            SubmissionAux.url.op('~')(
-                "https?://([^/]*\.)?"+domain+"(/|$)"
+            or_(
+                SubmissionAux.url.ilike("https://"+domain+'/%'),
+                SubmissionAux.url.ilike("https://"+domain+'/%'),
+                SubmissionAux.url.ilike("https://"+domain),
+                SubmissionAux.url.ilike("https://"+domain),
+                SubmissionAux.url.ilike("https://www."+domain+'/%'),
+                SubmissionAux.url.ilike("https://www."+domain+'/%'),
+                SubmissionAux.url.ilike("https://www."+domain),
+                SubmissionAux.url.ilike("https://www."+domain)
                 )
             )
-
-            # or_(
-            #     SubmissionAux.url.ilike("https://"+domain+'/%'),
-            #     SubmissionAux.url.ilike("http://"+domain+'/%'),
-            #     SubmissionAux.url.ilike("https://"+domain),
-            #     SubmissionAux.url.ilike("http://"+domain),
-            #     SubmissionAux.url.ilike("https://%."+domain+'/%'),
-            #     SubmissionAux.url.ilike("http://%."+domain+'/%'),
-            #     SubmissionAux.url.ilike("https://%."+domain),
-            #     SubmissionAux.url.ilike("http://%."+domain)
-            #     ),
-            # not_(SubmissionAux.url.ilike("https://%/%"+domain)),
-            # not_(SubmissionAux.url.ilike("http://%/%"+domain))
 
 
     if not (v and v.over_18):
@@ -150,7 +137,7 @@ def searchlisting(criteria, v=None, page=1, t="None", sort="top", b=None):
 
         posts = posts.filter(
             Submission.author_id.notin_(blocking),
-            #Submission.author_id.notin_(blocked),
+            Submission.author_id.notin_(blocked),
             Board.is_banned==False,
         )
     else:
@@ -183,9 +170,7 @@ def searchlisting(criteria, v=None, page=1, t="None", sort="top", b=None):
         posts = posts.order_by(Submission.score_hot.desc())
     elif sort == "new":
         posts = posts.order_by(Submission.created_utc.desc())
-    elif sort == "old":
-        posts = posts.order_by(Submission.created_utc.asc())
-    elif sort == "disputed":
+    elif sort == "controversial":
         posts = posts.order_by(Submission.score_disputed.desc())
     elif sort == "top":
         posts = posts.order_by(Submission.score_top.desc())
@@ -261,7 +246,7 @@ def search(v, search_type="posts"):
                                total=total,
                                page=page,
                                boards=boards,
-                               sort_method=sort,
+                               sort=sort,
                                next_exists=next_exists
                                ),
                 "api":lambda:jsonify({"data":[x.json for x in boards]})
@@ -339,7 +324,7 @@ def search(v, search_type="posts"):
                                total=total,
                                page=page,
                                listing=posts,
-                               sort_method=sort,
+                               sort=sort,
                                time_filter=t,
                                next_exists=next_exists,
                                domain=domain,
@@ -389,7 +374,7 @@ def search_guild(name, v, search_type="posts"):
                    total=total,
                    page=page,
                    listing=posts,
-                       sort_method=sort,
+                       sort=sort,
                            next_exists=next_exists,
                time_filter=t,
                            b=b

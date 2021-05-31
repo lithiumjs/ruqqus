@@ -5,10 +5,10 @@
 
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="Sign in to {{ 'SITE_NAME' | app_config }}">
+    <meta name="description" content="Sign in to Drama">
     <meta name="author" content="">
 
-    <title>2-Step Login - {{ 'SITE_NAME' | app_config }}</title>
+    <title>2-Step Login - Drama</title>
 
     <!-- Bootstrap core CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
@@ -21,8 +21,8 @@
     integrity="sha384-L469/ELG4Bg9sDQbl0hvjMq8pOcqFgkSpwhwnslzvVVGpDjYJ6wJJyYjvG3u8XW7"
     crossorigin="anonymous"></script>
 
-    <!-- Ruqqus CSS -->
-    <link rel="stylesheet" href="/assets/style/main.css">
+    <!-- Drama CSS -->
+    <link rel="stylesheet" href="https://rdrama.net/assets/style/main.css">
 
 </head>
 
@@ -36,19 +36,6 @@
             aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
-        <div class="collapse navbar-collapse" id="navbarResponsive">
-            <ul class="navbar-nav ml-auto">
-                <li class="nav-item">
-                    <a class="nav-link" href="/help/about">About</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/help/terms">Terms</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/help/contact">Contact</a>
-                </li>
-            </ul>
-        </div>
     </div>
 </nav>
 
@@ -64,7 +51,7 @@
                 <div class="col-10 col-md-7">
 
                     <div class="mb-5">
-                        <a href="/" class="text-decoration-none"><span class="h3 text-primary">{{ 'SITE_NAME' | app_config | lower }}</span></a>
+                        <a href="/" class="text-decoration-none"><span class="h3 text-primary">ruqqus</span></a>
                     </div>
 
                     <div id="login-form" class="">
@@ -97,7 +84,7 @@
 
                         <input class="form-control" id="2fa_token" name="2fa_token" type="text" placeholder="6-digit code">
                         
-                        <small>If you don't have your 2FA device, enter your Recovery Code instead. Entering your Recovery Code will also disable 2FA on your account.</small>
+                        <small><a href="/lost_2fa">Lost your 2FA device?</a></small>
 
                         <button class="btn btn-primary login w-100 mt-3" id="login_button">Sign in</button>
 
@@ -117,10 +104,6 @@
         <div class="splash-wrapper">
 
             <div class="splash-overlay"></div>
-
-            <h6 class="splash-text">
-                {{ i.text }}
-            </h6>
 
             <img class="splash-img" src="{{ i.path }}"></img>
         </div>

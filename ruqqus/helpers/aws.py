@@ -8,22 +8,26 @@ from PIL import Image
 import imagehash
 from sqlalchemy import func
 from os import remove
+import base64
+import io
 
 from ruqqus.classes.images import BadPic
 from ruqqus.__main__ import db_session
 from .base36 import hex2bin
 
-BUCKET = environ.get("S3_BUCKET_NAME",'i.ruqqus.com').lstrip().rstrip()
+BUCKET = "i.ruqqus.ga"
 CF_KEY = environ.get("CLOUDFLARE_KEY").lstrip().rstrip()
 CF_ZONE = environ.get("CLOUDFLARE_ZONE").lstrip().rstrip()
+imgurkey = environ.get("imgurkey").lstrip().rstrip()
+
 
 # setup AWS connection
 S3 = boto3.client("s3",
-                  aws_access_key_id=environ.get(
-                      "AWS_ACCESS_KEY_ID").lstrip().rstrip(),
-                  aws_secret_access_key=environ.get(
-                      "AWS_SECRET_ACCESS_KEY").lstrip().rstrip()
-                  )
+                aws_access_key_id=environ.get(
+                    "AWS_ACCESS_KEY_ID").lstrip().rstrip(),
+                aws_secret_access_key=environ.get(
+                    "AWS_SECRET_ACCESS_KEY").lstrip().rstrip()
+                )
 
 def check_phash(db, name):
 
@@ -37,11 +41,11 @@ def check_phash(db, name):
 
 def upload_from_url(name, url):
 
-    #print('upload from url')
+    print('upload from url')
 
     x = requests.get(url)
 
-    #print('got content')
+    print('got content')
 
     tempname = name.replace("/", "_")
 
@@ -53,13 +57,13 @@ def upload_from_url(name, url):
         piexif.remove(tempname)
 
     S3.upload_file(tempname,
-                   Bucket=BUCKET,
-                   Key=name,
-                   ExtraArgs={'ACL': 'public-read',
-                              "ContentType": "image/png",
-                              "StorageClass": "INTELLIGENT_TIERING"
-                              }
-                   )
+                Bucket=BUCKET,
+                Key=name,
+                ExtraArgs={'ACL': 'public-read',
+                            "ContentType": "image/png",
+                            "StorageClass": "INTELLIGENT_TIERING"
+                            }
+                )
 
     remove(tempname)
 
@@ -75,41 +79,36 @@ def crop_and_resize(img, resize):
     if new_ratio > org_ratio:
         crop_height = int(i.width / new_ratio)
         box = (0, (i.height // 2) - (crop_height // 2),
-               i.width, (i.height // 2) + (crop_height // 2))
+            i.width, (i.height // 2) + (crop_height // 2))
     else:
         crop_width = int(new_ratio * i.height)
         box = ((i.width // 2) - (crop_width // 2), 0,
-               (i.width // 2) + (crop_width // 2), i.height)
+            (i.width // 2) + (crop_width // 2), i.height)
 
     return i.resize(resize, box=box)
 
 
 def upload_file(name, file, resize=None):
 
-    # temp save for exif stripping
-    tempname = name.replace("/", "_")
-
-    file.save(tempname)
-
-    if tempname.split('.')[-1] in ['jpg', 'jpeg']:
-        piexif.remove(tempname)
-
     if resize:
+        tempname = name.replace("/", "_")
+
+        file.save(tempname)
+
+        if tempname.split('.')[-1] in ['jpg', 'jpeg']:
+            piexif.remove(tempname)
+
         i = Image.open(tempname)
         i = crop_and_resize(i, resize)
-        i.save(tempname)
+        img = io.BytesIO()
+        i.save(img, format='PNG')
+        url = requests.post('https://api.imgur.com/3/upload.json', headers = {"Authorization": f"Client-ID {imgurkey}"}, data = {'image': base64.b64encode(img.getvalue())}).json()['data']['link']
+        remove(tempname)
+    else: url = requests.post('https://api.imgur.com/3/upload.json', headers = {"Authorization": f"Client-ID {imgurkey}"}, data = {'image': base64.b64encode(file.read())}).json()['data']['link']
+    url = url.replace(".png", "_d.png").replace(".jpg", "_d.jpg").replace(".jpeg", "_d.jpeg") + "?maxwidth=9999"
+    return(url)
 
-    S3.upload_file(tempname,
-                   Bucket=BUCKET,
-                   Key=name,
-                   ExtraArgs={'ACL': 'public-read',
-                              "ContentType": "image/png"
-                              }
-                   )
-
-    remove(tempname)
-
-
+    
 def upload_from_file(name, filename, resize=None):
 
     tempname = name.replace("/", "_")
@@ -117,32 +116,25 @@ def upload_from_file(name, filename, resize=None):
     if filename.split('.')[-1] in ['jpg', 'jpeg']:
         piexif.remove(tempname)
 
-    if resize:
-        i = Image.open(tempname)
-        i = crop_and_resize(i, resize)
-        i.save(tempname)
-
-    S3.upload_file(tempname,
-                   Bucket=BUCKET,
-                   Key=name,
-                   ExtraArgs={'ACL': 'public-read',
-                              "ContentType": "image/png"
-                              }
-                   )
-
+    i = Image.open(tempname)
+    i = crop_and_resize(i, resize)
+    img = io.BytesIO()
+    i.save(img, format='PNG')
+    url = requests.post('https://api.imgur.com/3/upload.json', headers = {"Authorization": f"Client-ID {imgurkey}"}, data = {'image': base64.b64encode(img.getvalue())}).json()['data']['link']
     remove(filename)
-
+    url = url.replace(".png", "_d.png").replace(".jpg", "_d.jpg").replace(".jpeg", "_d.jpeg") + "?maxwidth=9999"
+    return(url)
 
 def delete_file(name):
 
     S3.delete_object(Bucket=BUCKET,
-                     Key=name)
+                    Key=name)
 
     # After deleting a file from S3, dump CloudFlare cache
 
     headers = {"Authorization": f"Bearer {CF_KEY}",
-               "Content-Type": "application/json"}
-    data = {'files': [f"https://{BUCKET}/{name}"]}
+            "Content-Type": "application/json"}
+    data = {'files': [f"https://s3.eu-central-1.amazonaws.com/i.ruqqus.ga/{name}"]}
     url = f"https://api.cloudflare.com/client/v4/zones/{CF_ZONE}/purge_cache"
 
     x = requests.post(url, headers=headers, json=data)
@@ -162,7 +154,7 @@ def check_csam(post):
     if parsed_url.netloc != BUCKET:
         return
 
-    headers = {"User-Agent": "Ruqqus webserver"}
+    headers = {"User-Agent": "Drama webserver"}
     for i in range(10):
         x = requests.get(post.url, headers=headers)
 
@@ -240,7 +232,7 @@ def check_csam_url(url, v, delete_content_function):
     if parsed_url.netloc != BUCKET:
         return
 
-    headers = {"User-Agent": "Ruqqus webserver"}
+    headers = {"User-Agent": "Drama webserver"}
     for i in range(10):
         x = requests.get(url, headers=headers)
 

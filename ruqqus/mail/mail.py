@@ -11,9 +11,9 @@ from ruqqus.__main__ import app
 
 
 def send_mail(to_address, subject, html, plaintext=None, files={},
-              from_address="Ruqqus <noreply@mail.ruqqus.com>"):
+              from_address="Drama <noreply@mail.rdrama.net>"):
 
-    url = "https://api.mailgun.net/v3/mail.ruqqus.com/messages"
+    url = "https://api.mailgun.net/v3/rdrama.net/messages"
 
     data = {"from": from_address,
             "to": [to_address],
@@ -47,7 +47,7 @@ def send_verification_email(user, email=None):
               html=render_template("email/email_verify.html",
                                    action_url=link,
                                    v=user),
-              subject="Validate your Ruqqus account email."
+              subject="Validate your Drama account email."
               )
 
 

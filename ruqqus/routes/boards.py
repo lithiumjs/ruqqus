@@ -25,130 +25,18 @@ from ruqqus.__main__ import app, limiter, cache
 
 valid_board_regex = re.compile("^[a-zA-Z0-9][a-zA-Z0-9_]{2,24}$")
 
-@app.route("/m/<name>", methods=["GET"])
-@app.route("/api/v1/multi/<name>/listing", methods=["GET"])
-@auth_desired
-@api("read")
-def multiboard(name, v):
-    
-    if v:
-        defaultsorting = v.defaultsorting
-        defaulttime = v.defaulttime
-    else:
-        defaultsorting = "hot"
-        defaulttime = "all"
+@app.route("/mod/<bid>/settings/disallowbots", methods=["POST"])
+@auth_required
+@is_guildmaster("config")
+@validate_formkey
+def mod_bid_settings_disallowbots(bid, board, v):
 
-    sort = request.args.get("sort", defaultsorting)
-    t = request.args.get("t", defaulttime)
-    page = int(request.args.get("page", 1))
-
-    board_ids=[]
-    
-    for name in name.split("+"):
-        board = get_guild(name)
-        if board.is_banned and not (v and v.admin_level >= 3): continue
-        if board.over_18 and not (v and v.over_18) and not session_over18(board): continue
-        if not board.can_view(v): continue
-
-        board_ids.append(board.id)
-
-    posts = g.db.query(Submission.id).options(lazyload('*')).filter_by(is_banned=False).filter(Submission.deleted_utc == 0,
-                                                                                                                                                Submission.board_id.in_(tuple(board_ids)))
-    
-    if v:
-        blocking = g.db.query(UserBlock.target_id).filter_by(user_id=v.id).subquery()
-        posts = posts.filter(Submission.author_id.notin_(blocking))
-
-    if v and not v.over_18:
-        posts = posts.filter_by(over_18=False)
-
-    if v and v.hide_offensive:
-        posts = posts.filter_by(is_offensive=False)
-        
-    if v and v.hide_bot:
-        posts = posts.filter_by(is_bot=False)
-
-    if v and not v.show_nsfl:
-        posts = posts.filter_by(is_nsfl=False)
-
-    if t:
-        now = int(time.time())
-        if t == 'day':
-            cutoff = now - 86400
-        elif t == 'week':
-            cutoff = now - 604800
-        elif t == 'month':
-            cutoff = now - 2592000
-        elif t == 'year':
-            cutoff = now - 31536000
-        else:
-            cutoff = 0
-        posts = posts.filter(Submission.created_utc >= cutoff)
-
-    if sort == "hot":
-        posts = posts.order_by(Submission.score_best.desc())
-    elif sort == "new":
-        posts = posts.order_by(Submission.created_utc.desc())
-    elif sort == "old":
-        posts = posts.order_by(Submission.created_utc.asc())
-    elif sort == "disputed":
-        posts = posts.order_by(Submission.score_disputed.desc())
-    elif sort == "top":
-        posts = posts.order_by(Submission.score_top.desc())
-    elif sort == "activity":
-        posts = posts.order_by(Submission.score_activity.desc())
-    else:
-        abort(422)
-    
-    posts = [x[0] for x in posts.offset(25 * (page - 1)).limit(26).all()]
-    
-    next_exists = (len(posts) == 26)
-    posts = posts[0:25]
-
-    posts = get_posts(posts,
-                      sort=sort,
-                      v=v)
-
-    return {'html': lambda: render_template("home.html",
-                                            b=None,
-                                            v=v,
-                                            time_filter=t,
-                                            listing=posts,
-                                            next_exists=next_exists,
-                                            sort_method=sort,
-                                            page=page
-                                           ),
-            'api': lambda: jsonify({"data": [x.json for x in posts],
-                                    "next_exists": next_exists})}
-
-@app.route("/create_guild", methods=["GET"])
-@is_not_banned
-@no_negative_balance("html")
-def create_board_get(v):
-    if not v.can_make_guild:
-        return render_template("message.html",
-                               v=v,
-                               title="You already lead 10 guilds." if not v.can_join_gms else "Unable to make a guild. For now.",
-                               message="You need to step down from a guild before you can make any more." if not v.can_join_gms else "You need more Reputation.")
-
-    # check # recent boards made by user
-    cutoff = int(time.time()) - 60 * 60 * 24
-    recent = g.db.query(Board).filter(
-        Board.creator_id == v.id,
-        Board.created_utc >= cutoff).all()
-    if v.admin_level<3 and len([x for x in recent]) >= 2:
-        return render_template("message.html",
-                               v=v,
-                               title="You need to wait a bit.",
-                               message="You can only create up to 2 guilds per day. Try again later."
-                               ), 429
-
-    return render_template(
-        "make_board.html", 
-        v=v,
-        categories=CATEGORIES
-        )
-
+    # toggle disallowing bots setting
+    board.disallowbots = bool(
+        request.form.get(
+            "disallowbots",
+            False) == 'true')
+    return "", 204
 
 @app.route("/api/board_available/<name>", methods=["GET"])
 @app.route("/api/v1/board_available/<name>", methods=["GET"])
@@ -162,15 +50,17 @@ def api_board_available(name, v):
 
 
 @app.route("/create_guild", methods=["POST"])
+@app.route("/api/v1/create_guild", methods=["POST"])
 @is_not_banned
 @no_negative_balance("html")
 @validate_formkey
+@api("read")
 def create_board_post(v):
-    if not v.can_make_guild:
-        return render_template("make_board.html",
-                               title="Unable to make board",
-                               error="You need more Reputation before you can make a Guild."
-                               )
+    # if not v.can_make_guild:
+        # return render_template("make_board.html",
+                               # title="Unable to make board",
+                               # error="You need more Reputation before you can make a Guild."
+                               # )
 
     board_name = request.form.get("name")
     board_name = board_name.lstrip("+")
@@ -191,18 +81,18 @@ def create_board_post(v):
                                description=description
                                )
 
-    # check # recent boards made by user
-    cutoff = int(time.time()) - 60 * 60 * 24
-    alt_ids=[x.id for x in v.alts]
-    user_ids=[v.id]+alt_ids
-    recent = g.db.query(Board).filter(
-        Board.creator_id.in_(user_ids),
-        Board.created_utc >= cutoff).all()
-    if v.admin_level<3 and len([x for x in recent]) >= 2:
-        return render_template("message.html",
-                               title="You need to wait a bit.",
-                               message="You can only create up to 2 guilds per day. Try again later."
-                               ), 429
+    # # check # recent boards made by user
+    # cutoff = int(time.time()) - 60 * 60 * 24
+    # alt_ids=[x.id for x in v.alts]
+    # user_ids=[v.id]+alt_ids
+    # recent = g.db.query(Board).filter(
+        # Board.creator_id.in_(user_ids),
+        # Board.created_utc >= cutoff).all()
+    # if len([x for x in recent]) >= 2:
+        # return render_template("message.html",
+                               # title="You need to wait a bit.",
+                               # message="You can only create up to 2 guilds per day. Try again later."
+                               # ), 429
 
     subcat=int(request.form.get("category",0))
     subcat=g.db.query(SubCategory).filter_by(id=subcat).first()
@@ -257,14 +147,8 @@ def create_board_post(v):
 
     # clear cache
     cache.delete_memoized(guild_ids, sort="new")
-
+    
     return redirect(new_board.permalink)
-
-
-@app.route("/r/<name>")
-def reddit_moment_redirect(name):
-    return redirect(f"/+{name}")
-
 
 @app.route("/+<name>", methods=["GET"])
 @app.route("/api/v1/guild/<name>/listing", methods=["GET"])
@@ -272,12 +156,10 @@ def reddit_moment_redirect(name):
 @api("read")
 def board_name(name, v):
 
-    board = get_guild(name, v=v)
+    board = get_guild(name)
 
-    #print(board.is_subscribed)
-
-    #if not board.name == name and not request.path.startswith('/api/v1'):
-        #return redirect(request.path.replace(name, board.name))
+    if not board.name == name and not request.path.startswith('/api/v1'):
+        return redirect(request.path.replace(name, board.name))
 
     if board.is_banned and not (v and v.admin_level >= 3):
         return {'html': lambda: (render_template("board_banned.html",
@@ -299,16 +181,9 @@ def board_name(name, v):
                 'api': lambda: jsonify({'error': f'+{board.name} is NSFW.'})
                 }
 
-    if v:
-        defaultsorting = v.defaultsorting
-        defaulttime = v.defaulttime
-    else:
-        defaultsorting = "hot"
-        defaulttime = "all"
-
-    sort = request.args.get("sort", defaultsorting)
-    t = request.args.get("t", defaulttime)
+    sort = request.args.get("sort", "hot")
     page = int(request.args.get("page", 1))
+    t = request.args.get("t", "all")
     ignore_pinned = bool(request.args.get("ignore_pinned", False))
 
     ids = board.idlist(sort=sort,
@@ -323,7 +198,7 @@ def board_name(name, v):
     next_exists = (len(ids) == 26)
     ids = ids[0:25]
 
-    if page == 1 and sort != "new" and sort != "old" and not ignore_pinned:
+    if page == 1 and sort != "new" and not ignore_pinned:
         stickies = g.db.query(Submission.id).filter_by(board_id=board.id,
                                                        is_banned=False,
                                                        is_pinned=True,
@@ -343,15 +218,16 @@ def board_name(name, v):
                                             time_filter=t,
                                             listing=posts,
                                             next_exists=next_exists,
-                                            sort_method=sort,
-                                            page=page#,
-                                            #is_subscribed=board.is_subscribed
+                                            sort=sort,
+                                            page=page,
+                                            is_subscribed=(v and board.has_subscriber(v)
+                                                           )
                                             ),
             'api': lambda: jsonify({"data": [x.json for x in posts],
                                     "next_exists": next_exists
                                     }
                                    )
-            }    
+            }
 
 @app.route("/mod/distinguish_post/<bid>/<pid>", methods=["POST"])
 @app.route("/api/v1/distinguish_post/<bid>/<pid>", methods=["POST"])
@@ -385,48 +261,6 @@ def mod_distinguish_post(bid, pid, board, v):
     g.db.add(ma)
 
     return "", 204
-
-@app.route("/mod/distinguish_comment/<bid>/<cid>", methods=["POST"])
-@app.route("/api/v1/distinguish_comment/<bid>/<cid>", methods=["POST"])
-@auth_required
-@is_guildmaster('content')
-@api("guildmaster")
-def mod_distinguish_comment(bid, cid, board, v):
-
-    comment = get_comment(cid, v=v)
-
-    if not comment.post.board_id==board.id:
-        abort(400)
-
-    if comment.author_id != v.id:
-        abort(403)
-
-    if comment.gm_distinguish:
-        comment.gm_distinguish = 0
-    else:
-        comment.gm_distinguish = board.id
-
-    g.db.add(comment)
-
-    ma=ModAction(
-        kind="herald_comment" if comment.gm_distinguish else "unherald_comment",
-        user_id=v.id,
-        target_comment_id=comment.id,
-        board_id=board.id
-        )
-    g.db.add(ma)
-
-    html=render_template(
-                "comments.html",
-                v=v,
-                comments=[comment],
-                render_replies=False,
-                is_allowed_to_comment=True
-                )
-
-    html=str(BeautifulSoup(html, features="html.parser").find(id=f"comment-{comment.base36id}-only"))
-
-    return jsonify({"html":html})
 
 @app.route("/mod/kick/<bid>/<pid>", methods=["POST"])
 @app.route("/api/v1/kick/<bid>/<pid>", methods=["POST"])
@@ -643,15 +477,6 @@ def user_kick_pid(pid, v):
 
     g.db.add(post)
 
-    #un-pin any comments
-    pinned_comments = g.db.query(Comment).filter_by(
-        is_pinned=True,
-        parent_submission=post.id
-        ).all()
-    for comment in pinned_comments:
-        comment.is_pinned=False
-        g.db.add(comment)
-
     g.db.commit()
 
     # clear board's listing caches
@@ -848,20 +673,11 @@ def mod_rescind_bid_username(bid, username, board, v):
 @api("guildmaster")
 def mod_accept_board(bid, v):
 
-    board = get_board(bid, v=v)
+    board = get_board(bid)
 
-    x = g.db.query(ModRelationship
-        ).options(
-        lazyload('*')
-        ).filter_by(
-        user_id=v.id,
-        board_id=board.id,
-        accepted=False,
-        invite_rescinded=False
-        ).first()
-
+    x = board.has_invite(v)
     if not x:
-        return jsonify({"error":"Unable to find invitation"}), 404
+        abort(404)
 
     if not v.can_join_gms:
         return jsonify({"error": f"You already lead enough guilds."}), 409
@@ -878,9 +694,8 @@ def mod_accept_board(bid, v):
         board_id=board.id
         )
     g.db.add(ma)
-
-    g.db.commit()
     
+    v.admin_level = 6
     return "", 204
 
 @app.route("/mod/<bid>/step_down", methods=["POST"])
@@ -904,15 +719,7 @@ def mod_step_down(bid, board, v):
         board_id=board.id
         )
     g.db.add(ma) 
-
-    g.db.flush()
-
-    if board.mods_count == 0:
-        board.is_private = False
-        board.restricted_posting = False
-        board.all_opt_out = False
-        g.db.add(board)
-
+    v.admin_level = 0
     return "", 204
 
 
@@ -952,6 +759,7 @@ def mod_remove_username(bid, username, board, v):
         )
     g.db.add(ma)
 
+    v.admin_level = 0
     return "", 204
 
 
@@ -1011,47 +819,6 @@ def mod_bid_settings_optout(bid, board, v):
         user_id=v.id,
         board_id=board.id,
         note=f"all_opt_out={board.all_opt_out}"
-        )
-    g.db.add(ma)
-    return "", 204
-
-@app.route("/mod/<bid>/settings/disallowbots", methods=["POST"])
-@auth_required
-@is_guildmaster("config")
-@validate_formkey
-def mod_bid_settings_disallowbots(bid, board, v):
-
-    # toggle disallowing bots setting
-    board.disallowbots = bool(
-        request.form.get(
-            "disallowbots",
-            False) == 'true')
-    g.db.add(board)
-    ma=ModAction(
-        kind="update_settings",
-        user_id=v.id,
-        board_id=board.id,
-        note=f"disallow_bots={board.disallowbots}"
-    )
-    g.db.add(ma)
-    return "", 204
-
-@app.route("/mod/<bid>/settings/public_chat", methods=["POST"])
-@auth_required
-@is_guildmaster("config", "chat")
-@validate_formkey
-def mod_bid_settings_public_chat(bid, board, v):
-
-    # nsfw
-    board.public_chat = bool(request.form.get("public_chat", False) == 'true')
-
-    g.db.add(board)
-
-    ma=ModAction(
-        kind="update_settings",
-        user_id=v.id,
-        board_id=board.id,
-        note=f"public_chat={board.public_chat}"
         )
     g.db.add(ma)
     return "", 204
@@ -1259,7 +1026,7 @@ def board_about_appearance(boardname, board, v):
 @api("read")
 def board_about_mods(boardname, v):
 
-    board = get_guild(boardname, v=v)
+    board = get_guild(boardname)
 
     if board.is_banned:
         return {
@@ -1303,34 +1070,6 @@ def board_about_exiled(boardname, board, v):
         "api":lambda:jsonify({"data":[x.json for x in bans]})
         }
 
-@app.route("/+<boardname>/mod/chatbans", methods=["GET"])
-@app.route("/api/v1/<boardname>/mod/chatbans", methods=["GET"])
-@auth_required
-@is_guildmaster("chat")
-@api("read", "guildmaster")
-def board_about_chatbanned(boardname, board, v):
-
-    page = int(request.args.get("page", 1))
-
-    bans = board.chatbans.order_by(
-        ChatBan.created_utc.desc()).offset(25 * (page - 1)).limit(26)
-
-    bans = [ban for ban in bans]
-    next_exists = (len(bans) == 26)
-    bans = bans[0:25]
-
-    return {
-        "html":lambda:render_template(
-            "guild/chatbans.html", 
-            v=v, 
-            b=board, 
-            bans=bans,
-            page=page,
-            next_exists=next_exists
-            ),
-        "api":lambda:jsonify({"data":[x.json for x in bans]})
-        }
-
 
 
 @app.route("/+<boardname>/mod/contributors", methods=["GET"])
@@ -1361,7 +1100,7 @@ def board_about_contributors(boardname, board, v):
 @auth_required
 def subscribe_board(boardname, v):
 
-    board = get_guild(boardname, v=v)
+    board = get_guild(boardname)
 
     # check for existing subscription, canceled or otherwise
     sub = g.db.query(Subscription).filter_by(
@@ -1398,7 +1137,7 @@ def subscribe_board(boardname, v):
 @auth_required
 def unsubscribe_board(boardname, v):
 
-    board = get_guild(boardname, v=v)
+    board = get_guild(boardname)
 
     # check for existing subscription
     sub = g.db.query(Subscription).filter_by(
@@ -1590,47 +1329,73 @@ def mod_board_images_delete_banner(bid, board, v):
     return redirect(f"/+{board.name}/mod/appearance?msg=Success#images")
 
 
-@app.route("/assets/<board_fullname>/<theme>/<x>.css", methods=["GET"])
+@app.route("/assets/<board_fullname>/main/<x>.css", methods=["GET"])
 #@cache.memoize(60*6*24)
-def board_css(board_fullname, theme, x):
-
-    if theme not in ["main", "dark"]:
-        abort(404)
+def board_css(board_fullname, x):
 
     try:
         b36id=board_fullname.split('_')[1]
     except IndexError:
-        #print(request.headers.get("Referer",request.headers.get("Referrer")))
-        abort(400)
+        print(request.headers.get("Referer",request.headers.get("Referrer")))
+        abort(500)
 
     board = get_board(b36id)
 
     if int(x) != board.color_nonce:
         return redirect(board.css_url)
 
-    if theme=="main":
-        path="ruqqus/ruqqus/assets/style/main.scss"
-    else:
-        path="ruqqus/ruqqus/assets/style/main_dark.scss"
-
     try:
-        with open(os.path.join(os.path.expanduser('~'), path), "r") as file:
+        with open(os.path.join(os.path.expanduser('~'), "ruqqus/ruqqus/assets/style/board_main.scss"), "r") as file:
             raw = file.read()
     except FileNotFoundError:
-        return redirect("/assets/style/main.css")
+        return redirect("https://rdrama.net/assets/style/main.css")
 
     # This doesn't use python's string formatting because
     # of some odd behavior with css files
     scss = raw.replace("{boardcolor}", board.color)
-    scss = scss.replace("{maincolor}", app.config["SITE_COLOR"])
 
     try:
         resp = Response(sass.compile(string=scss), mimetype='text/css')
     except sass.CompileError:
-        return redirect("/assets/style/main.css")
+        return redirect("https://rdrama.net/assets/style/main.css")
 
     resp.headers.add("Cache-Control", "public")
 
+    return resp
+
+
+@app.route("/assets/<board_fullname>/dark/<x>.css", methods=["GET"])
+#@cache.memoize(60*60*24)
+def board_dark_css(board_fullname, x):
+
+
+    try:
+        b36id=board_fullname.split('_')[1]
+    except IndexError:
+        print(request.headers.get("Referer",request.headers.get("Referrer")))
+        abort(500)
+
+    board = get_board(b36id)
+
+    if int(x) != board.color_nonce:
+        return redirect(board.css_dark_url)
+
+    try:
+        with open(os.path.join(os.path.expanduser('~'), "ruqqus/ruqqus/assets/style/board_dark.scss"), "r") as file:
+            raw = file.read()
+    except FileNotFoundError:
+        return redirect("https://rdrama.net/assets/style/main_dark.css")
+
+    # This doesn't use python's string formatting because
+    # of some odd behavior with css files
+    scss = raw.replace("{boardcolor}", board.color)
+
+    try:
+        resp = Response(sass.compile(string=scss), mimetype='text/css')
+    except sass.CompileError:
+        return redirect("https://rdrama.net/assets/style/main_dark.css")
+
+    resp.headers.add("Cache-Control", "public")
     return resp
 
 
@@ -1771,289 +1536,6 @@ def guild_profile(guild):
         return redirect(x.profile_url)
 
 
-
-
-
-@app.route("/mod/post_pin/<bid>/<pid>/<x>", methods=["POST"])
-@auth_required
-@is_guildmaster("content")
-@validate_formkey
-def mod_toggle_post_pin(bid, pid, x, board, v):
-
-    post = get_post(pid)
-
-    if post.board_id != board.id:
-        abort(400)
-
-    try:
-        x = bool(int(x))
-    except BaseException:
-        abort(400)
-
-    if x and not board.can_pin_another:
-        return jsonify({"error": f"+{board.name} already has the maximum number of pinned posts."}), 409
-
-    post.is_pinned = x
-
-    cache.delete_memoized(Board.idlist, post.board)
-
-    g.db.add(post)
-
-    ma=ModAction(
-        kind="pin_post" if post.is_pinned else "unpin_post",
-        user_id=v.id,
-        board_id=board.id,
-        target_submission_id=post.id
-    )
-    g.db.add(ma)
-
-    return "", 204
-
-
-@app.route("/+<boardname>/comments")
-@app.route("/api/v1/guild/<boardname>/comments")
-@auth_desired
-@api("read")
-def board_comments(boardname, v):
-
-    b = get_guild(boardname, v=v)
-
-    page = int(request.args.get("page", 1))
-
-    idlist = b.comment_idlist(v=v,
-                              page=page,
-                              nsfw=v and v.over_18,
-                              nsfl=v and v.show_nsfl,
-                              hide_offensive=(v and v.hide_offensive) or not v,
-                              hide_bot=v and v.hide_bot)
-
-    next_exists = len(idlist) == 26
-
-    idlist = idlist[0:25]
-
-    comments = get_comments(idlist, v=v)
-
-    return {"html": lambda: render_template("board_comments.html",
-                                            v=v,
-                                            b=b,
-                                            page=page,
-                                            comments=comments,
-                                            standalone=True,
-                                            next_exists=next_exists),
-            "api": lambda: jsonify({"data": [x.json for x in comments]})}
-
-
-@app.route("/mod/<bid>/category/<category>", methods=["POST"])
-@auth_required
-@is_guildmaster("config")
-@validate_formkey
-def change_guild_category(v, board, bid, category):
-
-    category = int(category)
-
-    sc=g.db.query(SubCategory).filter_by(id=category).first()
-    if not sc:
-        return jsonify({"error": f"Invalid category id"}), 400
-
-    if board.is_locked_category:
-        return jsonify({"error": "You can't do that right now."}), 403
-
-    board.subcat_id=sc.id
-    g.db.add(board)
-    g.db.flush()
-
-    ma=ModAction(
-        kind="update_settings",
-        user_id=v.id,
-        board_id=board.id,
-        note=f"category={sc.category.name} / {sc.name}"
-    )
-    g.db.add(ma)
-
-    return jsonify({"message": f"Category changed to {sc.category.name} / {sc.name}"})
-
-
-
-@app.route("/+<boardname>/mod/log", methods=["GET"])
-@app.route("/api/v1/mod_log/<boardname>", methods=["GET"])
-@auth_desired
-@api("read")
-def board_mod_log(boardname, v):
-
-    page=int(request.args.get("page",1))
-    board=get_guild(boardname, v=v)
-
-    if board.is_banned and not (v and v.admin_level>=4):
-        return {
-            "html":lambda:(render_template("board_banned.html", v=v, b=board), 403),
-            "api":lambda:(jsonify({"error":f"+{board.name} is banned"}), 403)
-            }
-
-    actions=g.db.query(ModAction).options(
-        joinedload(ModAction.target_post).lazyload('*'),
-        Load(Submission).joinedload(Submission.submission_aux),
-        joinedload(ModAction.target_comment).lazyload('*'),
-        joinedload(ModAction.target_user).lazyload('*'),
-        joinedload(ModAction.user).lazyload('*'),
-        joinedload(ModAction.board)
-        ).filter_by(
-        board_id=board.id
-        ).order_by(
-        ModAction.id.desc()
-        ).offset(25*(page-1)).limit(26).all()
-    actions=[i for i in actions]
-
-    next_exists=len(actions)==26
-    actions=actions[0:25]
-
-    return {
-        "html":lambda:render_template(
-            "guild/modlog.html",
-            v=v,
-            b=board,
-            actions=actions,
-            next_exists=next_exists,
-            page=page
-        ),
-        "api":lambda:jsonify({"data":[x.json for x in actions]})
-        }
-
-@app.route("/+<boardname>/mod/log/<aid>", methods=["GET"])
-@auth_desired
-def mod_log_item(boardname, aid, v):
-
-    action=g.db.query(ModAction).filter_by(id=base36decode(aid)).first()
-
-    if not action:
-        abort(404)
-
-    if request.path != action.permalink:
-        return redirect(action.permalink)
-
-    return render_template("guild/modlog.html",
-        v=v,
-        b=action.board,
-        actions=[action],
-        next_exists=False,
-        page=1,
-        action=action
-        )
-
-@app.route("/+<boardname>/mod/edit_perms", methods=["POST"])
-@auth_required
-@is_guildmaster("full")
-@validate_formkey
-def board_mod_perms_change(boardname, board, v):
-
-    user=get_user(request.form.get("username"))
-
-    v_mod=board.has_mod(v)
-    u_mod=board.has_mod_record(user)
-
-    if v_mod.id > u_mod.id:
-        return jsonify({"error":"You can't change perms on guildmasters above you."}), 403
-
-    #print({x:request.form.get(x) for x in request.form})
-
-    u_mod.perm_full         = bool(request.form.get("perm_full"         , False))
-    u_mod.perm_access       = bool(request.form.get("perm_access"       , False))
-    u_mod.perm_appearance   = bool(request.form.get("perm_appearance"   , False))
-    u_mod.perm_chat         = bool(request.form.get("perm_chat"       , False))
-    u_mod.perm_config       = bool(request.form.get("perm_config"       , False))
-    u_mod.perm_content      = bool(request.form.get("perm_content"      , False))
-
-    g.db.add(u_mod)
-    g.db.commit()
-
-    ma=ModAction(
-        kind="change_perms" if u_mod.accepted else "change_invite",
-        user_id=v.id,
-        board_id=board.id,
-        target_user_id=user.id,
-        note=u_mod.permchangelist
-    )
-    g.db.add(ma)
-
-    return redirect(f"{board.permalink}/mod/mods")
-
-# @app.route("/mod/chatban/<bid>", methods=["POST"])
-# @app.route("/api/v1/chatban/<bid>", methods=["POST"])
-# @auth_required
-# @is_guildmaster('chat')
-# @api("guildmaster")
-# @validate_formkey
-# def mod_chatban_bid_user(bid, board, v):
-
-#     user = get_user(request.values.get("username"), graceful=True)
-
-#     if not user:
-#         return jsonify({"error": "That user doesn't exist."}), 404
-
-#     if user.id == v.id:
-#         return jsonify({"error": "You can't chatban yourself."}), 409
-
-#     if g.db.query(ChatBan).filter_by(user_id=user.id, board_id=board.id, is_active=True).first():
-#         return jsonify({"error": f"@{user.username} is already chatbanned from +{board.name}."}), 409
-
-#     if board.has_contributor(user):
-#         return jsonify({"error": f"@{user.username} is an approved contributor to +{board.name} and can't currently be chatbanned."}), 409
-
-#     if board.has_mod(user):
-#         return jsonify({"error": "You can't chatban other guildmasters."}), 409
-
-#     new_ban = BanRelationship(user_id=user.id,
-#                               board_id=board.id,
-#                               banning_mod_id=v.id,
-#                               is_active=True)
-#     g.db.add(new_ban)
-
-#     ma=ModAction(
-#         kind="chatban_user",
-#         user_id=v.id,
-#         target_user_id=user.id,
-#         board_id=board.id
-#         )
-#     g.db.add(ma)
-
-#     g.db.commit()
-
-
-#     if request.args.get("toast"):
-#         return jsonify({"message": f"@{user.username} was exiled from +{board.name}"})
-#     else:
-#         return "", 204
-
-
-@app.route("/mod/unchatban/<bid>", methods=["POST"])
-@app.route("/api/v1/unchatban/<bid>", methods=["POST"])
-@auth_required
-@is_guildmaster('chat')
-@api("guildmaster")
-@validate_formkey
-def mod_unchatban_bid_user(bid, board, v):
-
-    user = get_user(request.values.get("username"))
-
-    x =  g.db.query(ChatBan).filter_by(board_id=board.id, user_id=user.id).first()
-
-    if not x:
-        abort(409)
-
-    g.db.delete(x)
-
-    ma=ModAction(
-        kind="unchatban_user",
-        user_id=v.id,
-        target_user_id=user.id,
-        board_id=board.id
-        )
-    g.db.add(ma)
-
-    g.db.commit()
-
-    return "", 204
-
-
 @app.route("/siege_guild", methods=["POST"])
 @is_not_banned
 @validate_formkey
@@ -2065,7 +1547,7 @@ def siege_guild(v):
     if not guild:
         abort(400)
 
-    guild = get_guild(guild, v=v)
+    guild = get_guild(guild)
 
     # check time
     if v.last_siege_utc > now - (60 * 60 * 24 * 7):
@@ -2182,6 +1664,7 @@ def siege_guild(v):
                     ),
                 #option 2: ruqqus adds user as mod due to siege
                 and_(
+                    ModAction.user_id==1,
                     ModAction.target_user_id.in_(tuple(ids)),
                     ModAction.kind=="add_mod",
                     ModAction.board_id==guild.id
@@ -2215,7 +1698,7 @@ def siege_guild(v):
 
             ma=ModAction(
                 kind="remove_mod",
-                user_id=1,
+                user_id=1046,
                 board_id=guild.id,
                 target_user_id=x.user_id,
                 note="siege"
@@ -2224,7 +1707,7 @@ def siege_guild(v):
         else:
             ma=ModAction(
                 kind="uninvite_mod",
-                user_id=1,
+                user_id=1046,
                 board_id=guild.id,
                 target_user_id=x.user_id,
                 note="siege"
@@ -2249,7 +1732,7 @@ def siege_guild(v):
         g.db.add(new_mod)
         ma=ModAction(
             kind="add_mod",
-            user_id=1,
+            user_id=1046,
             board_id=guild.id,
             target_user_id=v.id,
             note="siege"
@@ -2265,7 +1748,7 @@ def siege_guild(v):
         g.db.add(p)
         ma=ModAction(
             kind="change_perms",
-            user_id=1,
+            user_id=1046,
             board_id=guild.id,
             target_user_id=v.id,
             note="siege"
@@ -2275,22 +1758,192 @@ def siege_guild(v):
     return redirect(f"/+{guild.name}/mod/mods")
 
 
-@app.post("/+<guildname>/toggle_bell")
-@app.post("/api/v2/guilds/<guildname>/toggle_bell")
+@app.route("/mod/post_pin/<bid>/<pid>/<x>", methods=["POST"])
 @auth_required
-@api("update")
-def toggle_guild_bell(guildname, v):
+@is_guildmaster("content")
+@validate_formkey
+def mod_toggle_post_pin(bid, pid, x, board, v):
 
-    guild=get_guild(guildname, v=v, graceful=True)
-    if not guild:
-        return jsonify({"error": f"Guild '+{guildname}' not found."}), 404
+    post = get_post(pid)
 
-    sub=g.db.query(Subscription).filter_by(user_id=v.id, board_id=guild.id, is_active=True).first()
-    if not sub:
-        return jsonify({"error": f"You aren't a member of +{guild.name}"}), 404
+    if post.board_id != board.id:
+        abort(400)
 
-    sub.get_notifs = not sub.get_notifs
-    g.db.add(sub)
+    try:
+        x = bool(int(x))
+    except BaseException:
+        abort(400)
+
+    if x and not board.can_pin_another:
+        return jsonify({"error": f"+{board.name} already has the maximum number of pinned posts."}), 409
+
+    post.is_pinned = x
+
+    cache.delete_memoized(Board.idlist, post.board)
+
+    g.db.add(post)
+
+    ma=ModAction(
+        kind="pin_post" if post.is_pinned else "unpin_post",
+        user_id=v.id,
+        board_id=board.id,
+        target_submission_id=post.id
+    )
+    g.db.add(ma)
+
+    return "", 204
+
+
+@app.route("/+<boardname>/comments")
+@app.route("/api/v1/guild/<boardname>/comments")
+@auth_desired
+@api("read")
+def board_comments(boardname, v):
+
+    b = get_guild(boardname)
+
+    page = int(request.args.get("page", 1))
+
+    idlist = b.comment_idlist(v=v,
+                              page=page,
+                              nsfw=v and v.over_18,
+                              nsfl=v and v.show_nsfl,
+                              hide_offensive=(v and v.hide_offensive) or not v,
+                              hide_bot=v and v.hide_bot)
+
+    next_exists = len(idlist) == 26
+
+    idlist = idlist[0:25]
+
+    comments = get_comments(idlist, v=v)
+
+    return {"html": lambda: render_template("board_comments.html",
+                                            v=v,
+                                            b=b,
+                                            page=page,
+                                            comments=comments,
+                                            standalone=True,
+                                            next_exists=next_exists),
+            "api": lambda: jsonify({"data": [x.json for x in comments]})}
+
+
+@app.route("/mod/<bid>/category/<category>", methods=["POST"])
+@auth_required
+@is_guildmaster("config")
+@validate_formkey
+def change_guild_category(v, board, bid, category):
+
+    category = int(category)
+
+    sc=g.db.query(SubCategory).filter_by(id=category).first()
+    if not sc:
+        return jsonify({"error": f"Invalid category id"}), 400
+
+    if board.is_locked_category:
+        return jsonify({"error": "You can't do that right now."}), 403
+
+    board.subcat_id=sc.id
+    g.db.add(board)
+    g.db.flush()
+
+    ma=ModAction(
+        kind="update_settings",
+        user_id=v.id,
+        board_id=board.id,
+        note=f"category={sc.category.name} / {sc.name}"
+    )
+    g.db.add(ma)
+
+    return jsonify({"message": f"Category changed to {sc.category.name} / {sc.name}"})
+
+
+
+@app.route("/+<boardname>/mod/log", methods=["GET"])
+@app.route("/api/v1/mod_log/<boardname>", methods=["GET"])
+@auth_desired
+@api("read")
+def board_mod_log(boardname, v):
+
+    page=int(request.args.get("page",1))
+    board=get_guild(boardname)
+
+    if board.is_banned:
+        return {
+            "html":lambda:(render_template("board_banned.html", v=v, b=board), 403),
+            "api":lambda:(jsonify({"error":f"+{board.name} is banned"}), 403)
+            }
+
+    actions=g.db.query(ModAction).filter_by(board_id=board.id).order_by(ModAction.id.desc()).offset(25*(page-1)).limit(26).all()
+    actions=[i for i in actions]
+
+    next_exists=len(actions)==26
+    actions=actions[0:25]
+
+    return {
+        "html":lambda:render_template(
+            "guild/modlog.html",
+            v=v,
+            b=board,
+            actions=actions,
+            next_exists=next_exists,
+            page=page
+        ),
+        "api":lambda:jsonify({"data":[x.json for x in actions]})
+        }
+
+@app.route("/+<boardname>/mod/log/<aid>", methods=["GET"])
+@auth_desired
+def mod_log_item(boardname, aid, v):
+
+    action=g.db.query(ModAction).filter_by(id=base36decode(aid)).first()
+
+    if not action:
+        abort(404)
+
+    if request.path != action.permalink:
+        return redirect(action.permalink)
+
+    return render_template("guild/modlog.html",
+        v=v,
+        b=action.board,
+        actions=[action],
+        next_exists=False,
+        page=1,
+        action=action
+        )
+
+@app.route("/+<boardname>/mod/edit_perms", methods=["POST"])
+@auth_required
+@is_guildmaster("full")
+@validate_formkey
+def board_mod_perms_change(boardname, board, v):
+
+    user=get_user(request.form.get("username"))
+
+    v_mod=board.has_mod(v)
+    u_mod=board.has_mod_record(user)
+
+    if v_mod.id > u_mod.id:
+        return jsonify({"error":"You can't change perms on guildmasters above you."}), 403
+
+    #print({x:request.form.get(x) for x in request.form})
+
+    u_mod.perm_full         = bool(request.form.get("perm_full"         , False))
+    u_mod.perm_access       = bool(request.form.get("perm_access"       , False))
+    u_mod.perm_appearance   = bool(request.form.get("perm_appearance"   , False))
+    u_mod.perm_config       = bool(request.form.get("perm_config"       , False))
+    u_mod.perm_content      = bool(request.form.get("perm_content"      , False))
+
+    g.db.add(u_mod)
     g.db.commit()
 
-    return jsonify({"message":f"Notifications {'en' if sub.get_notifs else 'dis'}abled for +{guild.name}"})
+    ma=ModAction(
+        kind="change_perms" if u_mod.accepted else "change_invite",
+        user_id=v.id,
+        board_id=board.id,
+        target_user_id=user.id,
+        note=u_mod.permchangelist
+    )
+    g.db.add(ma)
+
+    return redirect(f"{board.permalink}/mod/mods")

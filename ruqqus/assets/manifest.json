@@ -1,8 +1,8 @@
 {
-  "name": "Ruqqus",
-  "short_name": "Ruqqus",
-  "start_url": "https://ruqqus.com",
+  "name": "Drama",
+  "short_name": "Drama",
+  "start_url": "https://rdrama.net",
   "display": "standalone",
-  "background_color": "#805ad5",
-  "description": "Awesome online communities, without censorship"
+  "background_color": "#FF66AC",
+  "description": "Drama"
 }

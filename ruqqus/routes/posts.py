@@ -33,8 +33,24 @@ BAN_REASONS = ['',
                "Copyright infringement is not permitted."
                ]
 
-BUCKET = app.config.get("S3_BUCKET", "i.ruqqus.com")
+BUCKET = "i.ruqqus.ga"
 
+@app.route("/submit", methods=["GET"])
+@is_not_banned
+@no_negative_balance("html")
+def submit_get(v):
+
+    board = request.args.get("guild", "general")
+    b = get_guild(board, graceful=True)
+    if not b:
+
+        b = get_guild("general")
+
+
+    return render_template("submit.html",
+                           v=v,
+                           b=b
+                           )
 
 @app.route("/post_short/", methods=["GET"])
 @app.route("/post_short/<base36id>", methods=["GET"])
@@ -55,26 +71,21 @@ def incoming_post_shortlink(base36id=None):
     post = get_post(base36id)
     return redirect(post.permalink)
 
-@app.route("/+<boardname>/post/<base36id>", methods=["GET"])
-@app.route("/+<boardname>/post/<base36id>/", methods=["GET"])
-@app.route("/+<boardname>/post/<base36id>/<anything>", methods=["GET"])
+@app.route("/post/<base36id>", methods=["GET"])
+@app.route("/post/<base36id>/", methods=["GET"])
+@app.route("/post/<base36id>/<anything>", methods=["GET"])
 @app.route("/api/v1/post/<base36id>", methods=["GET"])
 @app.route("/test/post/<base36id>", methods=["GET"])
 @auth_desired
 
 @api("read")
-def post_base36id(base36id, boardname=None, anything=None, v=None):
+def post_base36id(base36id, anything=None, v=None):
     
     post = get_post_with_comments(
         base36id, v=v, sort_type=request.args.get(
             "sort", "top"))
 
     board = post.board
-    #if the guild name is incorrect, fix the link and redirect
-
-
-    if boardname and not boardname == board.name:
-        return redirect(post.permalink)
 
     if board.is_banned and not (v and v.admin_level > 3):
         return render_template("board_banned.html",
@@ -100,36 +111,6 @@ def post_base36id(base36id, boardname=None, anything=None, v=None):
         "html":lambda:post.rendered_page(v=v),
         "api":lambda:jsonify(post.json)
         }
-
-#if the guild name is missing from the url, add it and redirect
-@app.route("/post/<base36id>", methods=["GET"])
-@app.route("/post/<base36id>/", methods=["GET"])
-@app.route("/post/<base36id>/<anything>", methods=["GET"])
-@auth_desired
-@api("read")
-def post_base36id_noboard(base36id, anything=None, v=None):
-    
-    post=get_post_with_comments(base36id, v=v, sort_type=request.args.get("sort","top"))
-
-    #board=post.board
-    return redirect(post.permalink)
-
-
-
-@app.route("/submit", methods=["GET"])
-@is_not_banned
-@no_negative_balance("html")
-def submit_get(v):
-
-    board = request.args.get("guild")
-    b = get_guild(board, graceful=True) if board else None
-
-
-    return render_template("submit.html",
-                           v=v,
-                           b=b
-                           )
-
 
 @app.route("/edit_post/<pid>", methods=["POST"])
 @is_not_banned
@@ -189,7 +170,7 @@ def edit_post(pid, v):
                 BadLink.link)).first()
         if badlink:
             if badlink.autoban:
-                text = "Your Ruqqus account has been suspended for 1 day for the following reason:\n\n> Too much spam!"
+                text = "Your Drama account has been suspended for 1 day for the following reason:\n\n> Too much spam!"
                 send_notification(v, text)
                 v.ban(days=1, reason="spam")
 
@@ -250,11 +231,15 @@ def get_post_title(v):
     except BaseException:
         return jsonify({"error": f"Could not find a title"}), 400
 
+def notifs(v, new_post):
+      for follow in v.followers:
+        user = get_account(follow.user_id)
+        send_notification(user, f"@{v.username} has made a new post: https://rdrama.net{new_post.permalink}")
 
 @app.route("/submit", methods=['POST'])
 @app.route("/api/v1/submit", methods=["POST"])
 @app.route("/api/vue/submit", methods=["POST"])
-#@limiter.limit("6/minute")
+@limiter.limit("6/minute")
 @is_not_banned
 @no_negative_balance('html')
 @tos_agreed
@@ -272,8 +257,7 @@ def submit_post(v):
     url = request.form.get("url", "")
 
     board = get_guild(request.form.get('board', 'general'), graceful=True)
-    if not board:
-        board = get_guild('general')
+    if not board: board = get_guild('general')
 
     if not title:
         return {"html": lambda: (render_template("submit.html",
@@ -287,17 +271,6 @@ def submit_post(v):
                                                  ), 400),
                 "api": lambda: ({"error": "Please enter a better title"}, 400)
                 }
-
-    # if len(title)<10:
-    #     return render_template("submit.html",
-    #                            v=v,
-    #                            error="Please enter a better title.",
-    #                            title=title,
-    #                            url=url,
-    #                            body=request.form.get("body",""),
-    #                            b=board
-    #                            )
-
 
     elif len(title) > 500:
         return {"html": lambda: (render_template("submit.html",
@@ -354,9 +327,7 @@ def submit_post(v):
         SubmissionAux.body == body
     ).first()
 
-    if dup:
-        return redirect(dup.permalink)
-
+    if dup: return redirect(dup.permalink)
 
     # check for domain specific rules
 
@@ -406,17 +377,7 @@ def submit_post(v):
     board = get_guild(board_name, graceful=True)
 
     if not board:
-
-        return {"html": lambda: (render_template("submit.html",
-                                                 v=v,
-                                                 error=f"Please enter a Guild to submit to.",
-                                                 title=title,
-                                                 url=url, body=request.form.get(
-                                                     "body", ""),
-                                                 b=None
-                                                 ), 403),
-                "api": lambda: (jsonify({"error": f"403 Forbidden - +{board.name} has been banned."}))
-                }
+        board = get_guild('general')
 
     if board.is_banned:
 
@@ -426,7 +387,8 @@ def submit_post(v):
                                                  title=title,
                                                  url=url, body=request.form.get(
                                                      "body", ""),
-                                                 b=None
+                                                 b=get_guild("general",
+                                                             graceful=True)
                                                  ), 403),
                 "api": lambda: (jsonify({"error": f"403 Forbidden - +{board.name} has been banned."}))
                 }
@@ -438,7 +400,7 @@ def submit_post(v):
                                                  title=title,
                                                  url=url, body=request.form.get(
                                                      "body", ""),
-                                                 b=None
+                                                 b=get_guild("general")
                                                  ), 403),
                 "api": lambda: (jsonify({"error": f"403 Not Authorized - You are exiled from +{board.name}"}), 403)
                 }
@@ -452,13 +414,12 @@ def submit_post(v):
                                                  url=url,
                                                  body=request.form.get(
                                                      "body", ""),
-                                                 b=None
+                                                 b=get_guild(request.form.get("board", "general"),
+                                                             graceful=True
+                                                             )
                                                  ), 403),
                 "api": lambda: (jsonify({"error": f"403 Not Authorized - You are not an approved contributor for +{board.name}"}), 403)
                 }
-
-    if board.disallowbots and request.headers.get("X-User-Type")=="Bot":
-        return {"api": lambda: (jsonify({"error": f"403 Not Authorized - +{board.name} disallows bots from posting and commenting!"}), 403)}
 
     # similarity check
     now = int(time.time())
@@ -512,7 +473,7 @@ def submit_post(v):
 
     if max(len(similar_urls), len(similar_posts)) >= threshold:
 
-        text = "Your Ruqqus account has been suspended for 1 day for the following reason:\n\n> Too much spam!"
+        text = "Your Drama account has been suspended for 1 day for the following reason:\n\n> Too much spam!"
         send_notification(v, text)
 
         v.ban(reason="Spamming.",
@@ -528,7 +489,7 @@ def submit_post(v):
             post.ban_reason = "Automatic spam removal. This happened because the post's creator submitted too much similar content too quickly."
             g.db.add(post)
             ma=ModAction(
-                    user_id=1,
+                    user_id=1046,
                     target_submission_id=post.id,
                     kind="ban_post",
                     board_id=post.board_id,
@@ -622,7 +583,7 @@ def submit_post(v):
                 BadLink.link)).first()
         if badlink:
             if badlink.autoban:
-                text = "Your Ruqqus account has been suspended for 1 day for the following reason:\n\n> Too much spam!"
+                text = "Your Drama account has been suspended for 1 day for the following reason:\n\n> Too much spam!"
                 send_notification(v, text)
                 v.ban(days=1, reason="spam")
 
@@ -674,20 +635,14 @@ def submit_post(v):
         domain_ref=domain_obj.id if domain_obj else None,
         board_id=board.id,
         original_board_id=board.id,
-        over_18=(
-            bool(
-                request.form.get(
-                    "over_18",
-                    "")
-                ) or board.over_18
-            ),
+        over_18=(request.form.get("over_18","")==True) or board.over_18,
         post_public=not board.is_private,
         repost_id=repost.id if repost else None,
         is_offensive=is_offensive,
         app_id=v.client.application.id if v.client else None,
         creation_region=request.headers.get("cf-ipcountry"),
-        is_bot = request.headers.get("X-User-Type","").lower()=="bot"
-    )
+        is_bot = request.headers.get("X-User-Type")=="Bot"
+        )
 
     g.db.add(new_post)
     g.db.flush()
@@ -715,7 +670,7 @@ def submit_post(v):
     if request.files.get('file'):
 
         #check file size
-        if request.content_length > 16 * 1024 * 1024 and not v.has_premium:
+        if request.content_length > 16 * 1024 * 1024:
             g.db.rollback()
             abort(413)
 
@@ -733,41 +688,36 @@ def submit_post(v):
                         }
 
         name = f'post/{new_post.base36id}/{secrets.token_urlsafe(8)}'
-        upload_file(name, file)
 
         # thumb_name=f'posts/{new_post.base36id}/thumb.png'
         #upload_file(name, file, resize=(375,227))
 
         # update post data
-        new_post.url = f'https://{BUCKET}/{name}'
-        new_post.is_image = True
-        new_post.domain_ref = 1  # id of i.ruqqus.com domain
+        new_post.url = upload_file(name, file)
+        #new_post.is_image = True
+        new_post.domain_ref = 1  # id of i.ruqqus.ga domain
         g.db.add(new_post)
-        g.db.add(new_post.submission_aux)
-        g.db.commit()
 
         #csam detection
-        def del_function():
-            db=db_session()
+        def del_function(db):
             delete_file(name)
             new_post.is_banned=True
             db.add(new_post)
             db.commit()
             ma=ModAction(
                 kind="ban_post",
-                user_id=1,
+                user_id=1046,
                 note="banned image",
                 target_submission_id=new_post.id
                 )
             db.add(ma)
             db.commit()
-            db.close()
 
             
         csam_thread=threading.Thread(target=check_csam_url, 
-                                     args=(f"https://{BUCKET}/{name}", 
+                                     args=(f"https://s3.eu-central-1.amazonaws.com/i.ruqqus.ga/{name}", 
                                            v, 
-                                           del_function
+                                           lambda:del_function(db=db_session())
                                           )
                                     )
         csam_thread.start()
@@ -780,92 +730,17 @@ def submit_post(v):
             thumbnail_thread,
             new_post.base36id
         )
+    
+    try: notifs(v, new_post)
+    except: pass
 
     # expire the relevant caches: front page new, board new
     cache.delete_memoized(frontlist)
     g.db.commit()
     cache.delete_memoized(Board.idlist, board, sort="new")
-
+    
     # print(f"Content Event: @{new_post.author.username} post
     # {new_post.base36id}")
-
-    #Bell notifs
-
-
-    board_uids = g.db.query(
-        Subscription.user_id
-        ).options(lazyload('*')).filter(
-        Subscription.board_id==new_post.board_id, 
-        Subscription.is_active==True,
-        Subscription.get_notifs==True,
-        Subscription.user_id != v.id,
-        Subscription.user_id.notin_(
-            g.db.query(UserBlock.user_id).filter_by(target_id=v.id).subquery()
-            )
-        )
-
-    follow_uids=g.db.query(
-        Follow.user_id
-        ).options(lazyload('*')).filter(
-        Follow.target_id==v.id,
-        Follow.get_notifs==True,
-        Follow.user_id!=v.id,
-        Follow.user_id.notin_(
-            g.db.query(UserBlock.user_id).filter_by(target_id=v.id).subquery()
-            ),
-        Follow.user_id.notin_(
-            g.db.query(UserBlock.target_id).filter_by(user_id=v.id).subquery()
-            )
-        ).join(Follow.target).filter(
-        User.is_private==False,
-        User.is_nofollow==False,
-        )
-
-    if not new_post.is_public:
-
-        contribs=g.db.query(ContributorRelationship).filter_by(board_id=new_post.board_id, is_active=True).subquery()
-        mods=g.db.query(ModRelationship).filter_by(board_id=new_post.board_id, accepted=True).subquery()
-
-        board_uids=board.uids.join(
-            contribs,
-            contribs.c.user_id==Subscription.user_id,
-            isouter=True
-            ).join(
-            mods,
-            mods.c.user_id==Subscription.user_id,
-            isouter=True
-            ).filter(
-                or_(
-                    mods.c.id != None,
-                    contribs.c.id !=None
-                )
-            )
-
-        follow_uids=follow_uids.join(
-            contribs,
-            contribs.c.user_id==Follow.user_id,
-            isouter=True
-            ).join(
-            mods,
-            mods.c.user_id==Follow.user_id,
-            isouter=True
-            ).filter(
-                or_(
-                    mods.c.id != None,
-                    contribs.c.id !=None
-                )
-            )
-
-    uids=list(set([x[0] for x in board_uids.all()] + [x[0] for x in follow_uids.all()]))
-
-    for uid in uids:
-        new_notif=Notification(
-            user_id=uid,
-            submission_id=new_post.id
-            )
-        g.db.add(new_notif)
-    g.db.commit()
-
 
     return {"html": lambda: redirect(new_post.permalink),
             "api": lambda: jsonify(new_post.json)
@@ -918,8 +793,8 @@ def delete_post_pid(pid, v):
         cache.delete_memoized(Board.idlist, post.board, sort="new")
         cache.delete_memoized(frontlist, sort="new")
 
-    # delete i.ruqqus.com
-    if post.domain == "i.ruqqus.com":
+    # delete i.ruqqus.ga
+    if post.domain == "i.ruqqus.ga":
 
         segments = post.url.split("/")
         pid = segments[4]
@@ -927,7 +802,7 @@ def delete_post_pid(pid, v):
         if pid == post.base36id:
             key = f"post/{pid}/{rand}"
             delete_file(key)
-            post.is_image = False
+            #post.is_image = False
             g.db.add(post)
 
     return "", 204
@@ -943,6 +818,18 @@ def embed_post_pid(pid):
 
     return render_template("embeds/submission.html", p=post)
 
+@app.route("/api/toggle_comment_nsfw/<cid>", methods=["POST"])
+@app.route("/api/v1/toggle_comment_nsfw/<cid>", methods=["POST"])
+@is_not_banned
+@api("update")
+@validate_formkey
+def toggle_comment_nsfw(cid, v):
+
+    comment = g.db.query(Comment).filter_by(id=base36decode(cid)).first()
+    if not comment.author_id == v.id and not v.admin_level >= 3: abort(403)
+    comment.over_18 = not comment.over_18
+    g.db.add(comment)
+    return "", 204
 
 @app.route("/api/toggle_post_nsfw/<pid>", methods=["POST"])
 @app.route("/api/v1/toggle_post_nsfw/<pid>", methods=["POST"])
@@ -1020,19 +907,11 @@ def retry_thumbnail(pid, v):
     if post.author_id != v.id and v.admin_level < 3:
         abort(403)
 
-    if post.is_archived:
-        return jsonify({"error": "Post is archived"}), 409
-
-    try:
-        success, msg = thumbnail_thread(post.base36id, debug=True)
-    except Exception as e:
-        return jsonify({"error":str(e)}), 500
-
-    if not success:
-        return jsonify({"error":msg}), 500
-
-
-    return jsonify({"message": "Success"})
+    new_thread = threading.Thread(target=thumbnail_thread,
+                                  args=(post.base36id,)
+                                  )
+    new_thread.start()
+    return jsonify({"message": "Thumbnail Retry Queued"})
 
 
 @app.route("/save_post/<pid>", methods=["POST"])

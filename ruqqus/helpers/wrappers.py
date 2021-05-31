@@ -42,9 +42,8 @@ def get_logged_in_user(db=None):
             return None, None
 
         client = db.query(ClientAuth).filter(
-            ClientAuth.access_token == token,
-            ClientAuth.access_token_expire_utc > int(time.time())
-        ).first()
+            ClientAuth.access_token == token).first()
+            #ClientAuth.access_token_expire_utc > int(time.time()
 
         x = (client.user, client) if client else (None, None)
 
@@ -79,24 +78,24 @@ def get_logged_in_user(db=None):
 
 def check_ban_evade(v):
 
-    if not v or not v.ban_evade:
+    if not v or not v.ban_evade or v.admin_level > 0:
         return
     
     if random.randint(0,30) < v.ban_evade:
         v.ban(reason="Evading a site-wide ban")
-        send_notification(v, "Your Ruqqus account has been permanently suspended for the following reason:\n\n> ban evasion")
+        send_notification(v, "Your Drama account has been permanently suspended for the following reason:\n\n> ban evasion")
 
         for post in g.db.query(Submission).filter_by(author_id=v.id).all():
             if post.is_banned:
                 continue
 
             post.is_banned=True
-            post.ban_reason="Ban evasion. This submission's owner was banned from Ruqqus on another account."
+            post.ban_reason="Ban evasion. This submission's owner was banned from Drama on another account."
             g.db.add(post)
 
             ma=ModAction(
                 kind="ban_post",
-                user_id=1,
+                user_id=1046,
                 target_submission_id=post.id,
                 board_id=post.board_id,
                 note="ban evasion"
@@ -110,12 +109,12 @@ def check_ban_evade(v):
                 continue
 
             comment.is_banned=True
-            comment.ban_reason="Ban evasion. This comment's owner was banned from Ruqqus on another account."
+            comment.ban_reason="Ban evasion. This comment's owner was banned from Drama on another account."
             g.db.add(comment)
 
             ma=ModAction(
                 kind="ban_comment",
-                user_id=1,
+                user_id=1046,
                 target_comment_id=comment.id,
                 board_id=comment.post.board_id,
                 note="ban evasion"
@@ -238,7 +237,7 @@ def tos_agreed(f):
         if v.tos_agreed_utc > cutoff:
             return f(*args, **kwargs)
         else:
-            return redirect("/help/terms#agreebox")
+            return redirect("/terms#agreebox")
 
     wrapper.__name__ = f.__name__
     return wrapper
@@ -509,6 +508,5 @@ def no_sanctions(f):
 
     wrapper.__name__=f.__name__
     return wrapper
-
 
 

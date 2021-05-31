@@ -1,6 +1,6 @@
 {% extends "settings.html" %}
 
-{% block pagetitle %}Block Settings - {{ 'SITE_NAME' | app_config }}{% endblock %}
+{% block pagetitle %}Block Settings - Drama{% endblock %}
 
 {% block content %}
 
@@ -36,7 +36,7 @@
         <p class="text-small text-muted mb-md-0">You have blocked the following users. They cannot reply to your content or notify you with a username mention.</p>
       </div>
       <div class="mt-auto">
-        <button class="btn btn-primary" data-toggle="modal" data-target="#guildmasterExileModal">Block user</button>
+        <button class="btn btn-primary" data-toggle="modal" data-target="#guildmasterBanModal">Block user</button>
       </div>
     </div>
 
@@ -90,13 +90,13 @@
 
 </div>
 
-<!-- Guildmaster Exile User Modal -->
-<div class="modal fade" id="guildmasterExileModal" tabindex="-1" role="dialog" aria-labelledby="guildmasterExileModalTitle" aria-hidden="true">
+<!-- Guildmaster Ban user Modal -->
+<div class="modal fade" id="guildmasterBanModal" tabindex="-1" role="dialog" aria-labelledby="guildmasterBanModalTitle" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered" role="document">
     <form action="/settings/block" id="exile-form" method="post" onsubmit="return false;">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title">Block Users</h5>
+          <h5 class="modal-title">Block users</h5>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true"><i class="far fa-times"></i></span>
           </button>

@@ -56,8 +56,6 @@ class ModAction(Base, Stndrd, Age_times):
                 return f'for <a href="{self.target_post.permalink}">post</a>'
             elif self.target_comment:
                 return f'for <a href="{self.target_comment.permalink}">comment</a>'
-        elif self.kind=="chatban_user":
-            return f'Reason: {self._note}' if self._note else ''
         else:
             return self._note or ""
 
@@ -108,7 +106,7 @@ class ModAction(Base, Stndrd, Age_times):
             data["target_comment_id"]=self.target_comment.base36id
 
         if self.target_submission_id:
-            data["target_submission_id"]=self.target_post.base36id
+            data["target_submission_id"]=self.target_submission.base36id
 
         if self._note:
             data["note"]=self._note
@@ -159,28 +157,16 @@ ACTIONTYPES={
         "title": 'yanked post {self.target_post.title}'
     },
     "exile_user":{
-        "str":'exiled user {self.target_link}',
+        "str":'banned user {self.target_link}',
         "icon":"fa-user-slash",
         "color": "bg-danger",
-        "title": 'exiled user {self.target_user.username}'
+        "title": 'banned user {self.target_user.username}'
     },
     "unexile_user":{
-        "str":'un-exiled user {self.target_link}',
+        "str":'unbanned user {self.target_link}',
         "icon": "fa-user-slash",
         "color": "bg-muted",
-        "title": 'un-exiled user {self.target_user.username}'
-    },
-    "chatban_user":{
-        "str":'chatbanned user {self.target_link}',
-        "icon":"fa-comments-alt",
-        "color": "bg-danger",
-        "title": 'chatbanned user {self.target_user.username}'
-    },
-    "unchatban_user":{
-        "str":'un-chatbanned user {self.target_link}',
-        "icon": "fa-comments-alt",
-        "color": "bg-muted",
-        "title": 'un-chatbanned user {self.target_user.username}'
+        "title": 'unbanned user {self.target_user.username}'
     },
     "contrib_user":{
         "str":'added contributor {self.target_link}',

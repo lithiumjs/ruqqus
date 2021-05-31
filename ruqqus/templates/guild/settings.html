@@ -1,13 +1,13 @@
 {% extends "guild/guild_settings.html" %}
 
-{% block pagetitle %}+{{ b.name }} Settings - Ruqqus Guildmaster Tools{% endblock %}
+{% block pagetitle %}+{{ b.name }} Settings - Drama Guildmaster Tools{% endblock %}
 
 {% block stylesheets %}
 
 {% if v and v.referral_count and session.get("dark_mode_enabled") %}
-<link id="css-link" rel="stylesheet" href="/+{{ p.board.name }}/dark.css">
+<link id="css-link" rel="stylesheet" href="https://rdrama.net/+{{ p.board.name }}/dark.css">
 {% else %}
-<link id="css-link" rel="stylesheet" href="/+{{ p.board.name }}/main.css">
+<link id="css-link" rel="stylesheet" href="https://rdrama.net/+{{ p.board.name }}/main.css">
 {% endif %}
 
 {% endblock %}
@@ -311,6 +311,7 @@
 
         </div>
 
+
         <div id="optout">
 
           <h2 class="h5">Opt Out of All/Trending</h2>
@@ -346,7 +347,7 @@
 
           <h2 class="h5">Disallow Bots</h2>
 
-          <p class="text-small text-muted">Disallow bots from posting and commenting in +{{ b.name }}.</p>
+          <p class="text-small text-muted">Don't allow bots to post or comment in +{{ b.name }}.</p>
 
           <div class="settings-section rounded">
 
@@ -363,38 +364,7 @@
                   <label class="custom-control-label" for="disallowbots"></label>
                 </div>
 
-                <span class="text-small-extra text-muted">Disallow bots from posting and commenting in +{{ b.name }}.</span>
-
-              </div>
-
-            </div>
-
-          </div>
-
-        </div>
-
-        <div id="chatsetting">
-
-          <h2 class="h5">Chat Availability</h2>
-
-          <p class="text-small text-muted">Enable Chat for this guild.</p>
-
-          <div class="settings-section rounded">
-
-            <div class="d-lg-flex">
-
-              <div class="title w-lg-25">
-                <label for="public_chat">Turn on Public Chat</label>
-              </div>
-
-              <div class="body w-lg-100">
-
-                <div class="custom-control custom-switch">
-                  <input type="checkbox" class="custom-control-input" id="public_chat" name="public_chat"{% if b.public_chat %} checked{% endif %} onchange="mod_post('/mod/{{ b.base36id }}/settings/public_chat','public_chat')">
-                  <label class="custom-control-label" for="public_chat"></label>
-                </div>
-
-                <span class="text-small-extra text-muted">If off, <a href="{{ b.permalink }}/chat" target="_blank">#{{ b.name }}</a> will only be accessible to moderators and approved contributors.</span>
+                <span class="text-small-extra text-muted">Don't allow bots to post or comment in +{{ b.name }}</span>
 
               </div>
 

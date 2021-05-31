@@ -1,11 +1,11 @@
-{% extends "docs_default.html" %}
+{% extends "default.html" %}
 
 {% block sidebarblock %}{% endblock %}
 {% block sidebarLeftblock %}{% endblock %}
 
 {% block title %}
-<title>Ruqqus - Help</title>
-<meta name="description" content="Ruqqus Help">
+<title>Drama - Help</title>
+<meta name="description" content="Drama Help">
 {% endblock %}
 
 {% block content %}
@@ -40,9 +40,9 @@
 
 	{% for vote in ups %}
 	<tr>
-		<td><a href="{{ vote.user.permalink }}" target="_blank">{{ vote.user.username }}</a></td>
-		<td><a href="/admin/ip/{{ vote.creation_ip}}" target="_blank">{{ vote.creation_ip }}</a></td>
-		<td><a href="/admin/ip/{{ vote.user.creation_ip}}" target="_blank">{{ vote.user.creation_ip }}</a></td>
+		<td>{{ vote.user.username }}</td>
+		<td>{{ vote.creation_ip }}</td>
+		<td>{{ vote.user.creation_ip }}</td>
 	</tr>
 	{% endfor %}
 </table>
@@ -59,9 +59,9 @@
 
 	{% for vote in downs %}
 	<tr>
-		<td><a href="{{ vote.user.permalink }}" target="_blank">{{ vote.user.username }}</a></td>
-		<td><a href="/admin/ip/{{ vote.creation_ip}}" target="_blank">{{ vote.creation_ip }}</a></td>
-		<td><a href="/admin/ip/{{ vote.user.creation_ip}}" target="_blank">{{ vote.user.creation_ip }}</a></td>
+		<td>{{ vote.user.username }}</td>
+		<td>{{ vote.creation_ip }}</td>
+		<td>{{ vote.user.creation_ip }}</td>
 	</tr>
 	{% endfor %}
 </table>

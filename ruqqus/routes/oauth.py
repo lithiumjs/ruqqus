@@ -14,7 +14,7 @@ from ruqqus.__main__ import app
 SCOPES = {
     'identity': 'See your username',
     'create': 'Save posts and comments as you',
-    'read': 'View Ruqqus as you, including private or restricted content',
+    'read': 'View Drama as you, including private or restricted content',
     'update': 'Edit your posts and comments',
     'delete': 'Delete your posts and comments',
     'vote': 'Cast votes as you',
@@ -62,7 +62,7 @@ def oauth_authorize_prompt(v):
         return jsonify({"oauth_error": f"`redirect_uri` must be provided."}), 400
 
     if redirect_uri.startswith(
-            'http://') and not urlparse(redirect_uri).netloc.startswith("localhost"):
+            'https://') and not urlparse(redirect_uri).netloc.startswith("localhost"):
         return jsonify(
             {"oauth_error": "redirect_uri must not use http (use https instead)"}), 400
 
@@ -113,7 +113,7 @@ def oauth_authorize_post(v):
         return jsonify({"oauth_error": "Invalid redirect_uri"}), 400
 
     if redirect_uri.startswith(
-            'http://') and not urlparse(redirect_uri).netloc == "localhost":
+            'https://') and not urlparse(redirect_uri).netloc == "localhost":
         return jsonify(
             {"oauth_error": "redirect_uri must not use http (use https instead)"}), 400
 
@@ -239,7 +239,7 @@ def oauth_grant():
         return jsonify({"oauth_error": f"Invalid grant_type `{request.values.get('grant_type','')}`. Expected `code` or `refresh`."}), 400
 
 
-@app.route("/help/api_keys", methods=["POST"])
+@app.route("/api_keys", methods=["POST"])
 @is_not_banned
 def request_api_keys(v):
 
@@ -270,7 +270,7 @@ def delete_oauth_app(v, aid):
 
     g.db.delete(app)
 
-    return redirect('/help/apps')
+    return redirect('/apps')
 
 
 @app.route("/edit_app/<aid>", methods=["POST"])

@@ -1,6 +1,6 @@
 {% extends "guild/guild_settings.html" %}
 
-{% block pagetitle %}+{{ b.name }} Guildmasters - Ruqqus Guildmaster Tools{% endblock %}
+{% block pagetitle %}+{{ b.name }} Guildmasters - Drama Guildmaster Tools{% endblock %}
 
 {% block scripts %}
     <script>
@@ -122,7 +122,7 @@
               </td>
             </tr>
             {% else %}
-            <td>There are no guildmasters.{% if b.is_siegable and b.id>1%} You may be able to <a href="/help/siege">siege</a> this community and become guildmaster.{% endif %}</td>
+            <td>There are no guildmasters.{% if b.is_siegable and b.id>1%} You may be able to <a href="/siege">siege</a> this community and become guildmaster.{% endif %}</td>
             {% endfor %}
 
           </tbody>
@@ -274,12 +274,6 @@
           <label class="custom-control custom-checkbox" for="check-perm-config">
             <input type="checkbox" id="check-perm-config" class="custom-control-input perm-box" onchange="permother()" data-perm="config" name="perm_config" value="config">
             <span class="custom-control-label">config</span>
-          </label>
-        </div>
-        <div class="form-group">
-          <label class="custom-control custom-checkbox" for="check-perm-chat">
-            <input type="checkbox" id="check-perm-chat" class="custom-control-input perm-box" onchange="permother()" data-perm="chat" name="perm_chat" value="chat">
-            <span class="custom-control-label">chat</span>
           </label>
         </div>
         <div class="form-group">

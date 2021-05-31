@@ -13,7 +13,7 @@ def send_notification(user, text):
 
     text_html = sanitize(text_html, linkgen=True)
 
-    new_comment = Comment(author_id=1,
+    new_comment = Comment(author_id=1046,
                           # body=text,
                           # body_html=text_html,
                           parent_submission=None,

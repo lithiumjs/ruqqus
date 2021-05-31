@@ -22,11 +22,15 @@ from ruqqus.__main__ import app, cache
 
 
 @app.route("/api/ban_user/<user_id>", methods=["POST"])
-@admin_level_required(3)
+@auth_required
 @validate_formkey
 def ban_user(user_id, v):
 
+    if v.admin_level != 6: abort(403)
+    
     user = g.db.query(User).filter_by(id=user_id).first()
+
+    if user.admin_level != 0: abort(403)
 
     # check for number of days for suspension
     days = int(request.form.get("days")) if request.form.get('days') else 0
@@ -38,36 +42,47 @@ def ban_user(user_id, v):
 
     if days > 0:
         if message:
-            text = f"Your Ruqqus account has been suspended for {days} days for the following reason:\n\n> {message}"
+            text = f"Your Drama account has been suspended for {days} days for the following reason:\n\n> {message}"
         else:
-            text = f"Your Ruqqus account has been suspended for {days} days due to a Terms of Service violation."
+            text = f"Your Drama account has been suspended for {days} days due to a Terms of Service violation."
         user.ban(admin=v, reason=reason, days=days)
 
     else:
         if message:
-            text = f"Your Ruqqus account has been permanently suspended for the following reason:\n\n> {message}"
+            text = f"Your Drama account has been permanently suspended for the following reason:\n\n> {message}"
         else:
-            text = "Your Ruqqus account has been permanently suspended due to a Terms of Service violation."
+            text = "Your Drama account has been permanently suspended due to a Terms of Service violation."
 
         user.ban(admin=v, reason=reason)
 
 
     for x in user.alts:
-        if not x.is_deleted:
+        if not x.is_deleted and x.admin_level == 0:
             x.ban(admin=v, reason=reason)
 
-
-
-
     send_notification(user, text)
+    
+    ma=ModAction(
+        kind="exile_user",
+        user_id=v.id,
+        target_user_id=user.id,
+        board_id=1,
+        )
+    g.db.add(ma)
+    g.db.commit()
 
-    return (redirect(user.url), user)
+    if request.args.get("toast"):
+        return jsonify({"message": f"@{user.username} was banned"})
+    else:
+        return "", 204
 
 
 @app.route("/api/unban_user/<user_id>", methods=["POST"])
-@admin_level_required(3)
+@auth_required
 @validate_formkey
 def unban_user(user_id, v):
+
+    if v.admin_level != 6: abort(403)
 
     user = g.db.query(User).filter_by(id=user_id).first()
 
@@ -77,11 +92,21 @@ def unban_user(user_id, v):
     user.unban()
 
     send_notification(user,
-                      "Your Ruqqus account has been reinstated. Please carefully review and abide by the [terms of service](/help/terms) and [content policy](/help/rules) to ensure that you don't get suspended again.")
+                      "Your Drama account has been reinstated. Please carefully review and abide by the [terms of service](/terms) and [content policy](/rules) to ensure that you don't get suspended again.")
 
+    ma=ModAction(
+        kind="unexile_user",
+        user_id=v.id,
+        target_user_id=user.id,
+        board_id=1,
+        )
+    g.db.add(ma)
+    g.db.commit()
 
-    return (redirect(user.url), user)
-
+    if request.args.get("toast"):
+        return jsonify({"message": f"@{user.username} was unbanned"})
+    else:
+        return "", 204
 
 @app.route("/api/ban_post/<post_id>", methods=["POST"])
 @admin_level_required(3)
@@ -170,7 +195,7 @@ def api_distinguish_post(post_id, v):
 
     g.db.add(post)
 
-    return (redirect(post.permalink), post)
+    return "", 204
 
 
 @app.route("/api/sticky/<post_id>", methods=["POST"])
@@ -182,20 +207,11 @@ def api_sticky_post(post_id, v):
         if post.stickied:
             post.stickied = False
             g.db.add(post)
-
-            return redirect(post.permalink)
-
-    already_stickied = g.db.query(Submission).filter_by(stickied=True).first()
+            return "", 204
 
     post.stickied = True
-
-    if already_stickied:
-        already_stickied.stickied = False
-        g.db.add(already_stickied)
-
     g.db.add(post)
-
-    return (redirect(post.permalink), post)
+    return "", 204
 
 
 @app.route("/api/ban_comment/<c_id>", methods=["post"])
@@ -250,9 +266,13 @@ def api_unban_comment(c_id, v):
 
 
 @app.route("/api/distinguish_comment/<c_id>", methods=["post"])
-@admin_level_required(1)
+@app.route("/api/v1/distinguish_comment/<c_id>", methods=["post"])
+@auth_required
+@api("read")
 def admin_distinguish_comment(c_id, v):
-
+    
+    if v.admin_level == 0: abort(403)
+    
     comment = get_comment(c_id, v=v)
 
     if comment.author_id != v.id:
@@ -273,7 +293,7 @@ def admin_distinguish_comment(c_id, v):
 
     html=str(BeautifulSoup(html, features="html.parser").find(id=f"comment-{comment.base36id}-only"))
 
-    return jsonify({"html":html})
+    return jsonify({"html":html, "api":html})
 
 
 
@@ -282,7 +302,7 @@ def admin_distinguish_comment(c_id, v):
 @validate_formkey
 def api_ban_guild(v, bid):
 
-    board = get_board(bid, v=v)
+    board = get_board(bid)
 
     board.is_banned = True
     board.ban_reason = request.form.get("reason", "")
@@ -297,7 +317,7 @@ def api_ban_guild(v, bid):
 @validate_formkey
 def api_unban_guild(v, bid):
 
-    board = get_board(bid, v=v)
+    board = get_board(bid)
 
     board.is_banned = False
     board.ban_reason = ""
@@ -426,8 +446,8 @@ def user_stat_data(v):
              "guild_data": guild_stats,
              "comment_data": comment_stats,
              "vote_data": vote_stats,
-             "single_plot": f"https://i.ruqqus.com/{x[0]}",
-             "multi_plot": f"https://i.ruqqus.com/{x[1]}"
+             "single_plot": f"https://s3.eu-central-1.amazonaws.com/i.ruqqus.ga/{x[0]}",
+             "multi_plot": f"https://s3.eu-central-1.amazonaws.com/i.ruqqus.ga/{x[1]}"
              }
 
     return jsonify(final)
@@ -552,7 +572,7 @@ def admin_csam_nuke(pid, v):
     post.ban_reason = "CSAM [1]"
     g.db.add(post)
     ma=ModAction(
-        user_id=1,
+        user_id=1046,
         target_submission_id=post.id,
         board_id=post.board_id,
         kind="ban_post",
@@ -566,7 +586,7 @@ def admin_csam_nuke(pid, v):
         alt.is_banned = v.id
         g.db.add(alt)
 
-    if post.domain == "i.ruqqus.com":
+    if post.domain == "i.ruqqus.ga":
 
         x = requests.get(url)
         # load image into PIL
@@ -631,11 +651,6 @@ def admin_nuke_user(v):
 
     user=get_user(request.form.get("user"))
 
-    note='admin_action'
-    if user.ban_reason:
-        note+=f" | {user.ban_reason}"
-
-
     for post in g.db.query(Submission).filter_by(author_id=user.id).all():
         if post.is_banned:
             continue
@@ -648,7 +663,7 @@ def admin_nuke_user(v):
             user_id=v.id,
             target_submission_id=post.id,
             board_id=post.board_id,
-            note=note
+            note="admin action"
             )
         g.db.add(ma)
 
@@ -664,7 +679,7 @@ def admin_nuke_user(v):
             user_id=v.id,
             target_comment_id=comment.id,
             board_id=comment.post.board_id,
-            note=note
+            note="admin action"
             )
         g.db.add(ma)
 
@@ -701,7 +716,7 @@ def admin_sig_generate(v):
     file=request.files["file"]
     return generate_hash(str(file.read()))
 
-@app.route("/help/signature", methods=["POST"])
+@app.route("/signature", methods=["POST"])
 @auth_desired
 def sig_validate(v):
 
@@ -712,7 +727,7 @@ def sig_validate(v):
     valid=validate_hash(str(file.read()), sig)
 
     return render_template(
-        "help/signature.html",
+        "signature.html",
         v=v,
         success = valid,
         error = not valid

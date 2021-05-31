@@ -11,7 +11,7 @@ from .mix_ins import *
 from ruqqus.helpers.base36 import *
 from ruqqus.helpers.lazy import lazy
 import ruqqus.helpers.aws as aws
-from ruqqus.__main__ import Base, cache, app
+from ruqqus.__main__ import Base, cache
 from .votes import Vote, CommentVote
 from .domains import Domain
 from .flags import Flag
@@ -52,6 +52,7 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
     repost_id = Column(BigInteger, ForeignKey("submissions.id"), default=0)
     edited_utc = Column(BigInteger, default=0)
     created_utc = Column(BigInteger, default=0)
+    thumburl = Column(String, default=None)
     is_banned = Column(Boolean, default=False)
     deleted_utc = Column(Integer, default=0)
     purged_utc = Column(Integer, default=0)
@@ -191,7 +192,7 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
         if not output:
             output = '-'
 
-        return f"/+{self.board.name}/post/{self.base36id}/{output}"
+        return f"/post/{self.base36id}/{output}"
 
     @property
     def is_archived(self):
@@ -238,7 +239,7 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
         return render_template(template,
                                v=v,
                                p=self,
-                               sort_method=request.args.get(
+                               sort=request.args.get(
                                    "sort", "Hot").capitalize(),
                                linked_comment=comment,
                                comment_info=comment_info,
@@ -306,7 +307,8 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
     def thumb_url(self):
 
         if self.has_thumb:
-            return f"https://i.ruqqus.com/posts/{self.base36id}/thumb.png"
+            if self.thumburl: return self.thumburl
+            else: return f"https://s3.eu-central-1.amazonaws.com/i.ruqqus.ga/posts/{self.base36id}/thumb.png"
         elif self.is_image:
             return self.url
         else:
@@ -324,7 +326,7 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
         elif self.board.has_contributor(v):
             return f"you are an approved contributor in +{self.board.name}."
         elif v.admin_level >= 4:
-            return "you are a Ruqqus admin."
+            return "you are a Drama admin."
 
     def determine_offensive(self):
 
@@ -358,8 +360,6 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
                 'created_utc': self.created_utc,
                 'edited_utc': self.edited_utc or 0,
                 'guild_name': self.board.name,
-                'original_guild_name': self.original_board.name if not self.board_id == self.original_board_id else None,
-                'original_guild_id': self.original_board.id if not self.board_id == self.original_board_id else None,
                 'guild_id': base36encode(self.board_id),
                 'comment_count': self.comment_count,
                 'score': self.score_fuzzed,
@@ -368,11 +368,7 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
                 'award_count': self.award_count,
                 'is_offensive': self.is_offensive,
                 'meta_title': self.meta_title,
-                'meta_description': self.meta_description,
-                'is_pinned': self.is_pinned,
-                'is_distinguished': bool(self.distinguish_level),
-                'is_heralded': bool(self.gm_distinguish),
-                'herald_guild': self.distinguished_board.name if self.gm_distinguish else None
+                'meta_description': self.meta_description
                 }
         if self.ban_reason:
             data["ban_reason"]=self.ban_reason
@@ -392,8 +388,7 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
                     'id': self.base36id,
                     'title': self.title,
                     'permalink': self.permalink,
-                    'guild_name': self.board.name,
-                    'is_pinned': self.is_pinned
+                    'guild_name': self.board.name
                     }
         elif self.is_deleted:
             return {'is_banned': bool(self.is_banned),
@@ -558,6 +553,10 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
         return f"site_embeds/{self.domain_obj.embed_template}.html"
 
     @property
+    def is_image(self):
+        return self.url.endswith('jpg') or self.url.endswith('png') or self.url.endswith('.gif') or self.url.endswith('jpeg') or self.url.endswith('?maxwidth=9999')
+
+    @property
     def self_download_json(self):
 
         #This property should never be served to anyone but author and admin
@@ -600,23 +599,7 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
     def is_exiled_for(self):
         return self.__dict__.get('_is_exiled_for', None)
 
-    @property
-    def is_image(self):
-        return self.has_thumb and self.domain_obj and self.domain_obj.show_thumbnail
-
-    @is_image.setter
-    def is_image(self, other):
-        pass
     
-    @property
-    def shortlink(self):
-        
-        protocol="https" if app.config["FORCE_HTTPS"] else "http"
-        
-        if app.config["SHORT_DOMAIN"]:
-            return f"{protocol}://{app.config['SHORT_DOMAIN']}/{self.base36id}"
-        else:
-            return f"{protocol}://{app.config['SERVER_NAME']}/post/{self.base36id}"
     
 class SaveRelationship(Base, Stndrd):
 

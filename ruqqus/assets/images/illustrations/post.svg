@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg width="375px" height="95px" viewBox="0 0 375 95" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-    <!-- Generator: Sketch 50.2 (55047) - http://www.bohemiancoding.com/sketch -->
+<svg width="375px" height="95px" viewBox="0 0 375 95" version="1.1" xmlns="https://www.w3.org/2000/svg" xmlns:xlink="https://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 50.2 (55047) - https://www.bohemiancoding.com/sketch -->
     <title>Post</title>
     <desc>Created with Sketch.</desc>
     <defs>
@@ -10,7 +10,7 @@
     <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
         <g id="Desktop-HD" transform="translate(-856.000000, -220.000000)">
             <g id="Post" transform="translate(856.000000, 220.000000)">
-                <rect id="Rectangle-3" fill="#FFFFFF" fill-rule="evenodd" x="0" y="0" width="375" height="95.25" rx="6"></rect>
+                <rect id="Rectangle-3" fill="#cfcfcf" fill-rule="evenodd" x="0" y="0" width="375" height="95.25" rx="6"></rect>
                 <g id="Group-3" stroke-width="1" fill-rule="evenodd" transform="translate(98.250000, 34.500000)" fill="#E0E4E9">
                     <rect id="Rectangle-Copy" x="0" y="0" width="157.5" height="10.5" rx="5.25"></rect>
                     <rect id="Rectangle-Copy-2" x="0" y="15.75" width="117.382075" height="10.5" rx="5.25"></rect>

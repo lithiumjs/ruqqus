@@ -2,9 +2,7 @@ from .base36 import *
 from .sqla_values import *
 from ruqqus.classes import *
 from flask import g
-from sqlalchemy import *
-from sqlalchemy.orm import *
-from urllib.parse import urlparse
+from sqlalchemy.orm import joinedload, aliased
 
 import re
 
@@ -18,50 +16,7 @@ def get_user(username, v=None, nSession=None, graceful=False):
     if not nSession:
         nSession = g.db
 
-    if v:
-        isblocking = nSession.query(UserBlock).filter(
-            UserBlock.user_id == v.id).subquery()
-
-        isblocked =  nSession.query(UserBlock).filter(
-            UserBlock.target_id==v.id).subquery()
-
-        follow=nSession.query(Follow).filter_by(user_id=v.id).subquery()
-
-        items=nSession.query(
-            User,
-            aliased(UserBlock, alias=isblocking),
-            aliased(UserBlock, alias=isblocked),
-            aliased(Follow, alias=follow)
-            ).filter(or_(
-                User.username.ilike(username),
-                User.original_username.ilike(username)
-            )).join(
-            isblocking,
-            isblocking.c.target_id==User.id,
-            isouter=True
-            ).join(
-            isblocked,
-            isblocked.c.user_id==User.id,
-            isouter=True
-            ).join(
-            follow,
-            follow.c.target_id==User.id,
-            isouter=True
-            ).first()
-
-        if not items:
-            if not graceful:
-                abort(404)
-            else:
-                return None
-
-        user=items[0]
-        user._is_blocking = items[1]
-        user._is_blocked = items[2]
-        user._is_following = items[3]
-
-    else:
-        user = nSession.query(
+    user = nSession.query(
         User
         ).filter(
         or_(
@@ -70,12 +25,27 @@ def get_user(username, v=None, nSession=None, graceful=False):
             )
         ).first()
 
-        if not user:
-            if not graceful:
-                abort(404)
-            else:
-                return None
+    if not user:
+        if not graceful:
+            abort(404)
+        else:
+            return None
 
+    if v:
+        block = nSession.query(UserBlock).filter(
+            or_(
+                and_(
+                    UserBlock.user_id == v.id,
+                    UserBlock.target_id == user.id
+                ),
+                and_(UserBlock.user_id == user.id,
+                     UserBlock.target_id == v.id
+                     )
+            )
+        ).first()
+
+        user._is_blocking = block and block.user_id == v.id
+        user._is_blocked = block and block.target_id == v.id
 
     return user
 
@@ -117,7 +87,7 @@ def get_account(base36id, v=None, nSession=None, graceful=False):
     return user
 
 
-def get_post(pid, v=None, graceful=False, nSession=None, no_text=False, **kwargs):
+def get_post(pid, v=None, graceful=False, nSession=None, **kwargs):
 
     if isinstance(pid, str):
         i = base36decode(pid)
@@ -141,8 +111,6 @@ def get_post(pid, v=None, graceful=False, nSession=None, no_text=False, **kwargs
         boardblocks = nSession.query(
             BoardBlock).filter_by(user_id=v.id).subquery()
         blocking = v.blocking.subquery()
-        blocked = v.blocked.subquery()
-        sub = nSession.query(Subscription).filter_by(user_id=v.id, is_active=True).subquery()
 
         items = nSession.query(
             Submission,
@@ -150,27 +118,10 @@ def get_post(pid, v=None, graceful=False, nSession=None, no_text=False, **kwargs
             aliased(ModRelationship, alias=mod),
             boardblocks.c.id,
             blocking.c.id,
-            blocked.c.id,
-            aliased(Subscription, alias=sub)
             # aliased(ModAction, alias=exile)
         ).options(
-            lazyload('*'),
-            joinedload(Submission.submission_aux),
-            joinedload(Submission.author),
-            Load(User).lazyload('*'),
-            joinedload(Submission.author).joinedload(User.title),
-            Load(Board).lazyload('*'),
-            joinedload(Submission.board),
-            joinedload(Submission.original_board),
-            Load(UserBlock).lazyload('*'),
-            joinedload(Submission.awards),
-            joinedload(Submission.domain_obj),
-            joinedload(Submission.reposts).lazyload('*'),
-            Load(AwardRelationship).lazyload('*')
+            joinedload(Submission.author).joinedload(User.title)
         )
-        
-        if no_text:
-            items=items.options(lazyload(Submission.submission_aux))
 
         if v.admin_level>=4:
             items=items.options(joinedload(Submission.oauth_app))
@@ -192,14 +143,6 @@ def get_post(pid, v=None, graceful=False, nSession=None, no_text=False, **kwargs
             blocking, 
             blocking.c.target_id == Submission.author_id, 
             isouter=True
-        ).join(
-            blocked, 
-            blocked.c.user_id == Submission.author_id, 
-            isouter=True
-        ).join(
-            sub,
-            sub.c.board_id == Submission.board_id,
-            isouter=True
         # ).join(
         #     exile,
         #     and_(exile.c.target_submission_id==Submission.id, exile.c.board_id==Submission.original_board_id),
@@ -214,8 +157,6 @@ def get_post(pid, v=None, graceful=False, nSession=None, no_text=False, **kwargs
         x._is_guildmaster = items[2] or 0
         x._is_blocking_guild = items[3] or 0
         x._is_blocking = items[4] or 0
-        x._is_blocked = items[5] or 0
-        x.board._is_subscribed=items[6] or 0
         # x._is_exiled_for=items[5] or 0
 
     else:
@@ -223,19 +164,7 @@ def get_post(pid, v=None, graceful=False, nSession=None, no_text=False, **kwargs
             Submission,
             # aliased(ModAction, alias=exile)
         ).options(
-            lazyload('*'),
-            joinedload(Submission.submission_aux),
-            joinedload(Submission.author),
-            Load(User).lazyload('*'),
-            joinedload(Submission.author).joinedload(User.title),
-            Load(Board).lazyload('*'),
-            joinedload(Submission.board),
-            joinedload(Submission.original_board),
-            Load(UserBlock).lazyload('*'),
-            joinedload(Submission.awards),
-            joinedload(Submission.domain_obj),
-            joinedload(Submission.reposts).lazyload('*'),
-            Load(AwardRelationship).lazyload('*')
+            joinedload(Submission.author).joinedload(User.title)
         # ).join(
         #     exile,
         #     and_(exile.c.target_submission_id==Submission.id, exile.c.board_id==Submission.original_board_id),
@@ -290,19 +219,7 @@ def get_posts(pids, sort="hot", v=None):
             subs.c.id,
             # aliased(ModAction, alias=exile)
         ).options(
-            lazyload('*'),
-            joinedload(Submission.submission_aux),
-            joinedload(Submission.author),
-            Load(User).lazyload('*'),
-            joinedload(Submission.author).joinedload(User.title),
-            Load(Board).lazyload('*'),
-            joinedload(Submission.board),
-            joinedload(Submission.original_board),
-            Load(UserBlock).lazyload('*'),
-            joinedload(Submission.awards),
-            joinedload(Submission.domain_obj),
-            joinedload(Submission.reposts).lazyload('*'),
-            Load(AwardRelationship).lazyload('*')
+            joinedload(Submission.author).joinedload(User.title)
         ).filter(
             Submission.id.in_(pids)
         ).join(
@@ -343,26 +260,13 @@ def get_posts(pids, sort="hot", v=None):
             output[i]._is_blocking = posts[i][4] or 0
             output[i]._is_blocked = posts[i][5] or 0
             output[i]._is_subscribed = posts[i][6] or 0
-            output[i].board._is_subscribed=posts[i][6] or 0
             # output[i]._is_exiled_for=posts[i][7] or 0
     else:
         query = g.db.query(
             Submission,
             # aliased(ModAction, alias=exile)
         ).options(
-            lazyload('*'),
-            joinedload(Submission.submission_aux),
-            joinedload(Submission.author),
-            Load(User).lazyload('*'),
-            joinedload(Submission.author).joinedload(User.title),
-            Load(Board).lazyload('*'),
-            joinedload(Submission.board),
-            joinedload(Submission.original_board),
-            Load(UserBlock).lazyload('*'),
-            joinedload(Submission.awards),
-            joinedload(Submission.domain_obj),
-            joinedload(Submission.reposts).lazyload('*'),
-            Load(AwardRelationship).lazyload('*')
+            joinedload(Submission.author).joinedload(User.title)
         ).filter(Submission.id.in_(pids)
         # ).join(
         #     exile,
@@ -406,33 +310,16 @@ def get_post_with_comments(pid, sort_type="top", v=None):
             blocked.c.id,
             aliased(ModAction, alias=exile)
         ).options(
-            lazyload('*'),
-            joinedload(Comment.comment_aux),
-            joinedload(Comment.author),
-            joinedload(Comment.distinguished_board),
-            joinedload(Comment.awards),
-            Load(User).lazyload('*'),
-            Load(User).joinedload(User.title),
-            joinedload(Comment.post),
-            Load(Submission).lazyload('*'),
-            Load(Submission).joinedload(Submission.submission_aux),
-            Load(Submission).joinedload(Submission.board),
-            Load(CommentVote).lazyload('*'),
-            Load(UserBlock).lazyload('*'),
-            Load(ModAction).lazyload('*'),
-            Load(Board).lazyload('*'),
-            Load(AwardRelationship).lazyload('*')
-        ).filter(
-            Comment.parent_submission == post.id,
-            Comment.level <= 6
+            joinedload(Comment.author).joinedload(User.title)
         )
-
-
         if v.admin_level >=4:
 
             comms=comms.options(joinedload(Comment.oauth_app))
 
-        comms=comms.join(
+        comms=comms.filter(
+            Comment.parent_submission == post.id,
+            Comment.level <= 6
+        ).join(
             votes,
             votes.c.comment_id == Comment.id,
             isouter=True
@@ -456,9 +343,7 @@ def get_post_with_comments(pid, sort_type="top", v=None):
             comments = comms.order_by(Comment.score_top.desc()).all()
         elif sort_type == "new":
             comments = comms.order_by(Comment.created_utc.desc()).all()
-        elif sort_type == "old":
-            comments = comms.order_by(Comment.created_utc.asc()).all()
-        elif sort_type == "disputed":
+        elif sort_type == "controversial":
             comments = comms.order_by(Comment.score_disputed.desc()).all()
         elif sort_type == "random":
             c = comms.all()
@@ -482,22 +367,7 @@ def get_post_with_comments(pid, sort_type="top", v=None):
             Comment,
             aliased(ModAction, alias=exile)
         ).options(
-            lazyload('*'),
-            joinedload(Comment.comment_aux),
-            joinedload(Comment.author),
-            Load(User).lazyload('*'),
-            Load(User).joinedload(User.title),
-            joinedload(Comment.post),
-            Load(Submission).lazyload('*'),
-            Load(Submission).joinedload(Submission.submission_aux),
-            Load(Submission).joinedload(Submission.board),
-            Load(CommentVote).lazyload('*'),
-            Load(UserBlock).lazyload('*'),
-            Load(ModAction).lazyload('*'),
-            joinedload(Comment.distinguished_board),
-            joinedload(Comment.awards),
-            Load(Board).lazyload('*'),
-            Load(AwardRelationship).lazyload('*')
+            joinedload(Comment.author).joinedload(User.title)
         ).filter(
             Comment.parent_submission == post.id,
             Comment.level <= 6
@@ -513,9 +383,7 @@ def get_post_with_comments(pid, sort_type="top", v=None):
             comments = comms.order_by(Comment.score_top.desc()).all()
         elif sort_type == "new":
             comments = comms.order_by(Comment.created_utc.desc()).all()
-        elif sort_type == "old":
-            comments = comms.order_by(Comment.created_utc.asc()).all()
-        elif sort_type == "disputed":
+        elif sort_type == "controversial":
             comments = comms.order_by(Comment.score_disputed.desc()).all()
         elif sort_type == "random":
             c = comms.all()
@@ -537,7 +405,7 @@ def get_post_with_comments(pid, sort_type="top", v=None):
     return post
 
 
-def get_comment(cid, nSession=None, v=None, graceful=False, no_text=False, **kwargs):
+def get_comment(cid, nSession=None, v=None, graceful=False, **kwargs):
 
     if isinstance(cid, str):
         i = base36decode(cid)
@@ -573,26 +441,8 @@ def get_comment(cid, nSession=None, v=None, graceful=False, no_text=False, **kwa
             aliased(ModRelationship, alias=mod),
             aliased(ModAction, alias=exile)
         ).options(
-            lazyload('*'),
-            joinedload(Comment.comment_aux),
-            joinedload(Comment.author),
-            Load(User).lazyload('*'),
-            Load(User).joinedload(User.title),
-            joinedload(Comment.post),
-            Load(Submission).lazyload('*'),
-            Load(Submission).joinedload(Submission.submission_aux),
-            Load(Submission).joinedload(Submission.board),
-            Load(CommentVote).lazyload('*'),
-            Load(UserBlock).lazyload('*'),
-            Load(ModAction).lazyload('*'),
-            joinedload(Comment.distinguished_board),
-            joinedload(Comment.awards),
-            Load(Board).lazyload('*'),
-            Load(AwardRelationship).lazyload('*')
+            joinedload(Comment.author).joinedload(User.title)
         )
-        
-        if no_text:
-            items=items.options(lazyload(Comment.comment_aux))
 
         if v.admin_level >=4:
             items=items.options(joinedload(Comment.oauth_app))
@@ -644,7 +494,7 @@ def get_comment(cid, nSession=None, v=None, graceful=False, no_text=False, **kwa
             Comment,
             aliased(ModAction, alias=exile)
         ).options(
-            joinedload(Comment.author).joinedload(User.title),
+            joinedload(Comment.author).joinedload(User.title)
         ).join(
             exile,
             and_(exile.c.target_comment_id==Comment.id, exile.c.board_id==Comment.original_board_id),
@@ -661,7 +511,7 @@ def get_comment(cid, nSession=None, v=None, graceful=False, no_text=False, **kwa
     return x
 
 
-def get_comments(cids, v=None, nSession=None, sort_type=None,
+def get_comments(cids, v=None, nSession=None, sort_type="new",
                  load_parent=False, **kwargs):
 
     if not cids:
@@ -680,218 +530,120 @@ def get_comments(cids, v=None, nSession=None, sort_type=None,
         ).distinct(ModAction.target_comment_id).subquery()
 
     if v:
-        votes = nSession.query(CommentVote).filter_by(user_id=v.id).subquery()
+        vt = nSession.query(CommentVote).filter(
+            CommentVote.comment_id.in_(cids), 
+            CommentVote.user_id==v.id
+            ).subquery()
 
-        blocking = v.blocking.subquery()
+        mod=nSession.query(ModRelationship
+            ).filter_by(
+            user_id=v.id,
+            accepted=True
+            ).subquery()
 
-        blocked = v.blocked.subquery()
 
-        mod = g.db.query(ModRelationship).filter_by(user_id=v.id, accepted=True).subquery()
 
-        comms = nSession.query(
-            Comment,
-            votes.c.vote_type,
-            blocking.c.id,
-            blocked.c.id,
-            aliased(ModAction, alias=exile),
-            aliased(ModRelationship, alias=mod)
-        ).options(
-            lazyload('*'),
-            joinedload(Comment.comment_aux),
-            joinedload(Comment.author),
-            joinedload(Comment.post),
-            Load(User).lazyload('*'),
-            Load(User).joinedload(User.title),
-            Load(Submission).lazyload('*'),
-            Load(Submission).joinedload(Submission.submission_aux),
-            Load(Submission).joinedload(Submission.board),
-            Load(CommentVote).lazyload('*'),
-            Load(UserBlock).lazyload('*'),
-            Load(ModAction).lazyload('*'),
-            Load(ModRelationship).lazyload('*'),
-            joinedload(Comment.distinguished_board),
-            joinedload(Comment.awards),
-            Load(Board).lazyload('*'),
-            Load(AwardRelationship).lazyload('*')
-        ).filter(
-            Comment.id.in_(cids)
-        )
-
+        query = nSession.query(
+            Comment, 
+            aliased(CommentVote, alias=vt),
+            aliased(ModRelationship, alias=mod),
+            aliased(ModAction, alias=exile)
+            ).options(
+            joinedload(Comment.author).joinedload(User.title)
+            )
 
         if v.admin_level >=4:
+            query=query.options(joinedload(Comment.oauth_app))
 
-            comms=comms.options(joinedload(Comment.oauth_app))
+        if load_parent:
+            query = query.options(
+                joinedload(
+                    Comment.parent_comment
+                    ).joinedload(
+                    Comment.author
+                    ).joinedload(
+                    User.title
+                    )
+                )
 
-        comms=comms.join(
-            votes,
-            votes.c.comment_id == Comment.id,
+        query = query.join(
+            vt,
+            vt.c.comment_id == Comment.id,
             isouter=True
-        ).join(
-            blocking,
-            blocking.c.target_id == Comment.author_id,
+            ).join(
+            Comment.post,
             isouter=True
-        ).join(
-            blocked,
-            blocked.c.user_id == Comment.author_id,
+            ).join(
+            mod,
+            mod.c.board_id==Submission.board_id,
             isouter=True
-        ).join(
+            ).join(
             exile,
             and_(exile.c.target_comment_id==Comment.id, exile.c.board_id==Comment.original_board_id),
             isouter=True
-        ).join(
-            mod,
-            mod.c.board_id==Comment.original_board_id,
-            isouter=True
-        )
+            ).filter(
+            Comment.id.in_(cids)
+            )
 
-        if sort_type == "hot":
-            comments = comms.order_by(Comment.score_hot.desc()).all()
-        elif sort_type == "top":
-            comments = comms.order_by(Comment.score_top.desc()).all()
-        elif sort_type == "new":
-            comments = comms.order_by(Comment.created_utc.desc()).all()
-        elif sort_type == "old":
-            comments = comms.order_by(Comment.created_utc.asc()).all()
-        elif sort_type == "disputed":
-            comments = comms.order_by(Comment.score_disputed.desc()).all()
-        elif sort_type == "random":
-            c = comms.all()
-            comments = random.sample(c, k=len(c))
-        else:
-            comments=comms.all()
 
-        output = []
-        for c in comments:
-            comment = c[0]
-            comment._voted = c[1] or 0
-            comment._is_blocking = c[2] or 0
-            comment._is_blocked = c[3] or 0
-            
-            comment._is_exiled_for=c[4]
-            comment._is_guildmaster=c[5] or None
-            output.append(comment)
+
+        query=query.options(
+    #        contains_eager(Comment.post).contains_eager(Submission.board)
+            ).order_by(None).all()
+
+        comments=[x for x in query]
+
+        output = [x[0] for x in comments]
+        for i in range(len(output)):
+            output[i]._voted = comments[i][1].vote_type if comments[i][1] else 0
+            output[i]._is_guildmaster = comments[i][2]
+            output[i]._is_exiled_for = comments[i][3]
+
+
 
     else:
-        comms = nSession.query(
+        query = nSession.query(
             Comment,
             aliased(ModAction, alias=exile)
         ).options(
-            lazyload('*'),
-            joinedload(Comment.post),
-            joinedload(Comment.comment_aux),
-            joinedload(Comment.author),
-            Load(User).lazyload('*'),
-            Load(User).joinedload(User.title),
-            Load(Submission).lazyload('*'),
-            Load(Submission).joinedload(Submission.submission_aux),
-            Load(Submission).joinedload(Submission.board),
-            Load(CommentVote).lazyload('*'),
-            Load(UserBlock).lazyload('*'),
-            Load(ModAction).lazyload('*'),
-            Load(ModRelationship).lazyload('*'),
-            joinedload(Comment.distinguished_board),
-            joinedload(Comment.awards),
-            Load(Board).lazyload('*'),
-            Load(AwardRelationship).lazyload('*')
+            joinedload(Comment.author).joinedload(User.title),
+            joinedload(Comment.post).joinedload(Submission.board)
         ).filter(
             Comment.id.in_(cids)
         ).join(
             exile,
             and_(exile.c.target_comment_id==Comment.id, exile.c.board_id==Comment.original_board_id),
             isouter=True
-        )
+        ).order_by(None).all()
 
-        if sort_type == "hot":
-            comments = comms.order_by(Comment.score_hot.desc()).all()
-        elif sort_type == "top":
-            comments = comms.order_by(Comment.score_top.desc()).all()
-        elif sort_type == "new":
-            comments = comms.order_by(Comment.created_utc.desc()).all()
-        elif sort_type == "old":
-            comments = comms.order_by(Comment.created_utc.asc()).all()
-        elif sort_type == "disputed":
-            comments = comms.order_by(Comment.score_disputed.desc()).all()
-        elif sort_type == "random":
-            c = comms.all()
-            comments = random.sample(c, k=len(c))
-        else:
-            comments=comms.all()
+        comments=[x for x in query]
 
-        output = []
-        for c in comments:
-            comment=c[0]
-            comment._is_exiled_for=c[1]
-            output.append(comment)
+        output=[x[0] for x in comments]
+        for i in range(len(output)):
+            output[i]._is_exiled_for=comments[i][1]
 
 
     output = sorted(output, key=lambda x: cids.index(x.id))
 
-    if load_parent:
-        parents=get_comments(
-            [x.parent_comment_id for x in output if x.parent_comment_id], 
-            v=v, 
-            nSession=nSession, 
-            load_parent=False
-            )
-
-        parents={x.id: x for x in parents}
-
-        for c in output:
-            c._parent_comment=parents.get(c.parent_comment_id)
-
     return output
 
 
-def get_board(bid,v=None, graceful=False):
+def get_board(bid, graceful=False):
 
-    if isinstance(bid, str):
-        bid=base36decode(bid)
-
-        
-    if v:
-        sub = g.db.query(Subscription).filter_by(user_id=v.id, is_active=True).subquery()
-        items = g.db.query(
-            Board,
-            aliased(Subscription, alias=sub)
-            ).options(
-            joinedload(Board.moderators).joinedload(ModRelationship.user),
-            joinedload(Board.subcat).joinedload(SubCategory.category)
-            ).filter(
-                Board.id==bid
-            ).join(
-            sub,
-            sub.c.board_id==Board.id,
-            isouter=True
-        ).first()
-
-        if items:
-            board=items[0]
-            board._is_subscribed=items[1]
-        else:
-            board=None
-    else:
-            
-        query = g.db.query(Board).options(
-            joinedload(Board.moderators).joinedload(ModRelationship.user),
-            joinedload(Board.subcat).joinedload(SubCategory.category)
-            ).filter(
-                    Board.id==bid)
-        board=query.first()
-    
-    
-    
-    if not board:
+    x = g.db.query(Board).options(
+        joinedload(Board.moderators).joinedload(ModRelationship.user),
+        joinedload(Board.subcat).joinedload(SubCategory.category)
+        ).filter_by(
+                id=base36decode(bid)).first()
+    if not x:
         if graceful:
             return None
         else:
             abort(404)
-    return board
+    return x
 
 
-def get_guild(name, v=None, graceful=False, db=None):
-
-    if not db:
-        db=g.db
+def get_guild(name, graceful=False):
 
     name = name.lstrip('+')
 
@@ -899,45 +651,18 @@ def get_guild(name, v=None, graceful=False, db=None):
     name = name.replace('_', '\_')
     name = name.replace('%', '')
 
-    if v:
-        sub = g.db.query(Subscription).filter_by(user_id=v.id, is_active=True).subquery()
-
-        items = g.db.query(
-            Board,
-            aliased(Subscription, alias=sub)
-            ).options(
-            joinedload(Board.moderators).joinedload(ModRelationship.user),
-            joinedload(Board.subcat).joinedload(SubCategory.category)
+    x = g.db.query(Board).options(
+        joinedload(Board.moderators).joinedload(ModRelationship.user),
+        joinedload(Board.subcat).joinedload(SubCategory.category)
             ).filter(
-                    Board.name.ilike(name)
-            ).join(
-            sub,
-            sub.c.board_id==Board.id,
-            isouter=True
-            ).first()
-
-        if items:
-            board=items[0]
-            board._is_subscribed=items[1]
-        else:
-            board=None
-    else:
-            
-        query = g.db.query(Board).options(
-            joinedload(Board.moderators).joinedload(ModRelationship.user),
-            joinedload(Board.subcat).joinedload(SubCategory.category)
-            ).filter(
-                    Board.name.ilike(name)
-        )
-        board=query.first()
-    
-    if not board:
+                Board.name.ilike(name)
+                ).first()
+    if not x:
         if not graceful:
             abort(404)
         else:
             return None
-
-    return board
+    return x
 
 
 def get_domain(s):
@@ -999,23 +724,21 @@ def get_application(client_id, graceful=False):
 
 def get_from_permalink(link, v=None):
 
-    link=urlparse(link).path
-
     if "@" in link:
 
         name = re.search("/@(\w+)", link)
         if name:
-            name=name.group(1)
-            return get_user(name, v=v)
+            name=name.match(1)
+            return get_user(name)
 
     if "+" in link:
 
         x = re.search("/\+(\w+)$", link)
         if x:
-            name=x.group(1)
-            return get_guild(name, v=v)
+            name=x.match(1)
+            return get_guild(name)
 
-    ids = re.search("/\+\w+/post/(\w+)/[^/]+(/(\w+))?", link)
+    ids = re.search("://[^/]+\w+/post/(\w+)/[^/]+(/(\w+))?", link)
 
     post_id = ids.group(1)
     comment_id = ids.group(3)

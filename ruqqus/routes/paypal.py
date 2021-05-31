@@ -132,14 +132,11 @@ def shop_buy_coins_completed(v):
     id=base36decode(id)
     txn=g.db.query(PayPalTxn
         #).with_for_update(
-        ).filter_by(user_id=v.id, id=id, status=1).first()
+        ).options(lazyload('*')).filter_by(user_id=v.id, id=id, status=1).first()
     #v=g.db.query(User).with_for_update().options(lazyload('*')).filter_by(id=v.id).first()
 
     if not txn:
         abort(400)
-
-    if txn.promo and not txn.promo.promo_is_active:
-        return jsonfy({"error":f"The promo code `{txn.promo.code}` is not currently valid. Please begin a new transaction."}), 422
 
     if not CLIENT.capture(txn):
         abort(402)
@@ -285,9 +282,9 @@ def gift_post_pid(pid, v):
     if not g.db.query(AwardRelationship).filter_by(user_id=v.id, submission_id=post.id).first():
         text=f"Someone liked [your post]({post.permalink}) and has given you a Coin!\n\n"
         if u.premium_expires_utc < int(time.time()):
-            text+="Your Coin has been automatically redeemed for one week of [Ruqqus Premium](/settings/premium)."
+            text+="Your Coin has been automatically redeemed for one week of [Drama Premium](/settings/premium)."
         else:
-            text+="Since you already have Ruqqus Premium, the Coin has been added to your balance. You can keep it for yourself, or give it to someone else."
+            text+="Since you already have Drama Premium, the Coin has been added to your balance. You can keep it for yourself, or give it to someone else."
         send_notification(u, text)
 
 
@@ -304,8 +301,6 @@ def gift_post_pid(pid, v):
         g.db.flush()
     except:
         pass
-    
-    g.db.commit()
 
     return jsonify({"message":"Tip Successful!"})
 
@@ -367,9 +362,9 @@ def gift_comment_pid(cid, v):
     if not g.db.query(AwardRelationship).filter_by(user_id=v.id, comment_id=comment.id).first():
         text=f"Someone liked [your comment]({comment.permalink}) and has given you a Coin!\n\n"
         if u.premium_expires_utc < int(time.time()):
-            text+="Your Coin has been automatically redeemed for one week of [Ruqqus Premium](/settings/premium)."
+            text+="Your Coin has been automatically redeemed for one week of [Drama Premium](/settings/premium)."
         else:
-            text+="Since you already have Ruqqus Premium, the Coin has been added to your balance. You can keep it for yourself, or give it to someone else."
+            text+="Since you already have Drama Premium, the Coin has been added to your balance. You can keep it for yourself, or give it to someone else."
 
         send_notification(u, text)
 
@@ -387,8 +382,6 @@ def gift_comment_pid(cid, v):
         g.db.flush()
     except:
         pass
-    
-    g.db.commit()
 
     return jsonify({"message":"Tip Successful!"})
 

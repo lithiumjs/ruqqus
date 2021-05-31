@@ -730,9 +730,7 @@ def admin_user_data_get(v):
 def admin_image_purge(v):
     
     url=request.form.get("url")
-    
-    if "&h=" in url: aws.delete_file(url)
-
+    aws.delete_file(url)
     return redirect("/admin/image_purge")
 
 

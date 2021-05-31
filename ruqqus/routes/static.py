@@ -14,11 +14,13 @@ from ruqqus.helpers.get import get_account
 # take care of misc pages that never really change (much)
 
 @app.route("/contact", methods=["GET"])
+@auth_desired
 def contact():
-    return render_template("contact.html")
+    return render_template("contact.html", v=v)
 
 @app.route("/submit_contact", methods=["POST"])
-def submit_contact():
+@auth_desired
+def submit_contact(v):
 
     inquiry = request.form.get("inquiry", "")
 
@@ -26,7 +28,7 @@ def submit_contact():
 
     for x in admins: send_notification(x, inquiry)
 
-    return render_template("contact.html", msg="Your inquiry has been saved.")
+    return render_template("contact.html", v=v, msg="Your inquiry has been saved.")
 
 @app.route('/assets/<path:path>')
 @limiter.exempt

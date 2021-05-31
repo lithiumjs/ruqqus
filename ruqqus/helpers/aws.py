@@ -127,7 +127,7 @@ def upload_from_file(name, filename, resize=None):
 
 def delete_file(url):
     deletehash = url.split("&h=")[1]
-    requests.post(f'https://api.imgur.com/3/image/{deletehash}', headers = {"Authorization": f"Client-ID {imgurkey}"})
+    requests.delete(f'https://api.imgur.com/3/image/{deletehash}', headers = {"Authorization": f"Client-ID {imgurkey}"})
     headers = {"Authorization": f"Bearer {CF_KEY}", "Content-Type": "application/json"}
     data = {'files': [url]}
     url = f"https://api.cloudflare.com/client/v4/zones/{CF_ZONE}/purge_cache"

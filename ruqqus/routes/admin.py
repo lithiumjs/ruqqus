@@ -733,7 +733,7 @@ def admin_image_purge(v):
     
     if "&h=" in url: aws.delete_file(url)
 
-    return "", 204
+    return redirect("/admin/image_purge")
 
 
 @app.route("/admin/ip/<ipaddr>", methods=["GET"])

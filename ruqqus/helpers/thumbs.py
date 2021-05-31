@@ -190,7 +190,7 @@ def thumbnail_thread(pid, debug=False):
         for chunk in image_req.iter_content(1024):
             file.write(chunk)
 
-    post.thumburl = aws.upload_file(name, tempname, resize=(375, 227))
+    post.thumburl = aws.upload_from_file(name, tempname, resize=(375, 227))
     post.has_thumb = True
     db.add(post)
 

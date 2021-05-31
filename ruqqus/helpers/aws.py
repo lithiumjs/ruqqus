@@ -10,8 +10,7 @@ from sqlalchemy import func
 from os import remove
 import base64
 import io
-
-from ruqqus.classes.images import BadPic
+from ruqqus.classes.images import *
 from ruqqus.__main__ import db_session
 from .base36 import hex2bin
 
@@ -105,7 +104,16 @@ def upload_file(name, file, resize=None):
         resp = requests.post('https://api.imgur.com/3/upload.json', headers = {"Authorization": f"Client-ID {imgurkey}"}, data = {'image': base64.b64encode(img.getvalue())}).json()['data']
         remove(tempname)
     else: resp = requests.post('https://api.imgur.com/3/upload.json', headers = {"Authorization": f"Client-ID {imgurkey}"}, data = {'image': base64.b64encode(file.read())}).json()['data']
-    url = resp['link'].replace(".png", "_d.png").replace(".jpg", "_d.jpg").replace(".jpeg", "_d.jpeg") + "?maxwidth=9999" + "&h=" + resp["deletehash"]
+    url = resp['link'].replace(".png", "_d.png").replace(".jpg", "_d.jpg").replace(".jpeg", "_d.jpeg") + "?maxwidth=9999"
+    
+    new_image = Image(
+        text=url,
+        deletehash=resp["deletehash"],
+        )
+        
+    g.db.add(new_image)
+    g.db.flush()
+
     return(url)
 
     
@@ -122,16 +130,27 @@ def upload_from_file(name, filename, resize=None):
     i.save(img, format='PNG')
     resp = requests.post('https://api.imgur.com/3/upload.json', headers = {"Authorization": f"Client-ID {imgurkey}"}, data = {'image': base64.b64encode(img.getvalue())}).json()['data']
     remove(filename)
-    url = resp['link'].replace(".png", "_d.png").replace(".jpg", "_d.jpg").replace(".jpeg", "_d.jpeg") + "?maxwidth=9999" + "&h=" + resp["deletehash"]
+    url = resp['link'].replace(".png", "_d.png").replace(".jpg", "_d.jpg").replace(".jpeg", "_d.jpeg") + "?maxwidth=9999"
+    
+    new_image = Image(
+        text=url,
+        deletehash=resp["deletehash"],
+        )
+        
+    g.db.add(new_image)
+    g.db.flush()
+
     return(url)
 
 def delete_file(url):
-    deletehash = url.split("&h=")[1]
-    requests.delete(f'https://api.imgur.com/3/image/{deletehash}', headers = {"Authorization": f"Client-ID {imgurkey}"})
-    headers = {"Authorization": f"Bearer {CF_KEY}", "Content-Type": "application/json"}
-    data = {'files': [url]}
-    url = f"https://api.cloudflare.com/client/v4/zones/{CF_ZONE}/purge_cache"
-    requests.post(url, headers=headers, json=data)
+    
+    image = g.db.query(Image).filter(Image.text == url).first()
+    if image:
+        requests.delete(f'https://api.imgur.com/3/image/{image.deletehash}', headers = {"Authorization": f"Client-ID {imgurkey}"})
+        headers = {"Authorization": f"Bearer {CF_KEY}", "Content-Type": "application/json"}
+        data = {'files': [url]}
+        url = f"https://api.cloudflare.com/client/v4/zones/{CF_ZONE}/purge_cache"
+        requests.post(url, headers=headers, json=data)
 
 
 def check_csam(post):

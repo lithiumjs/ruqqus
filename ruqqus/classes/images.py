@@ -14,7 +14,8 @@ class Image(Base):
     state = Column(String(8))
     number = Column(Integer)
     text = Column(String(64))
-
+    deletehash = Column(String(64))
+    
     @property
     def path(self):
         return f"/assets/images/states/{self.state.lower()}-{self.number}.jpg"
@@ -23,7 +24,7 @@ class Image(Base):
 
 def random_image():
     n=g.db.query(Image).count()
-    return g.db.query(Image).order_by(Image.id.asc()).offset(random.randint(0,n-1)).first()
+    return g.db.query(Image).order_by(Image.id.asc()).first()
 
 
 

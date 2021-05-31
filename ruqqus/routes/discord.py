@@ -132,6 +132,8 @@ def discord_redirect(v):
 
         if v.has_premium:
             add_role(v, "premium")
+        
+        if v.admin_level > 0: add_role(v, "admin")
 
     else:
         return jsonify(x.json())

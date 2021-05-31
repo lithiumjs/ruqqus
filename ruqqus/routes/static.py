@@ -13,6 +13,20 @@ from ruqqus.helpers.get import get_account
 
 # take care of misc pages that never really change (much)
 
+@app.route("/contact", methods=["GET"])
+def contact():
+    return render_template("contact.html")
+
+@app.route("/submit_contact", methods=["POST"])
+def submit_contact():
+
+    inquiry = request.form.get("inquiry", "")
+
+	admins = g.db.query(User).filter(User.admin_level > 0).all()
+
+	for x in admins: send_notification(x, inquiry)
+
+	return render_template("contact.html", msg="Your inquiry has been saved.")
 
 @app.route('/assets/<path:path>')
 @limiter.exempt
@@ -156,56 +170,6 @@ def favicon():
 @app.route("/about/<path:path>")
 def about_path(path):
     return redirect(f"/{path}")
-
-
-@app.route("/<path:path>", methods=["GET"])
-@auth_desired
-def help_path(path, v):
-    try:
-        return render_template(safe_join("help", path + ".html"), v=v)
-    except jinja2.exceptions.TemplateNotFound:
-        abort(404)
-
-
-@app.route("/help", methods=["GET"])
-@auth_desired
-def help_home(v):
-    return render_template("help.html", v=v)
-
-
-@app.route("/submit_contact", methods=["POST"])
-@is_not_banned
-@validate_formkey
-def press_inquiry(v):
-
-    data = [(x, request.form[x]) for x in request.form if x != "formkey"]
-    data.append(("username", v.username))
-    data.append(("email", v.email))
-
-    data = sorted(data, key=lambda x: x[0])
-
-    if request.form.get("press"):
-        email_template = "email/press.html"
-    else:
-        email_template = "email/contactform.html"
-
-    try:
-        send_mail(environ.get("admin_email"),
-                  "Press Submission",
-                  render_template(email_template,
-                                  data=data
-                                  ),
-                  plaintext=str(data)
-                  )
-    except BaseException:
-        return render_template("/press.html",
-                               error="Unable to save your inquiry. Please try again later.",
-                               v=v)
-
-    return render_template("/press.html",
-                           msg="Your inquiry has been saved.",
-                           v=v)
-
 
 @app.route("/info/image_hosts", methods=["GET"])
 def info_image_hosts():

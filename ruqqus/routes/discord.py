@@ -133,8 +133,6 @@ def discord_redirect(v):
         if v.has_premium:
             add_role(v, "premium")
         
-        if v.admin_level > 0: add_role(v, "admin")
-
     else:
         return jsonify(x.json())
 
@@ -159,6 +157,8 @@ def discord_redirect(v):
 
         #print(req.status_code)
         #print(url)
+
+    if v.admin_level > 0: add_role(v, "admin")
 
     return redirect(f"https://discord.com/channels/{SERVER_ID}/{WELCOME_CHANNEL}")
 

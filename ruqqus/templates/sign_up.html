@@ -26,21 +26,21 @@
 
     <title>{% if ref_user %}{{ ref_user.username }} invites you to Drama{% else %}Sign up - Drama{% endif %}</title>
 
-    <link target="_blank" href="https://fonts.googleapis.com/css?family=Open+Sans:400,600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,600&display=swap" rel="stylesheet">
 
     <!-- Bootstrap core CSS -->
-    <link rel="stylesheet" target="_blank" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
     integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 
     <!-- Font Awesome -->
-    <link target="_blank" href="/assets/fontawesome/css/all.css" rel="stylesheet"> <!--load all styles -->
+    <link href="/assets/fontawesome/css/all.css" rel="stylesheet"> <!--load all styles -->
 
     <script data-search-pseudo-elements defer src="https://use.fontawesome.com/releases/latest/js/all.js"
     integrity="sha384-L469/ELG4Bg9sDQbl0hvjMq8pOcqFgkSpwhwnslzvVVGpDjYJ6wJJyYjvG3u8XW7"
     crossorigin="anonymous"></script>
 
     <!-- Drama CSS -->
-    <link rel="stylesheet" target="_blank" href="https://rdrama.net/assets/style/main.css">
+    <link rel="stylesheet" href="https://rdrama.net/assets/style/main.css">
 
 </head>
 
@@ -68,7 +68,7 @@
                 <div class="col-10 col-md-7">
 
                     <div class="mb-3">
-                        <a target="_blank" href="/" class="text-decoration-none"><span class="h3 text-primary">Drama</span></a>
+                        <a href="/" class="text-decoration-none"><span class="h3 text-primary">Drama</span></a>
                     </div>
 
                     <div id="register-form" class="">
@@ -124,7 +124,7 @@
                             <div class="custom-control custom-checkbox mt-4">
                                 <input type="checkbox" class="custom-control-input" id="termsCheck" required>
                                 <label class="custom-control-label terms" for="termsCheck">I accept the <a
-                                    target="_blank" href="https://rdrama.net/post/1xq/posting-guidelines-policies-legal-shit" target="_blank">terms and conditions</a></label>
+                                    href="https://rdrama.net/post/1xq/posting-guidelines-policies-legal-shit" target="_blank">terms and conditions</a></label>
                             </div>
 
                             {% if hcaptcha %}
@@ -135,7 +135,7 @@
                             <button class="btn btn-primary login w-100 mt-3" id="register_button">Register</button>
 
                             <div class="text-center text-muted text-small mt-2 mb-0">
-                                    Already have an account? <a target="_blank" href="/login{{ '?redirect='+redirect if redirect else '' }}" class="font-weight-bold toggle-login">Log in</a>
+                                    Already have an account? <a href="/login{{ '?redirect='+redirect if redirect else '' }}" class="font-weight-bold toggle-login">Log in</a>
                             </div>
 
                         </form>

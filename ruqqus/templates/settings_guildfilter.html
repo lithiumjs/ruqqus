@@ -56,7 +56,7 @@
         {% for block in v.board_blocks %}
         <tr>
           <td>
-            <a target="_blank" href="{{ block.board.permalink }}">
+            <a href="{{ block.board.permalink }}">
               <img src="{{ block.board.profile_url }}" class="profile-pic-20 align-top mr-2">+{{ block.board.name }}</a>
           </td>
 
@@ -64,7 +64,7 @@
 
             <td>
               <div class="dropdown float-right dropdown-actions">
-                <a target="_blank" href="#" role="button" id="dropdownMoreLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="line-height: 0;">
+                <a href="#" role="button" id="dropdownMoreLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="line-height: 0;">
                   <i class="fas fa-ellipsis-h text-muted"></i>
                 </a>
                 <div class="dropdown-menu border-0 shadow dropdown-menu-right mt-2" aria-labelledby="dropdownMoreLink" x-placement="bottom-end" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(21px, 18px, 0px);">

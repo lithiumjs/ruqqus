@@ -12,21 +12,21 @@
     <title>Login -  Drama</title>
     {% endblock %}
     
-    <link target="_blank" href="https://fonts.googleapis.com/css?family=Open+Sans:400,600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,600&display=swap" rel="stylesheet">
 
     <!-- Bootstrap core CSS -->
-    <link rel="stylesheet" target="_blank" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
     integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 
     <!-- Font Awesome -->
-    <link target="_blank" href="https://rdrama.net/assets/style/fa.css" rel="stylesheet"> <!--load all styles -->
+    <link href="https://rdrama.net/assets/style/fa.css" rel="stylesheet"> <!--load all styles -->
 
     <script data-search-pseudo-elements defer src="https://use.fontawesome.com/releases/latest/js/all.js"
     integrity="sha384-L469/ELG4Bg9sDQbl0hvjMq8pOcqFgkSpwhwnslzvVVGpDjYJ6wJJyYjvG3u8XW7"
     crossorigin="anonymous"></script>
 
     <!-- Drama CSS -->
-    <link rel="stylesheet" target="_blank" href="https://rdrama.net/assets/style/main.css">
+    <link rel="stylesheet" href="https://rdrama.net/assets/style/main.css">
 
 </head>
 
@@ -54,7 +54,7 @@
                 <div class="col-10 col-md-7">
 
                     <div class="mb-5">
-                        <a target="_blank" href="/" class="text-decoration-none"><span class="h3 text-primary">Drama</span></a>
+                        <a href="/" class="text-decoration-none"><span class="h3 text-primary">Drama</span></a>
                     </div>
 
                     {% block content %}
@@ -71,7 +71,7 @@
                           <div>
                               Incorrect username, email address, or password.
                               <br>
-                              <a target="_blank" href="/forgot" class="alert-link">Forgot password?</a>
+                              <a href="/forgot" class="alert-link">Forgot password?</a>
                           </div>
                           <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
@@ -93,12 +93,12 @@
                             type="password" name="password" required="">
 
 
-                            <small><a target="_blank" href="/forgot">Forgot password?</a></small>
+                            <small><a href="/forgot">Forgot password?</a></small>
 
                             <button class="btn btn-primary login w-100 mt-3" id="login_button">Sign in</button>
 
                             <div class="text-center text-muted text-small mt-5 mb-3">
-                                Don't have an account? <a target="_blank" href="/signup{{ '?redirect='+redirect if redirect else '' }}" class="font-weight-bold toggle-login">Sign up</a>
+                                Don't have an account? <a href="/signup{{ '?redirect='+redirect if redirect else '' }}" class="font-weight-bold toggle-login">Sign up</a>
                             </div>
 
                         </form>

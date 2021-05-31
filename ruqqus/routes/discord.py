@@ -19,13 +19,6 @@ DISCORD_ENDPOINT = "https://discordapp.com/api/v6"
 
 WELCOME_CHANNEL="846509313941700618"
 
-
-
-@app.route("/guilded", methods=["GET"])
-def guilded_server():
-    return redirect("https://www.guilded.gg/i/VEvjaraE")
-
-
 @app.route("/discord", methods=["GET"])
 @auth_required
 def join_discord(v):

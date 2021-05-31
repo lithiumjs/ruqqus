@@ -2,7 +2,7 @@
 
 {% block adminpanel %}
 <div>
-  <p><a target="_blank" href="/admin">Admin Home</a></p>
+  <p><a href="/admin">Admin Home</a></p>
 </div>
 {% endblock %}
 
@@ -27,11 +27,11 @@
             {{ time_filter | capitalize }}
           </button>
           <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" x-placement="bottom-start" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(0px, 31px, 0px);">
-            {% if not time_filter=="day" %}<a class="dropdown-item" target="_blank" href="?sort={{ sort }}&t=day"><i class="fas fa-calendar-day mr-2"></i>Day</a>{% endif %}
-            {% if not time_filter=="week" %}<a class="dropdown-item" target="_blank" href="?sort={{ sort }}&t=week"><i class="fas fa-calendar-week mr-2"></i>Week</a>{% endif %}
-            {% if not time_filter=="month" %}<a class="dropdown-item" target="_blank" href="?sort={{ sort }}&t=month"><i class="fas fa-calendar-alt mr-2"></i>Month</a>{% endif %}
-            {% if not time_filter=="year" %}<a class="dropdown-item" target="_blank" href="?sort={{ sort }}&t=year"><i class="fas fa-calendar mr-2"></i>Year</a>{% endif %}
-            {% if not time_filter=="all" %}<a class="dropdown-item" target="_blank" href="?sort={{ sort }}&t=all"><i class="fas fa-infinity mr-2"></i>All</a>{% endif %}
+            {% if not time_filter=="day" %}<a class="dropdown-item" href="?sort={{ sort }}&t=day"><i class="fas fa-calendar-day mr-2"></i>Day</a>{% endif %}
+            {% if not time_filter=="week" %}<a class="dropdown-item" href="?sort={{ sort }}&t=week"><i class="fas fa-calendar-week mr-2"></i>Week</a>{% endif %}
+            {% if not time_filter=="month" %}<a class="dropdown-item" href="?sort={{ sort }}&t=month"><i class="fas fa-calendar-alt mr-2"></i>Month</a>{% endif %}
+            {% if not time_filter=="year" %}<a class="dropdown-item" href="?sort={{ sort }}&t=year"><i class="fas fa-calendar mr-2"></i>Year</a>{% endif %}
+            {% if not time_filter=="all" %}<a class="dropdown-item" href="?sort={{ sort }}&t=all"><i class="fas fa-infinity mr-2"></i>All</a>{% endif %}
           </div>
         </div>
 
@@ -47,12 +47,12 @@
             {{ sort | capitalize }}
           </button>
           <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" x-placement="bottom-start" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(0px, 31px, 0px);">
-            {% if not sort=="hot" %}<a class="dropdown-item" target="_blank" href="?sort=hot&t={{time_filter}}"><i class="fas fa-fire mr-2"></i>Hot</a>{% endif %}
-            {% if not sort=="top" %}<a class="dropdown-item" target="_blank" href="?sort=top&t={{time_filter}}"><i class="fas fa-arrow-alt-circle-up mr-2"></i>Top</a>{% endif %}
-            {% if not sort=="new" %}<a class="dropdown-item" target="_blank" href="?sort=new&t={{time_filter}}"><i class="fas fa-sparkles mr-2"></i>New</a>{% endif %}
-            {% if not sort=="old" %}<a class="dropdown-item" target="_blank" href="?sort=old&t={{time_filter}}"><i class="fas fa-book mr-2"></i>Old</a>{% endif %}
-            {% if not sort=="controversial" %}<a class="dropdown-item" target="_blank" href="?sort=controversial&t={{time_filter}}"><i class="fas fa-bullhorn mr-2"></i>Controversial</a>{% endif %}
-            {% if not sort=="comments" %}<a class="dropdown-item" target="_blank" href="?sort=comments&t={{time_filter}}"><i class="fas fa-comments mr-2"></i>Comments</a>{% endif %}
+            {% if not sort=="hot" %}<a class="dropdown-item" href="?sort=hot&t={{time_filter}}"><i class="fas fa-fire mr-2"></i>Hot</a>{% endif %}
+            {% if not sort=="top" %}<a class="dropdown-item" href="?sort=top&t={{time_filter}}"><i class="fas fa-arrow-alt-circle-up mr-2"></i>Top</a>{% endif %}
+            {% if not sort=="new" %}<a class="dropdown-item" href="?sort=new&t={{time_filter}}"><i class="fas fa-sparkles mr-2"></i>New</a>{% endif %}
+            {% if not sort=="old" %}<a class="dropdown-item" href="?sort=old&t={{time_filter}}"><i class="fas fa-book mr-2"></i>Old</a>{% endif %}
+            {% if not sort=="controversial" %}<a class="dropdown-item" href="?sort=controversial&t={{time_filter}}"><i class="fas fa-bullhorn mr-2"></i>Controversial</a>{% endif %}
+            {% if not sort=="comments" %}<a class="dropdown-item" href="?sort=comments&t={{time_filter}}"><i class="fas fa-comments mr-2"></i>Comments</a>{% endif %}
           </div>
         </div>
       </div>
@@ -79,13 +79,13 @@
       </div>
       <div class="card-body">
         {% if v %}
-        <a target="_blank" href="/submit">
+        <a href="/submit">
           <input type="text" class="form-control"
           placeholder="Share something dramatic..." aria-label="Username"
           aria-describedby="basic-addon1">
         </a>
         {% else %}
-        <a target="_blank" href="/signup">
+        <a href="/signup">
           <input type="text" class="form-control"
           placeholder="Share something dramatic..." aria-label="Username"
           aria-describedby="basic-addon1">
@@ -158,12 +158,12 @@
                   {{ sort | capitalize }}
                 </button>
                 <div class="dropdown-menu" id="mobileSortDropdown" aria-labelledby="dropdownMenuButtonMobile" x-placement="bottom-start" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(0px, 31px, 0px);">
-                  {% if not sort=="hot" %}<a class="dropdown-item" target="_blank" href="?sort=hot&t={{time_filter}}"><i class="fas fa-fire text-primary mr-3"></i>Hot</a>{% endif %}
-                  {% if not sort=="top" %}<a class="dropdown-item" target="_blank" href="?sort=top&t={{time_filter}}"><i class="fas fa-arrow-alt-circle-up text-primary mr-3"></i>Top</a>{% endif %}
-                  {% if not sort=="new" %}<a class="dropdown-item" target="_blank" href="?sort=new&t={{time_filter}}"><i class="fas fa-sparkles text-primary mr-3"></i>New</a>{% endif %}
-                  {% if not sort=="old" %}<a class="dropdown-item" target="_blank" href="?sort=old&t={{time_filter}}"><i class="fas fa-book text-primary mr-3"></i>Old</a>{% endif %}
-                  {% if not sort=="controversial" %}<a class="dropdown-item" target="_blank" href="?sort=controversial&t={{time_filter}}"><i class="fas fa-bullhorn text-primary mr-3"></i>Controversial</a>{% endif %}
-                  {% if not sort=="comments" %}<a class="dropdown-item" target="_blank" href="?sort=comments&t={{time_filter}}"><i class="fas fa-comments text-primary mr-3"></i>Comments</a>{% endif %}
+                  {% if not sort=="hot" %}<a class="dropdown-item" href="?sort=hot&t={{time_filter}}"><i class="fas fa-fire text-primary mr-3"></i>Hot</a>{% endif %}
+                  {% if not sort=="top" %}<a class="dropdown-item" href="?sort=top&t={{time_filter}}"><i class="fas fa-arrow-alt-circle-up text-primary mr-3"></i>Top</a>{% endif %}
+                  {% if not sort=="new" %}<a class="dropdown-item" href="?sort=new&t={{time_filter}}"><i class="fas fa-sparkles text-primary mr-3"></i>New</a>{% endif %}
+                  {% if not sort=="old" %}<a class="dropdown-item" href="?sort=old&t={{time_filter}}"><i class="fas fa-book text-primary mr-3"></i>Old</a>{% endif %}
+                  {% if not sort=="controversial" %}<a class="dropdown-item" href="?sort=controversial&t={{time_filter}}"><i class="fas fa-bullhorn text-primary mr-3"></i>Controversial</a>{% endif %}
+                  {% if not sort=="comments" %}<a class="dropdown-item" href="?sort=comments&t={{time_filter}}"><i class="fas fa-comments text-primary mr-3"></i>Comments</a>{% endif %}
                 </div>
               </div>
 
@@ -177,11 +177,11 @@
                   {{ time_filter | capitalize }}
                 </button>
                 <div class="dropdown-menu" id="mobileSortDropdown" aria-labelledby="dropdownMenuButtonMobile" x-placement="bottom-start" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(0px, 31px, 0px);">
-                  {% if not time_filter=="day" %}<a class="dropdown-item" target="_blank" href="?sort={{ sort }}&t=day"><i class="fas fa-calendar-day text-primary mr-3"></i>Day</a>{% endif %}
-                  {% if not time_filter=="week" %}<a class="dropdown-item" target="_blank" href="?sort={{ sort }}&t=week"><i class="fas fa-calendar-week text-primary mr-3"></i>Week</a>{% endif %}
-                  {% if not time_filter=="month" %}<a class="dropdown-item" target="_blank" href="?sort={{ sort }}&t=month"><i class="fas fa-calendar-alt text-primary mr-3"></i>Month</a>{% endif %}
-                  {% if not time_filter=="year" %}<a class="dropdown-item" target="_blank" href="?sort={{ sort }}&t=year"><i class="fas fa-calendar text-primary mr-3"></i>Year</a>{% endif %}
-                  {% if not time_filter=="all" %}<a class="dropdown-item" target="_blank" href="?sort={{ sort }}"><i class="fas fa-infinity text-primary mr-3"></i>All</a>{% endif %}
+                  {% if not time_filter=="day" %}<a class="dropdown-item" href="?sort={{ sort }}&t=day"><i class="fas fa-calendar-day text-primary mr-3"></i>Day</a>{% endif %}
+                  {% if not time_filter=="week" %}<a class="dropdown-item" href="?sort={{ sort }}&t=week"><i class="fas fa-calendar-week text-primary mr-3"></i>Week</a>{% endif %}
+                  {% if not time_filter=="month" %}<a class="dropdown-item" href="?sort={{ sort }}&t=month"><i class="fas fa-calendar-alt text-primary mr-3"></i>Month</a>{% endif %}
+                  {% if not time_filter=="year" %}<a class="dropdown-item" href="?sort={{ sort }}&t=year"><i class="fas fa-calendar text-primary mr-3"></i>Year</a>{% endif %}
+                  {% if not time_filter=="all" %}<a class="dropdown-item" href="?sort={{ sort }}"><i class="fas fa-infinity text-primary mr-3"></i>All</a>{% endif %}
                 </div>
               </div>
 
@@ -192,14 +192,14 @@
           <div class="post-filter d-none">
             <span>From:</span>
             <span class="dropdown">
-              <a class="dropdown-toggle" target="_blank" href="#" role="button" id="dropdownFrom" data-toggle="dropdown"
+              <a class="dropdown-toggle" href="#" role="button" id="dropdownFrom" data-toggle="dropdown"
               aria-haspopup="true" aria-expanded="false">Time</a>
 
               <span class="dropdown-menu border-0 shadow" id="dropdownMenuFrom" aria-labelledby="dropdownFrom">
-                <a class="dropdown-item" target="_blank" href="#">Past Day</a>
-                <a class="dropdown-item" target="_blank" href="#">Past Month</a>
-                <a class="dropdown-item" target="_blank" href="#">Past Year</a>
-                <a class="dropdown-item" target="_blank" href="#">All Time</a>
+                <a class="dropdown-item" href="#">Past Day</a>
+                <a class="dropdown-item" href="#">Past Month</a>
+                <a class="dropdown-item" href="#">Past Year</a>
+                <a class="dropdown-item" href="#">All Time</a>
               </span>
             </span>
 
@@ -221,14 +221,14 @@
       <ul class="pagination pagination-sm mb-0">
         {% if page>1 %}
         <li class="page-item">
-          <small><a class="page-link" target="_blank" href="?sort={{ sort }}&page={{ page-1 }}&t={{ time_filter }}{% if only %}&only={{ only }}{% endif %}" tabindex="-1">Prev</a></small>
+          <small><a class="page-link" href="?sort={{ sort }}&page={{ page-1 }}&t={{ time_filter }}{% if only %}&only={{ only }}{% endif %}" tabindex="-1">Prev</a></small>
         </li>
         {% else %}
         <li class="page-item disabled"><span class="page-link">Prev</span></li>
         {% endif %}
         {% if next_exists %}
         <li class="page-item">
-          <small><a class="page-link" target="_blank" href="?sort={{ sort }}&page={{ page+1 }}&t={{ time_filter }}{% if only %}&only={{ only }}{% endif %}">Next</a></small>
+          <small><a class="page-link" href="?sort={{ sort }}&page={{ page+1 }}&t={{ time_filter }}{% if only %}&only={{ only }}{% endif %}">Next</a></small>
         </li>
         {% else %}
         <li class="page-item disabled"><span class="page-link">Next</span></li>

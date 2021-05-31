@@ -35,7 +35,7 @@
 
     <div class="h5">No unread messages</div>
     <div class="text-small text-muted mb-3">When someone comments or replies, it will show up here.</div>
-    <a target="_blank" href="/notifications?all=true" class="btn btn-primary btn-sm">View entire inbox</a>
+    <a href="/notifications?all=true" class="btn btn-primary btn-sm">View entire inbox</a>
   </div>
 
   {% endif %}
@@ -50,14 +50,14 @@
   <ul class="pagination pagination-sm mb-0">
     {% if page>1 %}
     <li class="page-item">
-      <small><a class="page-link" target="_blank" href="?all={{ request.args.get('all', '') }}&page={{ page-1 }}" tabindex="-1">Prev</a></small>
+      <small><a class="page-link" href="?all={{ request.args.get('all', '') }}&page={{ page-1 }}" tabindex="-1">Prev</a></small>
     </li>
     {% else %}
     <li class="page-item disabled"><span class="page-link">Prev</span></li>
     {% endif %}
     {% if next_exists %}
     <li class="page-item">
-      <small><a class="page-link" target="_blank" href="?all={{ request.args.get('all', '') }}&page={{ page+1 }}">Next</a></small>
+      <small><a class="page-link" href="?all={{ request.args.get('all', '') }}&page={{ page+1 }}">Next</a></small>
     </li>
     {% else %}
     <li class="page-item disabled"><span class="page-link">Next</span></li>

@@ -8,7 +8,7 @@
 {% endblock %}
 
 <div class="post-info font-weight-bold">
-    <span class="align-top"><a target="_blank" href="{{ c.permalink }}?context=1">{{ c.post.title | safe }}</a></span>
+    <span class="align-top"><a href="{{ c.permalink }}?context=1">{{ c.post.title | safe }}</a></span>
 </div>
 
 <div id="comment-{{ c.base36id }}" class="comment rounded">

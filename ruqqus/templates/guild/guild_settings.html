@@ -7,26 +7,26 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <meta name="description" content="">
   <meta name="author" content="">
-  <link rel="icon" type="image/png" target="_blank" href="/assets/favicon.ico">
+  <link rel="icon" type="image/png" href="/assets/favicon.ico">
 
   <title>{% block pagetitle %}Guild management - Drama{% endblock %}</title>
 
-  <link target="_blank" href="https://fonts.googleapis.com/css?family=Open+Sans:400,600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,600&display=swap" rel="stylesheet">
 
   <!-- Bootstrap core CSS -->
-  <link rel="stylesheet" target="_blank" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
   integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 
   <!-- Drama CSS -->
 
   {% if v and v.can_use_darkmode and session.get("dark_mode_enabled") %}
-  <link id="css-link" rel="stylesheet" target="_blank" href="https://rdrama.net/assets/style/main_dark.css">
+  <link id="css-link" rel="stylesheet" href="https://rdrama.net/assets/style/main_dark.css">
   {% else %}
-  <link id="css-link" rel="stylesheet" target="_blank" href="https://rdrama.net/assets/style/main.css">
+  <link id="css-link" rel="stylesheet" href="https://rdrama.net/assets/style/main.css">
   {% endif %}
 
   <!-- Font Awesome -->
-  <link target="_blank" href="https://rdrama.net/assets/style/fa.css" rel="stylesheet"> <!--load all styles -->
+  <link href="https://rdrama.net/assets/style/fa.css" rel="stylesheet"> <!--load all styles -->
 
   <script>
     function formkey() {
@@ -51,7 +51,7 @@
             <div class="col">
               <span class="post-meta-guild font-weight-bold">
               {% if b %}
-                <a target="_blank" href="/+{{ b.name }}" class="text-black"><img src="{{ b.profile_url }}" class="profile-pic-20 align-top mr-1">+{{ b.name }}</a>
+                <a href="/+{{ b.name }}" class="text-black"><img src="{{ b.profile_url }}" class="profile-pic-20 align-top mr-1">+{{ b.name }}</a>
               {% else %}
               Moderation
               {% endif %}
@@ -81,35 +81,35 @@
 
                   {% if mod and mod.perm_config %}
                   <li class="nav-item">
-                    <a class="nav-link{% if request.path.endswith('/mod/settings') %} active{% endif %}" target="_blank" href="/+{{ b.name }}/mod/settings"><i class="fas fa-cog"></i>Settings</a>
+                    <a class="nav-link{% if request.path.endswith('/mod/settings') %} active{% endif %}" href="/+{{ b.name }}/mod/settings"><i class="fas fa-cog"></i>Settings</a>
                   </li>
                   {% endif %}
                   {% if mod and mod.perm_appearance %}
                   <li class="nav-item">
-                    <a class="nav-link{% if request.path.endswith('/mod/appearance') %} active{% endif %}" target="_blank" href="/+{{ b.name }}/mod/appearance"><i class="fas fa-palette"></i>Appearance</a>
+                    <a class="nav-link{% if request.path.endswith('/mod/appearance') %} active{% endif %}" href="/+{{ b.name }}/mod/appearance"><i class="fas fa-palette"></i>Appearance</a>
                   </li>
                   {% endif %}
                   <li class="nav-item">
-                    <a class="nav-link{% if request.path.endswith('/mod/mods') %} active{% endif %}" target="_blank" href="/+{{ b.name }}/mod/mods"><i class="fas fa-crown"></i>Guildmasters</a>
+                    <a class="nav-link{% if request.path.endswith('/mod/mods') %} active{% endif %}" href="/+{{ b.name }}/mod/mods"><i class="fas fa-crown"></i>Guildmasters</a>
                   </li>
                   <li class="nav-item">
-                    <a class="nav-link{% if request.path.endswith('/mod/log') %} active{% endif %}" target="_blank" href="/+{{ b.name }}/mod/log"><i class="fas fa-scroll-old"></i>Mod Log</a> 
+                    <a class="nav-link{% if request.path.endswith('/mod/log') %} active{% endif %}" href="/+{{ b.name }}/mod/log"><i class="fas fa-scroll-old"></i>Mod Log</a> 
                   </li>
                   {% if mod and mod.perm_access %}
                   <li class="nav-item">
-                    <a class="nav-link{% if request.path.endswith('/mod/exiled') %} active{% endif %}" target="_blank" href="/+{{ b.name }}/mod/exiled"><i class="fas fa-user-slash"></i>Band Users</a> 
+                    <a class="nav-link{% if request.path.endswith('/mod/exiled') %} active{% endif %}" href="/+{{ b.name }}/mod/exiled"><i class="fas fa-user-slash"></i>Band Users</a> 
                   </li>
 
                     {% if b.restricted_posting or b.is_private%}
                     <li class="nav-item">
-                      <a class="nav-link{% if request.path.endswith('/mod/contributors') %} active{% endif %}" target="_blank" href="/+{{ b.name }}/mod/contributors"><i class="fas fa-user-check"></i>Approved Contributors</a> 
+                      <a class="nav-link{% if request.path.endswith('/mod/contributors') %} active{% endif %}" href="/+{{ b.name }}/mod/contributors"><i class="fas fa-user-check"></i>Approved Contributors</a> 
                     </li>
                     {% endif %}
                   {% endif %}
 
                   {% if mod and mod.perm_content %}
                   <li class="nav-item">
-                    <a class="nav-link{% if request.path.endswith('/mod/queue') %} active{% endif %}" target="_blank" href="/+{{ b.name }}/mod/queue"><i class="fas fa-flag"></i>Reports</a> 
+                    <a class="nav-link{% if request.path.endswith('/mod/queue') %} active{% endif %}" href="/+{{ b.name }}/mod/queue"><i class="fas fa-flag"></i>Reports</a> 
                   </li>
                   {% endif %}
 
@@ -129,33 +129,33 @@
           <ul class="nav settings-nav">
             {% if mod and mod.perm_config %}
             <li class="nav-item">
-              <a class="nav-link{% if request.path.endswith('/mod/settings') %} active{% endif %}" target="_blank" href="/+{{ b.name }}/mod/settings"><i class="fas fa-cog text-lg mr-0"></i></a>
+              <a class="nav-link{% if request.path.endswith('/mod/settings') %} active{% endif %}" href="/+{{ b.name }}/mod/settings"><i class="fas fa-cog text-lg mr-0"></i></a>
             </li>
             {% endif %}
             {% if mod and mod.perm_appearance %}
             <li class="nav-item">
-              <a class="nav-link{% if request.path.endswith('/mod/appearance') %} active{% endif %}" target="_blank" href="/+{{ b.name }}/mod/appearance"><i class="fas fa-palette text-lg mr-0"></i></a>
+              <a class="nav-link{% if request.path.endswith('/mod/appearance') %} active{% endif %}" href="/+{{ b.name }}/mod/appearance"><i class="fas fa-palette text-lg mr-0"></i></a>
             </li> 
             {% endif %}
             <li class="nav-item">
-              <a class="nav-link{% if request.path.endswith('/mod/mods') %} active{% endif %}" target="_blank" href="/+{{ b.name }}/mod/mods"><i class="fas fa-crown text-lg mr-0"></i></a>
+              <a class="nav-link{% if request.path.endswith('/mod/mods') %} active{% endif %}" href="/+{{ b.name }}/mod/mods"><i class="fas fa-crown text-lg mr-0"></i></a>
             </li>
             <li class="nav-item">
-              <a class="nav-link{% if request.path.endswith('/mod/log') %} active{% endif %}" target="_blank" href="/+{{ b.name }}/mod/log"><i class="fas fa-scroll-old text-lg mr-0"></i></a>
+              <a class="nav-link{% if request.path.endswith('/mod/log') %} active{% endif %}" href="/+{{ b.name }}/mod/log"><i class="fas fa-scroll-old text-lg mr-0"></i></a>
             </li>
             {% if mod and mod.perm_access %}
             <li class="nav-item">
-              <a class="nav-link{% if request.path.endswith('/mod/exiled') %} active{% endif %}" target="_blank" href="/+{{ b.name }}/mod/exiled"><i class="fas fa-user-slash text-lg mr-0"></i></a>
+              <a class="nav-link{% if request.path.endswith('/mod/exiled') %} active{% endif %}" href="/+{{ b.name }}/mod/exiled"><i class="fas fa-user-slash text-lg mr-0"></i></a>
             </li>
               {% if b.restricted_posting or b.is_private %}
               <li class="nav-item">
-                <a class="nav-link{% if request.path.endswith('/mod/contributors') %} active{% endif %}" target="_blank" href="/+{{ b.name }}/mod/contributors"><i class="fas fa-user-check text-lg mr-0"></i></a>
+                <a class="nav-link{% if request.path.endswith('/mod/contributors') %} active{% endif %}" href="/+{{ b.name }}/mod/contributors"><i class="fas fa-user-check text-lg mr-0"></i></a>
               </li>
               {% endif %}
             {% endif %}
             {% if mod and mod.perm_content %}
             <li class="nav-item">
-              <a class="nav-link{% if request.path.endswith('/mod/queue') %} active{% endif %}" target="_blank" href="/+{{ b.name }}/mod/queue"><i class="fas fa-flag text-lg mr-0"></i></a>
+              <a class="nav-link{% if request.path.endswith('/mod/queue') %} active{% endif %}" href="/+{{ b.name }}/mod/queue"><i class="fas fa-flag text-lg mr-0"></i></a>
             </li>
             {% endif %}
           </ul>

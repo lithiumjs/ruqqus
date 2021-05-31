@@ -20,10 +20,10 @@
 {% if thing %}
 
 <h1>Info</h1>
-<p><a target="_blank" href="{{ thing.permalink }}">{{ thing.permalink }}</a></p>
+<p><a href="{{ thing.permalink }}">{{ thing.permalink }}</a></p>
 
 
-<p><b>Author:</b> <a target="_blank" href="{{ thing.author.permalink }}">@{{ thing.author.username }}</a></p>
+<p><b>Author:</b> <a href="{{ thing.author.permalink }}">@{{ thing.author.username }}</a></p>
 
 {% if thing.oauth_app %}
 
@@ -31,7 +31,7 @@
 <div class="settings-section rounded">
 	<div class="d-lg-flex">
 	    <div class="title w-lg-25">
-            <label for="over18"><a target="_blank" href="{{ thing.oauth_app.permalink }}" target="_blank">{{ thing.oauth_app.app_name }}</a></label>
+            <label for="over18"><a href="{{ thing.oauth_app.permalink }}" target="_blank">{{ thing.oauth_app.app_name }}</a></label>
         </div>
         <div class="body w-lg-100">
 			<label for="edit-{{ thing.oauth_app.id }}-author" class="mb-0 w-lg-25">User</label>

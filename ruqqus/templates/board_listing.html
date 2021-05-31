@@ -7,7 +7,7 @@
 			<div class="d-flex flex-wrap align-items-center mb-2">
 				<img src="{{ b.profile_url }}" class="profile-pic-40 mr-2">
 
-				<a class="card-title text-break stretched-link h5 mb-0" target="_blank" href="{{ b.permalink }}">+{{ b.name }} {% if b.over_18 %}<span class="badge badge-danger">NSFW</span>{% endif %}</a>
+				<a class="card-title text-break stretched-link h5 mb-0" href="{{ b.permalink }}">+{{ b.name }} {% if b.over_18 %}<span class="badge badge-danger">NSFW</span>{% endif %}</a>
 
 			</div>
 			<p class="card-text text-small text-muted">{{ b.description|truncate(72, True) }}</p>
@@ -25,7 +25,7 @@
 
   <div class="d-flex flex-wrap justify-content-between align-items-center">
 
-    <a class="card-title stretched-link mb-0" target="_blank" href="{{ b.permalink }}">
+    <a class="card-title stretched-link mb-0" href="{{ b.permalink }}">
 
      <div class="d-flex align-items-center">
         <img src="{{ b.profile_url }}" class="profile-pic-50 mr-2">
@@ -43,7 +43,7 @@
     <div id="button-sub-mobile-{{ b.base36id }}" style="z-index: 2" class="{% if b.has_subscriber(v) %}d-none{% endif %}"><a class="btn btn-primary btn-sm" href="javascript:void(0)" onclick="post_toast('/api/subscribe/{{ b.name }}', callback=function(){document.getElementById('button-unsub-mobile-{{ b.base36id }}').classList.toggle('d-none');document.getElementById('button-sub-mobile-{{ b.base36id }}').classList.toggle('d-none');})">Join</a></div>
     <div id="button-unsub-mobile-{{ b.base36id }}" style="z-index: 2" class="{% if not b.has_subscriber(v) %} d-none{% endif %}"><a class="btn btn-secondary btn-sm" href="javascript:void(0)" onclick="post_toast('/api/unsubscribe/{{ b.name }}', callback=function(){document.getElementById('button-unsub-mobile-{{ b.base36id }}').classList.toggle('d-none');document.getElementById('button-sub-mobile-{{ b.base36id }}').classList.toggle('d-none');})">Leave</a></div>
     {% elif not v and request.path=="/browse" %}
-    <a class="btn btn-primary btn-sm" style="z-index: 2" target="_blank" href="/signup">Join</a>
+    <a class="btn btn-primary btn-sm" style="z-index: 2" href="/signup">Join</a>
     {% endif %}
 
 	</div>

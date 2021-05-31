@@ -32,11 +32,11 @@
             {{ time_filter | capitalize }}
           </button>
           <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" x-placement="bottom-start" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(0px, 31px, 0px);">
-            {% if not time_filter=="day" %}<a class="dropdown-item" target="_blank" href="?q={{ query | urlencode }}&sort={{ sort }}&t=day"><i class="fas fa-calendar-day mr-2"></i>Day</a>{% endif %}
-            {% if not time_filter=="week" %}<a class="dropdown-item" target="_blank" href="?q={{ query | urlencode }}&sort={{ sort }}&t=week"><i class="fas fa-calendar-week mr-2"></i>Week</a>{% endif %}
-            {% if not time_filter=="month" %}<a class="dropdown-item" target="_blank" href="?q={{ query | urlencode }}&sort={{ sort }}&t=month"><i class="fas fa-calendar-alt mr-2"></i>Month</a>{% endif %}
-            {% if not time_filter=="year" %}<a class="dropdown-item" target="_blank" href="?q={{ query | urlencode }}&sort={{ sort }}&t=year"><i class="fas fa-calendar mr-2"></i>Year</a>{% endif %}
-            {% if not time_filter=="all" %}<a class="dropdown-item" target="_blank" href="?q={{ query | urlencode }}&sort={{ sort }}"><i class="fas fa-infinity mr-2"></i>All</a>{% endif %}
+            {% if not time_filter=="day" %}<a class="dropdown-item" href="?q={{ query | urlencode }}&sort={{ sort }}&t=day"><i class="fas fa-calendar-day mr-2"></i>Day</a>{% endif %}
+            {% if not time_filter=="week" %}<a class="dropdown-item" href="?q={{ query | urlencode }}&sort={{ sort }}&t=week"><i class="fas fa-calendar-week mr-2"></i>Week</a>{% endif %}
+            {% if not time_filter=="month" %}<a class="dropdown-item" href="?q={{ query | urlencode }}&sort={{ sort }}&t=month"><i class="fas fa-calendar-alt mr-2"></i>Month</a>{% endif %}
+            {% if not time_filter=="year" %}<a class="dropdown-item" href="?q={{ query | urlencode }}&sort={{ sort }}&t=year"><i class="fas fa-calendar mr-2"></i>Year</a>{% endif %}
+            {% if not time_filter=="all" %}<a class="dropdown-item" href="?q={{ query | urlencode }}&sort={{ sort }}"><i class="fas fa-infinity mr-2"></i>All</a>{% endif %}
           </div>
         </div>
 
@@ -51,11 +51,11 @@
             {{ sort | capitalize }}
           </button>
           <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" x-placement="bottom-start" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(0px, 31px, 0px);">
-            {% if not sort=="hot" %}<a class="dropdown-item" target="_blank" href="?q={{ query | urlencode }}&sort=hot&t={{ time_filter }}"><i class="fas fa-fire mr-2"></i>Hot</a>{% endif %}
-            {% if not sort=="top" %}<a class="dropdown-item" target="_blank" href="?q={{ query | urlencode }}&sort=top&t={{ time_filter }}"><i class="fas fa-arrow-alt-circle-up mr-2"></i>Top</a>{% endif %}
-            {% if not sort=="new" %}<a class="dropdown-item" target="_blank" href="?q={{ query | urlencode }}&sort=new&t={{ time_filter }}"><i class="fas fa-sparkles mr-2"></i>New</a>{% endif %}
-            {% if not sort=="controversial" %}<a class="dropdown-item" target="_blank" href="?q={{ query | urlencode }}&sort=controversial&t={{ time_filter }}"><i class="fas fa-bullhorn mr-2"></i>Controversial</a>{% endif %}
-            {% if not sort=="comments" %}<a class="dropdown-item" target="_blank" href="?q={{ query | urlencode }}&sort=comments&t={{ time_filter }}"><i class="fas fa-comments mr-2"></i>Comments</a>{% endif %}
+            {% if not sort=="hot" %}<a class="dropdown-item" href="?q={{ query | urlencode }}&sort=hot&t={{ time_filter }}"><i class="fas fa-fire mr-2"></i>Hot</a>{% endif %}
+            {% if not sort=="top" %}<a class="dropdown-item" href="?q={{ query | urlencode }}&sort=top&t={{ time_filter }}"><i class="fas fa-arrow-alt-circle-up mr-2"></i>Top</a>{% endif %}
+            {% if not sort=="new" %}<a class="dropdown-item" href="?q={{ query | urlencode }}&sort=new&t={{ time_filter }}"><i class="fas fa-sparkles mr-2"></i>New</a>{% endif %}
+            {% if not sort=="controversial" %}<a class="dropdown-item" href="?q={{ query | urlencode }}&sort=controversial&t={{ time_filter }}"><i class="fas fa-bullhorn mr-2"></i>Controversial</a>{% endif %}
+            {% if not sort=="comments" %}<a class="dropdown-item" href="?q={{ query | urlencode }}&sort=comments&t={{ time_filter }}"><i class="fas fa-comments mr-2"></i>Comments</a>{% endif %}
           </div>
         </div>
       </div>
@@ -82,7 +82,7 @@
 
           <div class="text-muted text-small mb-1">Showing {% block listinglength %}{{ listing | length }}{% endblock %} of {{ total }} result{{ 's' if total != 1 else '' }} for</div>
           <h1 class="h4 mb-0">{{ query }}</h1>
-          {% if b %}<div class="text-muted text-small mb-1">Showing results in +{{ b.name }}. <a target="_blank" href="/search?q={{ query | urlencode }}">Did you want to search all of Drama instead?</a></div>{% endif %}
+          {% if b %}<div class="text-muted text-small mb-1">Showing results in +{{ b.name }}. <a href="/search?q={{ query | urlencode }}">Did you want to search all of Drama instead?</a></div>{% endif %}
 
         </div>
       </div>
@@ -98,19 +98,19 @@
   <ul class="nav post-nav mr-auto">
     <li class="nav-item">
 
-      <a class="nav-link{% if sort=='hot' %} active{% endif %}" target="_blank" href="?sort=hot&q={{ query | urlencode }}&t={{ time_filter }}"><i class="fas fa-fire"></i>Hot</a>
+      <a class="nav-link{% if sort=='hot' %} active{% endif %}" href="?sort=hot&q={{ query | urlencode }}&t={{ time_filter }}"><i class="fas fa-fire"></i>Hot</a>
     </li>
     <li class="nav-item">
-      <a class="nav-link{% if sort=='top' %} active{% endif %}" target="_blank" href="?sort=top&q={{ query | urlencode }}&t={{ time_filter }}"><i class="fas fa-arrow-alt-circle-up"></i>Top</a>
+      <a class="nav-link{% if sort=='top' %} active{% endif %}" href="?sort=top&q={{ query | urlencode }}&t={{ time_filter }}"><i class="fas fa-arrow-alt-circle-up"></i>Top</a>
     </li>
     <li class="nav-item">
-      <a class="nav-link{% if sort=='new' %} active{% endif %}" target="_blank" href="?sort=new&q={{ query | urlencode }}&t={{ time_filter }}"><i class="fas fa-sparkles"></i>New</a> 
+      <a class="nav-link{% if sort=='new' %} active{% endif %}" href="?sort=new&q={{ query | urlencode }}&t={{ time_filter }}"><i class="fas fa-sparkles"></i>New</a> 
     </li>
     <li class="nav-item">
-      <a class="nav-link{% if sort=='fiery' %} active{% endif %}" target="_blank" href="?sort=fiery&q={{ query | urlencode }}&t={{ time_filter }}"><i class="fas fa-bullhorn"></i>Controversial</a>
+      <a class="nav-link{% if sort=='fiery' %} active{% endif %}" href="?sort=fiery&q={{ query | urlencode }}&t={{ time_filter }}"><i class="fas fa-bullhorn"></i>Controversial</a>
     </li>
     <li class="nav-item ">
-      <a class="nav-link {% if sort=='comments' %} active{% endif %}" target="_blank" href="/?sort=comments&q={{ query | urlencode }}&t={{ time_filter }}"><i class="fas fa-comments"></i>Comments</a>
+      <a class="nav-link {% if sort=='comments' %} active{% endif %}" href="/?sort=comments&q={{ query | urlencode }}&t={{ time_filter }}"><i class="fas fa-comments"></i>Comments</a>
     </li>
   </ul>
 
@@ -130,16 +130,16 @@
       <div class="post-filter pb-2">
         <span>Sort By:</span>
         <span class="dropdown">
-          <a class="dropdown-toggle" target="_blank" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown"
+          <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown"
           aria-haspopup="true" aria-expanded="false">
           Time
         </a>
 
         <span class="dropdown-menu border-0 shadow" aria-labelledby="dropdownMenuLink">
-          <a class="dropdown-item" target="_blank" href="#">Day</a>
-          <a class="dropdown-item" target="_blank" href="#">Month</a>
-          <a class="dropdown-item" target="_blank" href="#">Year</a>
-          <a class="dropdown-item" target="_blank" href="#">All Time</a>
+          <a class="dropdown-item" href="#">Day</a>
+          <a class="dropdown-item" href="#">Month</a>
+          <a class="dropdown-item" href="#">Year</a>
+          <a class="dropdown-item" href="#">All Time</a>
         </span>
       </span>
 
@@ -179,11 +179,11 @@
                 {{ sort }}
               </button>
               <div class="dropdown-menu" id="mobileSortDropdown" aria-labelledby="dropdownMenuButtonMobile" x-placement="bottom-start" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(0px, 31px, 0px);">
-                {% if not sort=="hot" %}<a class="dropdown-item" target="_blank" href="?sort=hot&q={{ query | urlencode }}&t={{ time_filter }}"><i class="fas fa-fire text-primary mr-3"></i>Hot</a>{% endif %}
-                {% if not sort=="top" %}<a class="dropdown-item" target="_blank" href="?sort=top&q={{ query | urlencode }}&t={{ time_filter }}"><i class="fas fa-arrow-alt-circle-up text-primary mr-3"></i>Top</a>{% endif %}
-                {% if not sort=="new" %}<a class="dropdown-item" target="_blank" href="?sort=new&q={{ query | urlencode }}&t={{ time_filter }}"><i class="fas fa-sparkles text-primary mr-3"></i>New</a>{% endif %}
-                {% if not sort=="controversial" %}<a class="dropdown-item" target="_blank" href="?sort=controversial&q={{ query | urlencode }}&t={{ time_filter }}"><i class="fas fa-bullhorn text-primary mr-3"></i>Controversial</a>{% endif %}
-                {% if not sort=="comments" %}<a class="dropdown-item" target="_blank" href="?sort=comments&q={{ query | urlencode }}&t={{ time_filter }}"><i class="fas fa-comments text-primary mr-3"></i>Comments</a>{% endif %}
+                {% if not sort=="hot" %}<a class="dropdown-item" href="?sort=hot&q={{ query | urlencode }}&t={{ time_filter }}"><i class="fas fa-fire text-primary mr-3"></i>Hot</a>{% endif %}
+                {% if not sort=="top" %}<a class="dropdown-item" href="?sort=top&q={{ query | urlencode }}&t={{ time_filter }}"><i class="fas fa-arrow-alt-circle-up text-primary mr-3"></i>Top</a>{% endif %}
+                {% if not sort=="new" %}<a class="dropdown-item" href="?sort=new&q={{ query | urlencode }}&t={{ time_filter }}"><i class="fas fa-sparkles text-primary mr-3"></i>New</a>{% endif %}
+                {% if not sort=="controversial" %}<a class="dropdown-item" href="?sort=controversial&q={{ query | urlencode }}&t={{ time_filter }}"><i class="fas fa-bullhorn text-primary mr-3"></i>Controversial</a>{% endif %}
+                {% if not sort=="comments" %}<a class="dropdown-item" href="?sort=comments&q={{ query | urlencode }}&t={{ time_filter }}"><i class="fas fa-comments text-primary mr-3"></i>Comments</a>{% endif %}
               </div>
             </div>
 
@@ -197,11 +197,11 @@
                 {{ time_filter | capitalize }}
               </button>
               <div class="dropdown-menu" id="mobileSortDropdown" aria-labelledby="dropdownMenuButtonMobile" x-placement="bottom-start" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(0px, 31px, 0px);">
-                {% if not time_filter=="day" %}<a class="dropdown-item" target="_blank" href="?q={{ query | urlencode }}&sort={{ sort }}&t=day"><i class="fas fa-calendar-day text-primary mr-3"></i>Day</a>{% endif %}
-                {% if not time_filter=="week" %}<a class="dropdown-item" target="_blank" href="?q={{ query | urlencode }}&sort={{ sort }}&t=week"><i class="fas fa-calendar-week text-primary mr-3"></i>Week</a>{% endif %}
-                {% if not time_filter=="month" %}<a class="dropdown-item" target="_blank" href="?q={{ query | urlencode }}&sort={{ sort }}&t=month"><i class="fas fa-calendar-alt text-primary mr-3"></i>Month</a>{% endif %}
-                {% if not time_filter=="year" %}<a class="dropdown-item" target="_blank" href="?q={{ query | urlencode }}&sort={{ sort }}&t=year"><i class="fas fa-calendar text-primary mr-3"></i>Year</a>{% endif %}
-                {% if not time_filter=="all" %}<a class="dropdown-item" target="_blank" href="?q={{ query | urlencode }}&sort={{ sort }}"><i class="fas fa-infinity text-primary mr-3"></i>All</a>{% endif %}
+                {% if not time_filter=="day" %}<a class="dropdown-item" href="?q={{ query | urlencode }}&sort={{ sort }}&t=day"><i class="fas fa-calendar-day text-primary mr-3"></i>Day</a>{% endif %}
+                {% if not time_filter=="week" %}<a class="dropdown-item" href="?q={{ query | urlencode }}&sort={{ sort }}&t=week"><i class="fas fa-calendar-week text-primary mr-3"></i>Week</a>{% endif %}
+                {% if not time_filter=="month" %}<a class="dropdown-item" href="?q={{ query | urlencode }}&sort={{ sort }}&t=month"><i class="fas fa-calendar-alt text-primary mr-3"></i>Month</a>{% endif %}
+                {% if not time_filter=="year" %}<a class="dropdown-item" href="?q={{ query | urlencode }}&sort={{ sort }}&t=year"><i class="fas fa-calendar text-primary mr-3"></i>Year</a>{% endif %}
+                {% if not time_filter=="all" %}<a class="dropdown-item" href="?q={{ query | urlencode }}&sort={{ sort }}"><i class="fas fa-infinity text-primary mr-3"></i>All</a>{% endif %}
               </div>
             </div>
 
@@ -225,10 +225,10 @@
     <ul class="pagination pagination-sm mb-0">
       <li class="page-item{% if page==1 %} disabled{% endif %}">
 
-        <small><a class="page-link" target="_blank" href="?sort={{ sort }}&q={{ query | urlencode }}&t={{ time_filter }}&page={{ page-1 }}" tabindex="-1"{% if page==1 %} aria-disabled="true"{% endif %}>Back</a></small>
+        <small><a class="page-link" href="?sort={{ sort }}&q={{ query | urlencode }}&t={{ time_filter }}&page={{ page-1 }}" tabindex="-1"{% if page==1 %} aria-disabled="true"{% endif %}>Back</a></small>
       </li>
       <li class="page-item{% if not next_exists %} disabled{% endif %}">
-        <small><a class="page-link" target="_blank" href="?sort={{ sort }}&q={{ query | urlencode }}&t={{ time_filter }}&page={{ page+1 }}">Next</a></small>
+        <small><a class="page-link" href="?sort={{ sort }}&q={{ query | urlencode }}&t={{ time_filter }}&page={{ page+1 }}">Next</a></small>
 
       </li>
     </ul>

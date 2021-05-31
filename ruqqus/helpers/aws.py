@@ -125,16 +125,10 @@ def upload_from_file(name, filename, resize=None):
     url = url.replace(".png", "_d.png").replace(".jpg", "_d.jpg").replace(".jpeg", "_d.jpeg") + "?maxwidth=9999"
     return(url)
 
-def delete_file(name):
+def delete_file(url):
 
-    S3.delete_object(Bucket=BUCKET,
-                    Key=name)
-
-    # After deleting a file from S3, dump CloudFlare cache
-
-    headers = {"Authorization": f"Bearer {CF_KEY}",
-            "Content-Type": "application/json"}
-    data = {'files': [f"https://s3.eu-central-1.amazonaws.com/i.ruqqus.ga/{name}"]}
+    headers = {"Authorization": f"Bearer {CF_KEY}", "Content-Type": "application/json"}
+    data = {'files': [url]}
     url = f"https://api.cloudflare.com/client/v4/zones/{CF_ZONE}/purge_cache"
 
     x = requests.post(url, headers=headers, json=data)

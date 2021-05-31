@@ -731,17 +731,7 @@ def admin_image_purge(v):
     
     url=request.form.get("url")
 
-    parsed_url=urlparse(url)
-
-    name=parsed_url.path.lstrip('/')
-
-    try:
-        print(name)
-    except:
-        pass
-
-
-    aws.delete_file(name)
+    aws.delete_file(url)
 
     return "", 204
 

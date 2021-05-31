@@ -22,11 +22,11 @@ def submit_contact():
 
     inquiry = request.form.get("inquiry", "")
 
-	admins = g.db.query(User).filter(User.admin_level > 0).all()
+    admins = g.db.query(User).filter(User.admin_level > 0).all()
 
-	for x in admins: send_notification(x, inquiry)
+    for x in admins: send_notification(x, inquiry)
 
-	return render_template("contact.html", msg="Your inquiry has been saved.")
+    return render_template("contact.html", msg="Your inquiry has been saved.")
 
 @app.route('/assets/<path:path>')
 @limiter.exempt

@@ -61,13 +61,13 @@
 
 
         {% elif p.thumb_url and not p.embed_url %}
-        <a href="{{ p.url }}" rel="nofollow noopener" target="_blank">
+        <a target="_blank" href="{{ p.url }}" rel="nofollow noopener" target="_blank">
           <img src="{{ p.thumb_url }}" class="post-img" alt="">
         </a>
         {% endif %}
 
         {% if p.embed_url %}
-        <a href="{{ p.url }}" target="_blank" rel="nofollow noopener">
+        <a target="_blank" href="{{ p.url }}" target="_blank" rel="nofollow noopener">
           <img src="{{ p.thumb_url if p.has_thumb else '/assets/images/icons/default_thumb_yt.png' }}" class="post-img border-0" alt="generic youtube embed thumbnail">
         </a>
         {% endif %}
@@ -79,7 +79,7 @@
         {% endif %}
 
         {% if p.url and not p.thumb_url and not p.embed_url %}
-        <a href="{{ p.url }}" rel="nofollow noopener" target="_blank">
+        <a target="_blank" href="{{ p.url }}" rel="nofollow noopener" target="_blank">
           <img src="/assets/images/icons/default_thumb_link.png" class="post-img border-0" alt="generic link post thumbnail">
         </a>
         {% endif %}
@@ -88,7 +88,7 @@
 
       <div class="d-block d-md-none" style="z-index: 3;">
         {% if p.thumb_url and not p.is_image %}
-        <a href="{{ p.url }}" rel="nofollow noopener">
+        <a target="_blank" href="{{ p.url }}" rel="nofollow noopener">
           <img src="{{ p.thumb_url }}" class="post-img" alt="link post thumbnail">
         </a>
         {% elif p.thumb_url and p.is_image %}

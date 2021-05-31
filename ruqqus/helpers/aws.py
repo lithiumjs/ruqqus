@@ -4,7 +4,7 @@ from os import environ, remove
 import piexif
 import time
 from urllib.parse import urlparse
-from PIL import Image
+from PIL import Image as IImage
 import imagehash
 from sqlalchemy import func
 from os import remove

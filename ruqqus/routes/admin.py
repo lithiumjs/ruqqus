@@ -730,8 +730,8 @@ def admin_user_data_get(v):
 def admin_image_purge(v):
     
     url=request.form.get("url")
-
-    aws.delete_file(url)
+    
+    if "&h=" in url: aws.delete_file(url)
 
     return "", 204
 

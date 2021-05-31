@@ -102,10 +102,10 @@ def upload_file(name, file, resize=None):
         i = crop_and_resize(i, resize)
         img = io.BytesIO()
         i.save(img, format='PNG')
-        url = requests.post('https://api.imgur.com/3/upload.json', headers = {"Authorization": f"Client-ID {imgurkey}"}, data = {'image': base64.b64encode(img.getvalue())}).json()['data']['link']
+        resp = requests.post('https://api.imgur.com/3/upload.json', headers = {"Authorization": f"Client-ID {imgurkey}"}, data = {'image': base64.b64encode(img.getvalue())}).json()['data']
         remove(tempname)
-    else: url = requests.post('https://api.imgur.com/3/upload.json', headers = {"Authorization": f"Client-ID {imgurkey}"}, data = {'image': base64.b64encode(file.read())}).json()['data']['link']
-    url = url.replace(".png", "_d.png").replace(".jpg", "_d.jpg").replace(".jpeg", "_d.jpeg") + "?maxwidth=9999"
+    else: resp = requests.post('https://api.imgur.com/3/upload.json', headers = {"Authorization": f"Client-ID {imgurkey}"}, data = {'image': base64.b64encode(file.read())}).json()['data']
+    url = resp['link'].replace(".png", "_d.png").replace(".jpg", "_d.jpg").replace(".jpeg", "_d.jpeg") + "?maxwidth=9999" + "&h=" + resp["deletehash"]
     return(url)
 
     
@@ -120,18 +120,18 @@ def upload_from_file(name, filename, resize=None):
     i = crop_and_resize(i, resize)
     img = io.BytesIO()
     i.save(img, format='PNG')
-    url = requests.post('https://api.imgur.com/3/upload.json', headers = {"Authorization": f"Client-ID {imgurkey}"}, data = {'image': base64.b64encode(img.getvalue())}).json()['data']['link']
+    resp = requests.post('https://api.imgur.com/3/upload.json', headers = {"Authorization": f"Client-ID {imgurkey}"}, data = {'image': base64.b64encode(img.getvalue())}).json()['data']
     remove(filename)
-    url = url.replace(".png", "_d.png").replace(".jpg", "_d.jpg").replace(".jpeg", "_d.jpeg") + "?maxwidth=9999"
+    url = resp['link'].replace(".png", "_d.png").replace(".jpg", "_d.jpg").replace(".jpeg", "_d.jpeg") + "?maxwidth=9999" + "&h=" + resp["deletehash"]
     return(url)
 
 def delete_file(url):
-
+    deletehash = url.split("&h=")[1]
+    requests.post(f'https://api.imgur.com/3/image/{deletehash}', headers = {"Authorization": f"Client-ID {imgurkey}"})
     headers = {"Authorization": f"Bearer {CF_KEY}", "Content-Type": "application/json"}
     data = {'files': [url]}
     url = f"https://api.cloudflare.com/client/v4/zones/{CF_ZONE}/purge_cache"
-
-    x = requests.post(url, headers=headers, json=data)
+    requests.post(url, headers=headers, json=data)
 
 
 def check_csam(post):

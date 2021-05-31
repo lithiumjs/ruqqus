@@ -15,7 +15,7 @@ from ruqqus.helpers.get import get_account
 
 @app.route("/contact", methods=["GET"])
 @auth_desired
-def contact():
+def contact(v):
     return render_template("contact.html", v=v)
 
 @app.route("/submit_contact", methods=["POST"])

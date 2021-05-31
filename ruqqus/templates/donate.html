@@ -28,17 +28,17 @@
 	<meta name="twitter:url" content="{{ request.path | full_link }}" />
 	{% endblock %}
 
-	<link href="https://fonts.googleapis.com/css?family=Open+Sans:400,600&display=swap" rel="stylesheet">
+	<link target="_blank" href="https://fonts.googleapis.com/css?family=Open+Sans:400,600&display=swap" rel="stylesheet">
 
 	<!-- Bootstrap core CSS -->
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+	<link rel="stylesheet" target="_blank" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
 	integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 
 	<!-- Drama CSS -->
-	<link rel="stylesheet" href="https://rdrama.net/assets/style/main.css">
+	<link rel="stylesheet" target="_blank" href="https://rdrama.net/assets/style/main.css">
 
 	<!-- Font Awesome -->
-	<link href="https://rdrama.net/assets/style/fa.css" rel="stylesheet"> <!--load all styles -->
+	<link target="_blank" href="https://rdrama.net/assets/style/fa.css" rel="stylesheet"> <!--load all styles -->
 
 	<!-- Code Prettify -->
 
@@ -51,7 +51,7 @@
 	<!-- Navigation -->
 	<nav class="navbar navbar-expand-md navbar-light bg-white border-bottom fixed-top">
 		<div class="container">
-			<a class="navbar-brand" href="/">ruqqus</a>
+			<a class="navbar-brand" target="_blank" href="/">ruqqus</a>
 			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive"
 			aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
 			<span class="navbar-toggler-icon"><i class="fal fa-bars text-gray-500" style="font-size: 2rem;"></i></span>
@@ -59,13 +59,13 @@
 		<div class="collapse navbar-collapse" id="navbarResponsive">
 			<ul class="navbar-nav ml-auto">
 				<li class="nav-item">
-					<a class="nav-link" href="/about">About</a>
+					<a class="nav-link" target="_blank" href="/about">About</a>
 				</li>
 				<li class="nav-item">
-					<a class="nav-link" href="mailto:info@rdrama.net">Contact</a>
+					<a class="nav-link" target="_blank" href="mailto:info@rdrama.net">Contact</a>
 				</li>
 				<li class="nav-item">
-					<a class="nav-link" href="https://www.twitter.com/ruqqus">Twitter</a>
+					<a class="nav-link" target="_blank" href="https://www.twitter.com/ruqqus">Twitter</a>
 				</li>
 			</ul>
 		</div>
@@ -85,8 +85,8 @@
 					Drama is an open-source web app that lets you enjoy online communities focused around topics you love, without censorship and moderator abuse.
 				</p>
 				<div class="text-center text-md-left">
-					<a href="#donate-CTA" class="btn btn-lg btn-black shadow-md"><i class="fas fa-heart text-small mr-2"></i>Donate to Drama</a>
-					<p class="text-small mt-3">Just want to use Drama? <a href="/login" class="text-white">Visit rdrama.net</a></p>
+					<a target="_blank" href="#donate-CTA" class="btn btn-lg btn-black shadow-md"><i class="fas fa-heart text-small mr-2"></i>Donate to Drama</a>
+					<p class="text-small mt-3">Just want to use Drama? <a target="_blank" href="/login" class="text-white">Visit rdrama.net</a></p>
 				</div>
 			</div>
 			<div class="col-12 col-md-5 col-lg-6 text-right">
@@ -208,7 +208,7 @@
 					</li>
 				</ul>
 
-				<a href="https://github.com/ruqqus/ruqqus" class="btn btn-lg btn-primary shadow-md d-none d-md-inline-block">View our code</a>
+				<a target="_blank" href="https://github.com/ruqqus/ruqqus" class="btn btn-lg btn-primary shadow-md d-none d-md-inline-block">View our code</a>
 
 			</div>
 
@@ -232,7 +232,7 @@
 						aria-selected="false"><i class="far fa-user-circle mr-2"
 						aria-hidden="true"></i>User</a>
 						<a class="nav-link text-center d-none d-lg-block" id="v-pills-comment-tab"
-						data-toggle="pill" href="#v-pills-comment" role="tab"
+						data-toggle="pill" target="_blank" href="#v-pills-comment" role="tab"
 						aria-controls="v-pills-comment" aria-selected="true"><i
 						class="far fa-comment-dots mr-2" aria-hidden="true"></i>Comment</a>
 					</div>
@@ -285,7 +285,7 @@
 
 	<div class="col">
 
-		<a href="https://github.com/ruqqus/ruqqus" class="btn btn-lg btn-primary btn-block mb-6">View our code</a>
+		<a target="_blank" href="https://github.com/ruqqus/ruqqus" class="btn btn-lg btn-primary btn-block mb-6">View our code</a>
 
 		<pre class="prettyprint lang-python linenums bg-dark border-0 px-3"
 		style="height: 330px; overflow-x: hidden;">
@@ -397,12 +397,12 @@
 					<p class="text-white opacity-80">Now accepting Bitcoin, Litecoin, and Ethereum. Every donation counts :)</p>
 					<div class="d-none d-md-block mt-5">
 						<button class="btn btn-black text-warning btn-lg mr-md-2" data-toggle="modal" data-target="#donateCryptoModal"><i class="fab fa-bitcoin text-small mr-2"></i>Donate with crypto</button>
-						<a href="https://paypal.me/ruqqus" target="_blank" class="btn btn-black text-info btn-lg"><i class="fab fa-paypal text-small mr-2"></i>Donate with PayPal</a>
+						<a target="_blank" href="https://paypal.me/ruqqus" target="_blank" class="btn btn-black text-info btn-lg"><i class="fab fa-paypal text-small mr-2"></i>Donate with PayPal</a>
 					</div>
 
 					<div class="d-md-none mt-5">
 						<button class="btn btn-black text-warning btn-lg btn-block mb-3" data-toggle="modal" data-target="#donateCryptoModal"><i class="fab fa-bitcoin text-small mr-2"></i>Donate with crypto</button>
-						<a href="https://paypal.me/ruqqus" target="_blank" class="btn btn-black text-info btn-lg btn-block"><i class="fab fa-paypal text-small mr-2"></i>Donate with PayPal</a>
+						<a target="_blank" href="https://paypal.me/ruqqus" target="_blank" class="btn btn-black text-info btn-lg btn-block"><i class="fab fa-paypal text-small mr-2"></i>Donate with PayPal</a>
 
 					</div>
 
@@ -468,7 +468,7 @@
 
 <!-- AOS Animate -->
 
-<link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+<link target="_blank" href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
 
 <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 

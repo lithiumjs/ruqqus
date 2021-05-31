@@ -12,12 +12,12 @@
     <title>Create a post - Drama</title>
     {% endblock %}
   
-  <link rel="icon" type="image/png" href="/assets/images/logo/favicon.png">
+  <link rel="icon" type="image/png" target="_blank" href="/assets/images/logo/favicon.png">
 
-    <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,600&display=swap" rel="stylesheet">
+    <link target="_blank" href="https://fonts.googleapis.com/css?family=Open+Sans:400,600&display=swap" rel="stylesheet">
 
     <!-- Bootstrap core CSS -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+    <link rel="stylesheet" target="_blank" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
     integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 
     <!-- Drama Board CSS -->
@@ -25,21 +25,21 @@
     {% block stylesheets %}
     {% if b %}
     {% if v and v.can_use_darkmode and session.get("dark_mode_enabled") %}
-    <link id="css-link" rel="stylesheet" href="{{ b.css_dark_url }}">
+    <link id="css-link" rel="stylesheet" target="_blank" href="{{ b.css_dark_url }}">
     {% else %}
-    <link id="css-link" rel="stylesheet" href="{{ b.css_url }}">
+    <link id="css-link" rel="stylesheet" target="_blank" href="{{ b.css_url }}">
     {% endif %}
     {% else %}
     {% if v and v.can_use_darkmode and session.get("dark_mode_enabled") %}
-    <link id="css-link" rel="stylesheet" href="https://rdrama.net/assets/style/main_dark.css">
+    <link id="css-link" rel="stylesheet" target="_blank" href="https://rdrama.net/assets/style/main_dark.css">
     {% else %}
-    <link id="css-link" rel="stylesheet" href="https://rdrama.net/assets/style/main.css">
+    <link id="css-link" rel="stylesheet" target="_blank" href="https://rdrama.net/assets/style/main.css">
     {% endif %}
     {% endif %}
     {% endblock %}
 
     <!-- Font Awesome -->
-    <link href="https://rdrama.net/assets/style/fa.css" rel="stylesheet"> <!--load all styles -->
+    <link target="_blank" href="https://rdrama.net/assets/style/fa.css" rel="stylesheet"> <!--load all styles -->
 
     {% if v %}
 
@@ -142,7 +142,7 @@
                             </div>
                         </div>
 
-                        <div class="form-text text-small"><a href="/formatting" target="_blank">Formatting help</a></div>
+                        <div class="form-text text-small"><a target="_blank" href="/formatting" target="_blank">Formatting help</a></div>
 
                         <label for="over_18" class="text-danger mt-3">NSFW?</label>
 
@@ -163,7 +163,7 @@
         <div class="container">
             <div class="row fixed-bottom bg-white border-top p-3" id="" style="z-index: 100; bottom: 0px; transition: bottom 220ms cubic-bezier(0, 0, 0.2, 1) 0s;">
                 <div class="col">
-                    <a href="/" class="btn btn-secondary">Cancel</a>
+                    <a target="_blank" href="/" class="btn btn-secondary">Cancel</a>
                 </div>
                 <div class="col text-right">
                     {% if error %}<span class="text-danger mr-2">{{ error }}</span>{% endif %}

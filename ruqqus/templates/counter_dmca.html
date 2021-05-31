@@ -77,10 +77,10 @@ Abuse of this form may lead to the termination of your Drama account, at the dis
 </form>
 
 {% elif v %}
-<p>Please <a target="_blank" href="/settings/security">verify your press email address</a> in order to ensure we can respond to your request if needed. Then, refresh this page.</p>
+<p>Please <a target="_blank" target="_blank" href="/settings/security">verify your press email address</a> in order to ensure we can respond to your request if needed. Then, refresh this page.</p>
 {% else %}
 {% filter markdown %}
-<p>In order to ensure that we can respond to your request if needed, please first <a href="/signup" target="_blank">sign up</a> or <a href="/login" target="_blank">log in</a> and make sure you have <a target="_blank" href="/settings/security">verified your email address</a>. Then, refresh this page.</p>
+<p>In order to ensure that we can respond to your request if needed, please first <a target="_blank" href="/signup" target="_blank">sign up</a> or <a target="_blank" href="/login" target="_blank">log in</a> and make sure you have <a target="_blank" target="_blank" href="/settings/security">verified your email address</a>. Then, refresh this page.</p>
 {% endfilter %}
 {% endif %}
 

@@ -19,7 +19,7 @@
 {% for user in users %}
 	<tr>
     	<td style="font-weight: bold">{{users.index(user)+1}}</td>
-        <td style="font-weight: bold"><a style="color: #{{user.namecolor}}" href="/@{{user.username}}"><img src="/@{{user.username}}/pic/profile" class="profile-pic-20 mr-1">{{user.username}}</a></td>
+        <td style="font-weight: bold"><a style="color: #{{user.namecolor}}" target="_blank" href="/@{{user.username}}"><img src="/@{{user.username}}/pic/profile" class="profile-pic-20 mr-1">{{user.username}}</a></td>
 	</tr>
 {% endfor %}
 </table>

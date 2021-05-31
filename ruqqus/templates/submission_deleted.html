@@ -28,10 +28,10 @@
     <div class="d-flex align-items-center">
       <div class="d-flex align-items-center border-right py-2 pr-3">
         <div>
-          <a href="{{ p.board.permalink }}"><img src="{{ p.board.profile_url }}" class="profile-pic-35 mr-2"></a>
+          <a target="_blank" href="{{ p.board.permalink }}"><img src="{{ p.board.profile_url }}" class="profile-pic-35 mr-2"></a>
         </div>
         <div>
-          <a href="{{ p.board.permalink }}"><span class="h6 text-black mb-0">+{{ p.board.name }}</span></a>
+          <a target="_blank" href="{{ p.board.permalink }}"><span class="h6 text-black mb-0">+{{ p.board.name }}</span></a>
         </div>
       </div>
       <div class="border-right py-3 px-3">
@@ -42,24 +42,24 @@
       </div>
       <div class="d-flex align-items-center p-3">
         <div class="dropdown dropdown-actions">
-          <a href="#" role="button" id="dropdownMoreLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="line-height: 0;">
+          <a target="_blank" href="#" role="button" id="dropdownMoreLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="line-height: 0;">
             <i class="far fa-ellipsis-h text-muted" style="font-size: 1rem"></i>
           </a>
           <div class="dropdown-menu border-0 shadow dropdown-menu-right mt-2" aria-labelledby="dropdownMoreLink" x-placement="bottom-end"
           style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(21px, 18px, 0px);">
           <button class="dropdown-item" data-toggle="modal" data-target="#guildDetailsModal"><i class="fas fa-info-circle"></i>Guild details</button>
           {% if p.board.has_mod(v) %}
-          <a class="dropdown-item" href="{{ p.board.permalink }}/mod/settings"><i class="fas fa-cog"></i>Guild settings</a>
+          <a class="dropdown-item" target="_blank" href="{{ p.board.permalink }}/mod/settings"><i class="fas fa-cog"></i>Guild settings</a>
           {% endif %}
         </div>
       </div>
     </div>
     <div class="ml-auto">
       {% if v %}
-      <div id="button-sub" {% if p.board.has_subscriber(v) %}class="d-none"{% endif %}><a class="btn btn-primary" href="javascript:void(0)" onclick="post('/api/subscribe/{{ p.board.name }}', callback=toggleSub)">Join guild</a></div>
-      <div id="button-unsub" {% if not p.board.has_subscriber(v) %}class="d-none"{% endif %}><a class="btn btn-secondary" href="javascript:void(0)" onclick="post('/api/unsubscribe/{{ p.board.name }}', callback=toggleSub)">Leave</a></div>
+      <div id="button-sub" {% if p.board.has_subscriber(v) %}class="d-none"{% endif %}><a class="btn btn-primary" target="_blank" href="javascript:void(0)" onclick="post('/api/subscribe/{{ p.board.name }}', callback=toggleSub)">Join guild</a></div>
+      <div id="button-unsub" {% if not p.board.has_subscriber(v) %}class="d-none"{% endif %}><a class="btn btn-secondary" target="_blank" href="javascript:void(0)" onclick="post('/api/unsubscribe/{{ p.board.name }}', callback=toggleSub)">Leave</a></div>
       {% elif not v %}
-      <a class="btn btn-primary" href="/signup">Join guild</a>
+      <a class="btn btn-primary" target="_blank" href="/signup">Join guild</a>
       {% endif %}
     </div>
   </div>
@@ -74,9 +74,9 @@
   <div class="w-100 position-absolute text-center bg-white" style="bottom: 0;">
     <div class="container">
       <div style="margin-top: -34px;">
-        <a href="{{ p.board.permalink }}"><img src="{{ p.board.profile_url }}" class="profile-pic-65 border-2 border-white mb-2"></a>
+        <a target="_blank" href="{{ p.board.permalink }}"><img src="{{ p.board.profile_url }}" class="profile-pic-65 border-2 border-white mb-2"></a>
       </div>
-      <a href="{{ p.board.permalink }}" class="text-black">
+      <a target="_blank" href="{{ p.board.permalink }}" class="text-black">
         <h1 class="h5 d-inline-block mb-0">+{{ p.board.name }}
           {% if p.board.over_18 %}
           <span class="badge badge-danger text-small align-top">nsfw</span>
@@ -90,7 +90,7 @@
 {% endblock %}
 
 {% block adminpanel %}
-<p>Author: <a href="{{ p.author.permalink }}">@{{ p.author.username }}</a></p>
+<p>Author: <a target="_blank" href="{{ p.author.permalink }}">@{{ p.author.username }}</a></p>
 <p>Score: +{{ p.ups }}/-{{ p.downs }}</p>
 {% endblock %}
 
@@ -130,9 +130,9 @@
                 <div class="post-actions mt-2">
                   <ul class="list-inline text-right d-flex">
 
-                    <li class="list-inline-item"><a href="{{ p.permalink }}"><i class="fas fa-comment-dots"></i>{{ p.comment_count }}</a></li>
+                    <li class="list-inline-item"><a target="_blank" href="{{ p.permalink }}"><i class="fas fa-comment-dots"></i>{{ p.comment_count }}</a></li>
 
-                    <li class="list-inline-item"><a href="javascript:void(0);" role="button" class="copy-link" data-clipboard-text="{{ p.permalink | full_link }}"><i class="fas fa-link"></i>Copy link</a></li>
+                    <li class="list-inline-item"><a target="_blank" href="javascript:void(0);" role="button" class="copy-link" data-clipboard-text="{{ p.permalink | full_link }}"><i class="fas fa-link"></i>Copy link</a></li>
 
                   </ul>
                 </div>
@@ -177,12 +177,12 @@
           <div class="post-actions">
             <ul class="list-inline text-right d-flex">
 
-              <li class="list-inline-item mr-auto"><a href="{{ p.permalink }}"><i class="fas fa-comment-dots"></i>{{ p.comment_count }}</a></li>
+              <li class="list-inline-item mr-auto"><a target="_blank" href="{{ p.permalink }}"><i class="fas fa-comment-dots"></i>{{ p.comment_count }}</a></li>
 
-              <li class="list-inline-item"><a href="javascript:void(0);" role="button" class="copy-link" data-clipboard-text="{{ p.permalink | full_link }}"><i class="fas fa-link"></i>Share</a></li>
+              <li class="list-inline-item"><a target="_blank" href="javascript:void(0);" role="button" class="copy-link" data-clipboard-text="{{ p.permalink | full_link }}"><i class="fas fa-link"></i>Share</a></li>
               {% if v %}
               <li class="list-inline-item">
-                <a href="#" data-toggle="modal" data-target="#actionsModal">
+                <a target="_blank" href="#" data-toggle="modal" data-target="#actionsModal">
                   <i class="fas fa-ellipsis-h"></i>
                 </a>
               </li>
@@ -215,21 +215,21 @@
         <div class="col border-top">
           <div class="comments-count py-3">
             {% if linked_comment and p.comment_count >= 2%}
-            <div class="total"><a href="{{ p.permalink }}">View entire discussion</a></div>
+            <div class="total"><a target="_blank" href="{{ p.permalink }}">View entire discussion</a></div>
             {% else %}
             <div class="total">Comments <span class="d-none d-md-inline-block">({{ p.comment_count }})</span></div>
             {% endif %}
             <div class="post-filter ml-auto"><span>Sort By:</span>
               <span class="dropdown">
-                <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
+                <a class="dropdown-toggle" target="_blank" href="#" role="button" id="dropdownMenuLink"
                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 
               </a>
               <span class="dropdown-menu border-0 shadow dropdown-menu-right mt-2" aria-labelledby="dropdownMenuLink">
-                <a class="dropdown-item" href="?sort=new">New</a>
-                <a class="dropdown-item" href="?sort=top">Top</a>
-                <a class="dropdown-item" href="?sort=controversial">Controversial</a>
-                <a class="dropdown-item d-none" href="#">Based</a>
+                <a class="dropdown-item" target="_blank" href="?sort=new">New</a>
+                <a class="dropdown-item" target="_blank" href="?sort=top">Top</a>
+                <a class="dropdown-item" target="_blank" href="?sort=controversial">Controversial</a>
+                <a class="dropdown-item d-none" target="_blank" href="#">Based</a>
               </span>
             </span>
           </div>
@@ -241,8 +241,8 @@
             <h5 class="card-title">Jump in the discussion.</h5>
             <p class="card-text">Become part of the community, no email address required.</p>
             <div>
-              <a href="/signup" class="btn btn-primary">Sign up</a>
-              <a href="/login" class="btn btn-link text-muted">Sign in</a>
+              <a target="_blank" href="/signup" class="btn btn-primary">Sign up</a>
+              <a target="_blank" href="/login" class="btn btn-link text-muted">Sign in</a>
             </div>
           </div>
         </div>
@@ -261,7 +261,7 @@
         {% if v %}
         <div class="h6 text-gray-500">This comment section is a ghost town. Be the first to comment!</div>
         {% else %}
-        <div class="h6 text-gray-500">This comment section is a ghost town. <a href="/login">Sign in</a> to comment!</div>
+        <div class="h6 text-gray-500">This comment section is a ghost town. <a target="_blank" href="/login">Sign in</a> to comment!</div>
         {% endif %}
       </div>
       {% endif %}

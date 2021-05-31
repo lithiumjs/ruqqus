@@ -16,7 +16,7 @@ def filter_comment_html(html_text):
 
     for link in links:
 
-        href=link.get("href", None)
+        target="_blank" href=link.get("href", None)
         if not href:
             continue
 

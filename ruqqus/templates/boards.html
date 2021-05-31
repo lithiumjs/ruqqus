@@ -27,9 +27,9 @@
       {% if sort=="trending" %}<i class="fas fa-fire mr-1"></i>Trending{% endif %}
     </button>
     <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton" x-placement="bottom-start" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(0px, 31px, 0px);">
-      {% if not sort=="subs" %}<a class="dropdown-item" href="?sort=subs"><i class="fas fa-users mr-2"></i>Members</a>{% endif %}
-      {% if not sort=="new" %}<a class="dropdown-item" href="?sort=new"><i class="fas fa-sparkles mr-2"></i>New</a>{% endif %}
-      {% if not sort=="trending" %}<a class="dropdown-item" href="?sort=trending"><i class="fas fa-fire mr-2"></i>Trending</a>{% endif %}
+      {% if not sort=="subs" %}<a class="dropdown-item" target="_blank" href="?sort=subs"><i class="fas fa-users mr-2"></i>Members</a>{% endif %}
+      {% if not sort=="new" %}<a class="dropdown-item" target="_blank" href="?sort=new"><i class="fas fa-sparkles mr-2"></i>New</a>{% endif %}
+      {% if not sort=="trending" %}<a class="dropdown-item" target="_blank" href="?sort=trending"><i class="fas fa-fire mr-2"></i>Trending</a>{% endif %}
     </div>
   </div>
 </div>
@@ -41,7 +41,7 @@
 <div class="alert alert-success alert-dismissible fade show my-3" role="alert">
 <i class="fas fa-check-circle my-auto" aria-hidden="true"></i>
 <span>
-Welcome to Drama! These communities are currently Trending. Join some to start customizing your <a href="/">home page</a>.
+Welcome to Drama! These communities are currently Trending. Join some to start customizing your <a target="_blank" href="/">home page</a>.
 </span>
 <button type="button" class="close" data-dismiss="alert" aria-label="Close">
 <span aria-hidden="true"><i class="far fa-times"></i></span>
@@ -72,9 +72,9 @@ Welcome to Drama! These communities are currently Trending. Join some to start c
               {% if sort=="trending" %}<i class="fas fa-fire mr-1"></i>Trending{% endif %}
             </button>
             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButtonMobile" x-placement="bottom-start" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(0px, 31px, 0px);">
-              {% if not sort=="subs" %}<a class="dropdown-item" href="?sort=subs"><i class="fas fa-users mr-2"></i>Members</a>{% endif %}
-              {% if not sort=="new" %}<a class="dropdown-item" href="?sort=new"><i class="fas fa-sparkles mr-2"></i>New</a>{% endif %}
-              {% if not sort=="trending" %}<a class="dropdown-item" href="?sort=trending"><i class="fas fa-fire mr-2"></i>Trending</a>{% endif %}
+              {% if not sort=="subs" %}<a class="dropdown-item" target="_blank" href="?sort=subs"><i class="fas fa-users mr-2"></i>Members</a>{% endif %}
+              {% if not sort=="new" %}<a class="dropdown-item" target="_blank" href="?sort=new"><i class="fas fa-sparkles mr-2"></i>New</a>{% endif %}
+              {% if not sort=="trending" %}<a class="dropdown-item" target="_blank" href="?sort=trending"><i class="fas fa-fire mr-2"></i>Trending</a>{% endif %}
             </div>
           </div>
 
@@ -94,14 +94,14 @@ Welcome to Drama! These communities are currently Trending. Join some to start c
   <ul class="pagination pagination-sm mb-0">
     {% if page>1 %}
     <li class="page-item">
-      <small><a class="page-link" href="?sort={{ sort }}&page={{ page-1 }}" tabindex="-1">Prev</a></small>
+      <small><a class="page-link" target="_blank" href="?sort={{ sort }}&page={{ page-1 }}" tabindex="-1">Prev</a></small>
     </li>
     {% else %}
     <li class="page-item disabled"><span class="page-link">Prev</span></li>
     {% endif %}
     {% if next_exists %}
     <li class="page-item">
-      <small><a class="page-link" href="?sort={{ sort }}&page={{ page+1 }}">Next</a></small>
+      <small><a class="page-link" target="_blank" href="?sort={{ sort }}&page={{ page+1 }}">Next</a></small>
     </li>
     {% else %}
     <li class="page-item disabled"><span class="page-link">Next</span></li>

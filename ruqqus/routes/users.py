@@ -396,7 +396,7 @@ def convert_file(html):
             else: 
                 thing["href"]=f"https://{app.config['SERVER_NAME']}{thing['href']}"
 
-    for thing in soup.find_all('a', href=True):
+    for thing in soup.find_all('a', target="_blank" href=True):
 
         if thing["href"].startswith('/') and not thing["href"].startswith(("javascript",'//')):
             if app.config["FORCE_HTTPS"]:

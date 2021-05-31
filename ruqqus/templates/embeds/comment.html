@@ -10,12 +10,12 @@
 
 {% block content %}
 <div class="post-info font-weight-bold">
-    <span class="align-top"><a href="{{ c.permalink }}?context=1">{{ c.post.title | safe }}</a></span>
+    <span class="align-top"><a target="_blank" href="{{ c.permalink }}?context=1">{{ c.post.title | safe }}</a></span>
 </div>
 
 <div id="comment-{{ c.base36id }}" class="comment rounded">
 
-    <span class="mr-2 d-block d-md-none"><a href="{{ c.author.permalink }}"><img src="{{ c.author.profile_url }}" class="profile-pic-25"></a></span>
+    <span class="mr-2 d-block d-md-none"><a target="_blank" href="{{ c.author.permalink }}"><img src="{{ c.author.profile_url }}" class="profile-pic-25"></a></span>
 
     <span class="comment-collapse d-md-block d-none" onclick="collapse_comment('{{ c.base36id }}')"></span>
 
@@ -23,7 +23,7 @@
 
         <div id="comment-{{ c.base36id }}-only">
 
-            <div class="user-info">{% if c.over_18 %}<span class="badge badge-danger">nsfw</span> {% endif %}{% if c.author.title and c.author.title.is_before %}<span style="color:#{{ c.author.title.color }}">{{ c.author.title.text }}</span> {% endif %}<a href="{{ c.author.permalink }}" class="user-name {% if c.post.author_id==c.author_id %}text-info{% endif %}">{{ c.author.username }}</a>{% if c.author.title and not c.author.title.is_before %}<span style="color:#{{ c.author.title.color }}">{{ c.author.title.text }}</span>{% endif %}
+            <div class="user-info">{% if c.over_18 %}<span class="badge badge-danger">nsfw</span> {% endif %}{% if c.author.title and c.author.title.is_before %}<span style="color:#{{ c.author.title.color }}">{{ c.author.title.text }}</span> {% endif %}<a target="_blank" href="{{ c.author.permalink }}" class="user-name {% if c.post.author_id==c.author_id %}text-info{% endif %}">{{ c.author.username }}</a>{% if c.author.title and not c.author.title.is_before %}<span style="color:#{{ c.author.title.color }}">{{ c.author.title.text }}</span>{% endif %}
 		{% if c.distinguish_level or c.author_id==c.post.author_id %}
 		<span> </span>
 			{% if c.distinguish_level %}
@@ -68,25 +68,25 @@
                     </li>
 
 {% endif %}
-                    <li class="list-inline-item text-muted d-none d-md-inline-block"><a href="javascript:void(0);" role="button" class="copy-link" data-clipboard-text="{{ c.permalink | full_link}}"><i class="fas fa-link"></i><span>Copy link</span></a>
+                    <li class="list-inline-item text-muted d-none d-md-inline-block"><a target="_blank" href="javascript:void(0);" role="button" class="copy-link" data-clipboard-text="{{ c.permalink | full_link}}"><i class="fas fa-link"></i><span>Copy link</span></a>
                     </li>
                     <li class="list-inline-item d-none d-md-inline-block">
                         <div class="dropdown show">
-                          <a href="#" role="button" id="dropdownMoreLink" data-toggle="dropdown" aria-haspopup="true"
+                          <a target="_blank" href="#" role="button" id="dropdownMoreLink" data-toggle="dropdown" aria-haspopup="true"
                           aria-expanded="false">
                           <i class="fas fa-ellipsis-h"></i>
                       </a>
 
                       <div class="dropdown-menu border-0 shadow" aria-labelledby="dropdownMoreLink">
-                        <a class="dropdown-item" href="{{ c.parent.permalink }}"><i class="fas fa-dna"></i>Parent</a>
-                        <a class="dropdown-item d-none" href="#"><i class="fas fa-save"></i>Save</a>
+                        <a class="dropdown-item" target="_blank" href="{{ c.parent.permalink }}"><i class="fas fa-dna"></i>Parent</a>
+                        <a class="dropdown-item d-none" target="_blank" href="#"><i class="fas fa-save"></i>Save</a>
 
 
                     </div>
                 </div>
             </li>
             <li class="list-inline-item d-inline-block d-md-none">
-                <a href="#" data-toggle="modal" data-target="#actionsModal-{{ c.base36id }}" data-focus="false"><i class="fas fa-ellipsis-h"></i></a>
+                <a target="_blank" href="#" data-toggle="modal" data-target="#actionsModal-{{ c.base36id }}" data-focus="false"><i class="fas fa-ellipsis-h"></i></a>
             </li>
 
             <li id="comment-{{ c.base36id }}-up" class="list-inline-item arrow-up d-inline-block d-md-none mr-2">
@@ -115,9 +115,9 @@
       </div>
       <div class="modal-body">
           <ul class="list-group comment-actions">
-            <li class="list-group-item"><a href="javascript:void(0);" role="button" class="d-block copy-link" data-dismiss="modal" data-clipboard-text="{{ c.permalink | full_link}}"><i class="fas fa-link"></i><span>Share</span></a>
-                <li class="list-group-item"><a class="d-block" href="{{ c.parent.permalink }}"><i class="fas fa-dna"></i>Parent</a></li>
-                <li class="list-group-item d-none"><a href="#" class="d-block"><i class="fas fa-save"></i>Save</a></li>
+            <li class="list-group-item"><a target="_blank" href="javascript:void(0);" role="button" class="d-block copy-link" data-dismiss="modal" data-clipboard-text="{{ c.permalink | full_link}}"><i class="fas fa-link"></i><span>Share</span></a>
+                <li class="list-group-item"><a class="d-block" target="_blank" href="{{ c.parent.permalink }}"><i class="fas fa-dna"></i>Parent</a></li>
+                <li class="list-group-item d-none"><a target="_blank" href="#" class="d-block"><i class="fas fa-save"></i>Save</a></li>
 
              
             </ul>

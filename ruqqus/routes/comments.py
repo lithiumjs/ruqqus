@@ -471,7 +471,7 @@ def api_comment(v):
 
     # queue up notifications for username mentions
     soup = BeautifulSoup(body_html, features="html.parser")
-    mentions = soup.find_all("a", href=re.compile("^/@(\w+)"), limit=3)
+    mentions = soup.find_all("a", target="_blank" href=re.compile("^/@(\w+)"), limit=3)
     for mention in mentions:
         username = mention["href"].split("@")[1]
 

@@ -142,13 +142,13 @@ def upload_from_file(name, filename, resize=None):
 
     return(url)
 
-def delete_file(url):
+def delete_file(name):
     
-    image = g.db.query(Image).filter(Image.text == url).first()
+    image = g.db.query(Image).filter(Image.text == name).first()
     if image:
         requests.delete(f'https://api.imgur.com/3/image/{image.deletehash}', headers = {"Authorization": f"Client-ID {imgurkey}"})
         headers = {"Authorization": f"Bearer {CF_KEY}", "Content-Type": "application/json"}
-        data = {'files': [url]}
+        data = {'files': [name]}
         url = f"https://api.cloudflare.com/client/v4/zones/{CF_ZONE}/purge_cache"
         requests.post(url, headers=headers, json=data)
 

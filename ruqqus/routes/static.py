@@ -23,7 +23,7 @@ def contact(v):
 @auth_desired
 def submit_contact(v):
 
-    message = f"This message has been sent automatically to all admins via https://rdrama.net/contact, user email is {v.email}\n\nMessage:\n\n" + request.form.get("message", "")
+    message = f'This message has been sent automatically to all admins via https://rdrama.net/contact, user email is "{v.email}"\n\nMessage:\n\n' + request.form.get("message", "")
 
     admins = g.db.query(User).filter(User.admin_level > 0).all()
 

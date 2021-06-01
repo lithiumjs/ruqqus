@@ -19,7 +19,7 @@ from ruqqus.helpers.alerts import *
 def contact(v):
     return render_template("contact.html", v=v)
 
-@app.route("/submit_contact", methods=["POST"])
+@app.route("/contact", methods=["POST"])
 @auth_desired
 def submit_contact(v):
 

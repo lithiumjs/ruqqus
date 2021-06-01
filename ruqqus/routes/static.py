@@ -10,6 +10,7 @@ from ruqqus.classes import *
 from ruqqus.mail import *
 from ruqqus.__main__ import app, limiter
 from ruqqus.helpers.get import get_account
+from ruqqus.helpers.alerts import *
 
 # take care of misc pages that never really change (much)
 

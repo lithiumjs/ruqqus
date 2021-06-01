@@ -7,6 +7,7 @@ import qrcode
 import io
 import gevent
 
+from ruqqus.helpers.alerts import *
 from ruqqus.helpers.wrappers import *
 from ruqqus.helpers.base36 import *
 from ruqqus.helpers.sanitize import *

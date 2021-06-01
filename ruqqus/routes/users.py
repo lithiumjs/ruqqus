@@ -108,7 +108,7 @@ def message2(v):
     if user.is_blocked: return jsonify({"error": "This user is blocking you."}), 403
     message = request.form.get("message", "")
     send_pm(v.user_id, user, message)
-    return render_template("privatemessage.html", v=v, , username=username, msg="Your message has been sent.")
+    return render_template("privatemessage.html", v=v, username=username, msg="Your message has been sent.")
 
 @app.route("/@<username>/followers", methods=["GET"])
 @auth_required

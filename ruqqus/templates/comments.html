@@ -76,8 +76,10 @@
     {% else %}
       <span class="font-weight-bold"><a href="{{ c.post.permalink }}">{{ c.post.title | safe }}</a></span>
     {% endif %}
-  {% else %}
+  {% elif c.author_id=1046 %}
   <span class="font-weight-bold">Drama Notification</span>
+  {% else %}
+  <span class="font-weight-bold">Private Message</span>
   {% endif %}
 </span>
 </div>
@@ -205,8 +207,7 @@
           {% endif %}
 
           {% endif %}
-          <li class="list-inline-item text-muted d-none d-md-inline-block"><a href="{{ c.permalink  }}"{% if c.author.is_private %} rel="nofollow"{% endif %}><i class="fas fa-link"></i>Permalink</a>
-          </li>
+          <li class="list-inline-item text-muted d-none d-md-inline-block"><a href="{{ c.permalink }}?context=99"{% if c.author.is_private %} rel="nofollow"{% endif %}><i class="fas fa-book-open"></i>Context</a></li>
           <li class="list-inline-item text-muted d-none d-md-inline-block"><a href="javascript:void(0);" role="button" class="copy-link" data-clipboard-text="{{ c.permalink | full_link}}"><i class="fas fa-copy"></i>Copy link</a></li>
           
           {% if v and v.admin_level>=3 and request.path.startswith ('/admin') %}
@@ -221,7 +222,6 @@
             </a>
 
             <div class="dropdown-menu border-0 shadow" aria-labelledby="dropdownMoreLink">
-              <a class="dropdown-item" target="_blank" href="{{ c.permalink }}?context=3"><i class="fas fa-book-open fa-fw"></i>Context</a>
               <a class="dropdown-item d-none" href="#"><i class="fas fa-save fa-fw"></i>Save</a>
 
 
@@ -395,7 +395,6 @@
 
           <li class="list-group-item"><a href="javascript:void(0);" role="button" class="d-block copy-link" data-dismiss="modal" data-clipboard-text="{{ c.permalink | full_link}}"><i class="fas fa-copy"></i><span>Copy Link</span></a></li>
 
-          <li class="list-group-item"><a href="{{ c.permalink }}"{% if c.author.is_private %} rel="nofollow"{% endif %}><i class="fas fa-link"></i>Permalink</a></li>
           <li class="list-group-item"><a href="{{ c.permalink }}?context=3"{% if c.author.is_private %} rel="nofollow"{% endif %}><i class="fas fa-dna"></i>Context</a></li>
           <li class="list-group-item d-none"><a href="#" class="d-block"><i class="fas fa-save"></i>Save</a></li>
 

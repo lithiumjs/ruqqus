@@ -440,17 +440,17 @@ class User(Base, Stndrd, Age_times):
         return z
 
     @property
-    #@cache.memoize(timeout=3600)  # 1hr cache time for user rep
+    @cache.memoize(timeout=3600)  # 1hr cache time for user rep
     def karma(self):
         return int(self.energy) - self.post_count
 
     @property
-    #@cache.memoize(timeout=3600)
+    @cache.memoize(timeout=3600)
     def comment_karma(self):
         return int(self.comment_energy) - self.comments.filter(Comment.parent_submission is not None).filter_by(is_banned=False).count()
 
     @property
-    #@cache.memoize(timeout=3600)
+    @cache.memoize(timeout=3600)
     def true_score(self):
 
         self.stored_karma=max((self.karma + self.comment_karma), -5)
@@ -468,7 +468,7 @@ class User(Base, Stndrd, Age_times):
         return f"t1_{self.base36id}"
 
     @property
-    #@cache.memoize(timeout=60)
+    @cache.memoize(timeout=60)
     def has_report_queue(self):
         board_ids = [
             x.board_id for x in self.moderates.filter_by(

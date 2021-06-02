@@ -725,11 +725,7 @@ def submit_post(v):
     g.db.commit()
 
     # spin off thumbnail generation and csam detection as  new threads
-    if (new_post.url or request.files.get('file')) and (v.is_activated or request.headers.get('cf-ipcountry')!="T1"):
-        new_thread = gevent.spawn(
-            thumbnail_thread,
-            new_post.base36id
-        )
+    if (new_post.url or request.files.get('file')) and (v.is_activated or request.headers.get('cf-ipcountry')!="T1"): thumbnail_thread(new_post.base36id)
     
     try: notifs(v, new_post)
     except: pass

@@ -906,14 +906,14 @@ def submit_post(v):
         try: remove(tempname)
         except FileNotFoundError: pass
 
-      for follow in v.followers:
-        user = get_account(follow.user_id)
-        send_notification(user, f"@{v.username} has made a new post: https://rdrama.net{new_post.permalink}")
-
     # expire the relevant caches: front page new, board new
     cache.delete_memoized(frontlist)
     g.db.commit()
     cache.delete_memoized(Board.idlist, board, sort="new")
+
+    for follow in v.followers:
+        user = get_account(follow.user_id)
+        send_notification(user, f"@{v.username} has made a new post: https://rdrama.net{new_post.permalink}")
 
     # print(f"Content Event: @{new_post.author.username} post
     # {new_post.base36id}")

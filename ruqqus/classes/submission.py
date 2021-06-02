@@ -169,7 +169,7 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
 
     @property
     def is_archived(self):
-        return int(time.time()) - self.created_utc > 60 * 60 * 24 * 180
+        return false
 
     @property
     @lazy

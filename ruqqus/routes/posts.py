@@ -497,7 +497,7 @@ def submit_post(v):
 
     if max(len(similar_urls), len(similar_posts)) >= threshold:
 
-        text = "Your Ruqqus account has been suspended for 1 day for the following reason:\n\n> Too much spam!"
+        text = "Your Drama account has been suspended for 1 day for the following reason:\n\n> Too much spam!"
         send_notification(v, text)
 
         v.ban(reason="Spamming.",
@@ -513,7 +513,7 @@ def submit_post(v):
             post.ban_reason = "Automatic spam removal. This happened because the post's creator submitted too much similar content too quickly."
             g.db.add(post)
             ma=ModAction(
-                    user_id=1,
+                    user_id=1046,
                     target_submission_id=post.id,
                     kind="ban_post",
                     board_id=post.board_id,
@@ -607,7 +607,7 @@ def submit_post(v):
                 BadLink.link)).first()
         if badlink:
             if badlink.autoban:
-                text = "Your Ruqqus account has been suspended for 1 day for the following reason:\n\n> Too much spam!"
+                text = "Your Drama account has been suspended for 1 day for the following reason:\n\n> Too much spam!"
                 send_notification(v, text)
                 v.ban(days=1, reason="spam")
 
@@ -700,7 +700,7 @@ def submit_post(v):
     if request.files.get('file'):
 
         #check file size
-        if request.content_length > 16 * 1024 * 1024 and not v.has_premium:
+        if request.content_length > 16 * 1024 * 1024:
             g.db.rollback()
             abort(413)
 
@@ -718,15 +718,8 @@ def submit_post(v):
                         }
 
         name = f'post/{new_post.base36id}/{secrets.token_urlsafe(8)}'
-        upload_file(name, file)
-
-        # thumb_name=f'posts/{new_post.base36id}/thumb.png'
-        #upload_file(name, file, resize=(375,227))
-
-        # update post data
-        new_post.url = f'https://{BUCKET}/{name}'
-        new_post.is_image = True
-        new_post.domain_ref = 1  # id of i.ruqqus.com domain
+        new_post.url = upload_file(name, file)
+        new_post.domain_ref = 1  # id of i.ruqqus.ga domain
         g.db.add(new_post)
         g.db.add(new_post.submission_aux)
         g.db.commit()
@@ -740,7 +733,7 @@ def submit_post(v):
             db.commit()
             ma=ModAction(
                 kind="ban_post",
-                user_id=1,
+                user_id=1046,
                 note="banned image",
                 target_submission_id=new_post.id
                 )
@@ -750,7 +743,7 @@ def submit_post(v):
 
             
         csam_thread=threading.Thread(target=check_csam_url, 
-                                     args=(f"https://{BUCKET}/{name}", 
+                                     args=(new_post.url, 
                                            v, 
                                            del_function
                                           )
@@ -773,84 +766,6 @@ def submit_post(v):
 
     # print(f"Content Event: @{new_post.author.username} post
     # {new_post.base36id}")
-
-    #Bell notifs
-
-
-    board_uids = g.db.query(
-        Subscription.user_id
-        ).options(lazyload('*')).filter(
-        Subscription.board_id==new_post.board_id, 
-        Subscription.is_active==True,
-        Subscription.get_notifs==True,
-        Subscription.user_id != v.id,
-        Subscription.user_id.notin_(
-            g.db.query(UserBlock.user_id).filter_by(target_id=v.id).subquery()
-            )
-        )
-
-    follow_uids=g.db.query(
-        Follow.user_id
-        ).options(lazyload('*')).filter(
-        Follow.target_id==v.id,
-        Follow.get_notifs==True,
-        Follow.user_id!=v.id,
-        Follow.user_id.notin_(
-            g.db.query(UserBlock.user_id).filter_by(target_id=v.id).subquery()
-            ),
-        Follow.user_id.notin_(
-            g.db.query(UserBlock.target_id).filter_by(user_id=v.id).subquery()
-            )
-        ).join(Follow.target).filter(
-        User.is_private==False,
-        User.is_nofollow==False,
-        )
-
-    if not new_post.is_public:
-
-        contribs=g.db.query(ContributorRelationship).filter_by(board_id=new_post.board_id, is_active=True).subquery()
-        mods=g.db.query(ModRelationship).filter_by(board_id=new_post.board_id, accepted=True).subquery()
-
-        board_uids=board.uids.join(
-            contribs,
-            contribs.c.user_id==Subscription.user_id,
-            isouter=True
-            ).join(
-            mods,
-            mods.c.user_id==Subscription.user_id,
-            isouter=True
-            ).filter(
-                or_(
-                    mods.c.id != None,
-                    contribs.c.id !=None
-                )
-            )
-
-        follow_uids=follow_uids.join(
-            contribs,
-            contribs.c.user_id==Follow.user_id,
-            isouter=True
-            ).join(
-            mods,
-            mods.c.user_id==Follow.user_id,
-            isouter=True
-            ).filter(
-                or_(
-                    mods.c.id != None,
-                    contribs.c.id !=None
-                )
-            )
-
-    uids=list(set([x[0] for x in board_uids.all()] + [x[0] for x in follow_uids.all()]))
-
-    for uid in uids:
-        new_notif=Notification(
-            user_id=uid,
-            submission_id=new_post.id
-            )
-        g.db.add(new_notif)
-    g.db.commit()
-
 
     return {"html": lambda: redirect(new_post.permalink),
             "api": lambda: jsonify(new_post.json)

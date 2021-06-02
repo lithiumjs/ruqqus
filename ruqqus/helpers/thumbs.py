@@ -28,10 +28,3 @@ def expand_url(post_url, fragment_url):
 def thumbnail_thread(pid, debug=False):
 
     return True, "Success"
-    
-def print_(x):
-    if debug:
-        try:
-            print(x)
-        except:
-            pass

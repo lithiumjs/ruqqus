@@ -770,10 +770,10 @@ def submit_post(v):
         headers={"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.72 Safari/537.36"}
 
         try:
-            print_(f"loading {fetch_url}")
+            print(f"loading {fetch_url}")
             x=requests.get(fetch_url, headers=headers)
         except:
-            print_(f"unable to connect to {fetch_url}")
+            print(f"unable to connect to {fetch_url}")
             g.db.close()
             return False, "Unable to connect to source"
 
@@ -819,7 +819,7 @@ def submit_post(v):
 
             for tag_name in meta_tags:
                 
-                print_(f"Looking for meta tag: {tag_name}")
+                print(f"Looking for meta tag: {tag_name}")
 
 
                 tag = soup.find(
@@ -847,37 +847,37 @@ def submit_post(v):
 
             #now we have a list of candidate urls to try
             for url in thumb_candidate_urls:
-                print_(f"Trying url {url}")
+                print(f"Trying url {url}")
 
                 try:
                     image_req=requests.get(url, headers=headers)
                 except:
-                    print_(f"Unable to connect to candidate url {url}")
+                    print(f"Unable to connect to candidate url {url}")
                     continue
 
                 if image_req.status_code >= 400:
-                    print_(f"status code {x.status_code}")
+                    print(f"status code {x.status_code}")
                     continue
 
                 if not image_req.headers.get("Content-Type","").startswith("image/"):
-                    print_(f'bad type {image_req.headers.get("Content-Type","")}, try next')
+                    print(f'bad type {image_req.headers.get("Content-Type","")}, try next')
                     continue
 
                 if image_req.headers.get("Content-Type","").startswith("image/svg"):
-                    print_("svg, try next")
+                    print("svg, try next")
                     continue
 
                 image = PILimage.open(BytesIO(image_req.content))
                 if image.width < 30 or image.height < 30:
-                    print_("image too small, next")
+                    print("image too small, next")
                     continue
 
-                print_("Image is good, upload it")
+                print("Image is good, upload it")
                 break
 
             else:
                 #getting here means we are out of candidate urls (or there never were any)
-                print_("Unable to find image")
+                print("Unable to find image")
                 g.db.close()
                 return False, "No usable images"
 
@@ -886,18 +886,18 @@ def submit_post(v):
 
         elif x.headers.get("Content-Type","").startswith("image/"):
             #image is originally loaded fetch_url
-            print_("post url is direct image")
+            print("post url is direct image")
             image_req=x
             image = PILimage.open(BytesIO(x.content))
 
         else:
 
-            print_(f'Unknown content type {x.headers.get("Content-Type")}')
+            print(f'Unknown content type {x.headers.get("Content-Type")}')
             g.db.close()
             return False, f'Unknown content type {x.headers.get("Content-Type")} for submitted content'
 
 
-        print_(f"Have image, uploading")
+        print(f"Have image, uploading")
 
         name = f"posts/{post.base36id}/thumb.png"
         tempname = name.replace("/", "_")
@@ -1089,13 +1089,7 @@ def retry_thumbnail(pid, v):
 
     if post.author_id != v.id and v.admin_level < 3:
         abort(403)
-
-    new_thread = threading.Thread(target=thumbnail_thread,
-                                  args=(post.base36id,)
-                                  )
-    new_thread.start()
     return jsonify({"message": "Thumbnail Retry Queued"})
-
 
 @app.route("/save_post/<pid>", methods=["POST"])
 @auth_required

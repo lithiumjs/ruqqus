@@ -231,11 +231,6 @@ def get_post_title(v):
     except BaseException:
         return jsonify({"error": f"Could not find a title"}), 400
 
-def notifs(v, new_post):
-      for follow in v.followers:
-        user = get_account(follow.user_id)
-        send_notification(user, f"@{v.username} has made a new post: https://rdrama.net{new_post.permalink}")
-
 @app.route("/submit", methods=['POST'])
 @app.route("/api/v1/submit", methods=["POST"])
 @app.route("/api/vue/submit", methods=["POST"])
@@ -910,6 +905,10 @@ def submit_post(v):
 
         try: remove(tempname)
         except FileNotFoundError: pass
+
+      for follow in v.followers:
+        user = get_account(follow.user_id)
+        send_notification(user, f"@{v.username} has made a new post: https://rdrama.net{new_post.permalink}")
 
     # expire the relevant caches: front page new, board new
     cache.delete_memoized(frontlist)

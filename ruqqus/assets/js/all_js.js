@@ -277,7 +277,7 @@ function removeComment(post_id) {
     button.onclick=function(){approveComment(post_id)};
     button.innerHTML='<i class="fas fa-clipboard-check"></i>Approve'
   }
-  post(url, callback, "Unable to remove post at this time. Please try again later.")
+  post(url, callback, "Comment has been removed.")
 };
 
 function approveComment(post_id) {
@@ -291,7 +291,7 @@ function approveComment(post_id) {
     button.innerHTML='<i class="fas fa-trash-alt"></i>Remove'
   }
 
-  post(url, callback, "Unable to approve post at this time. Please try again later.")
+  post(url, callback, "Comment has been approved.")
 }
 
 admin_comment=function(cid){
@@ -750,7 +750,7 @@ function removePost(post_id) {
     button.classList.add("approveDropdownItem");
     button.innerHTML='<i class="fas fa-clipboard-check"></i>Approve'
   }
-  post(url, callback, "Unable to remove post at this time. Please try again later.")
+  post(url, callback, "Post has been removed.")
 }
 
 function approvePost(post_id) {
@@ -766,7 +766,7 @@ function approvePost(post_id) {
     button.innerHTML='<i class="fas fa-trash-alt"></i>Remove'
   }
 
-  post(url, callback, "Unable to approve post at this time. Please try again later.")
+  post(url, callback, "Post has been approved.")
 }
 
 //Element deleter

@@ -774,11 +774,9 @@ def submit_post(v):
             x=requests.get(fetch_url, headers=headers)
         except:
             print(f"unable to connect to {fetch_url}")
-            g.db.close()
             return False, "Unable to connect to source"
 
         if x.status_code != 200:
-            g.db.close()
             return False, f"Source returned status {x.status_code}."
 
         #if content is image, stick with that. Otherwise, parse html.
@@ -878,7 +876,6 @@ def submit_post(v):
             else:
                 #getting here means we are out of candidate urls (or there never were any)
                 print("Unable to find image")
-                g.db.close()
                 return False, "No usable images"
 
 
@@ -893,7 +890,6 @@ def submit_post(v):
         else:
 
             print(f'Unknown content type {x.headers.get("Content-Type")}')
-            g.db.close()
             return False, f'Unknown content type {x.headers.get("Content-Type")} for submitted content'
 
 
@@ -911,8 +907,6 @@ def submit_post(v):
         g.db.add(post)
 
         g.db.commit()
-
-        g.db.close()
 
         try: remove(tempname)
         except FileNotFoundError: pass

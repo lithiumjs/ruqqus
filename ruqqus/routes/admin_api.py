@@ -22,11 +22,9 @@ from ruqqus.__main__ import app, cache
 
 
 @app.route("/api/ban_user/<user_id>", methods=["POST"])
-@auth_required
+@admin_level_required(6)
 @validate_formkey
 def ban_user(user_id, v):
-
-    if v.admin_level != 6: abort(403)
     
     user = g.db.query(User).filter_by(id=user_id).first()
 
@@ -78,11 +76,9 @@ def ban_user(user_id, v):
 
 
 @app.route("/api/unban_user/<user_id>", methods=["POST"])
-@auth_required
+@admin_level_required(6)
 @validate_formkey
 def unban_user(user_id, v):
-
-    if v.admin_level != 6: abort(403)
 
     user = g.db.query(User).filter_by(id=user_id).first()
 

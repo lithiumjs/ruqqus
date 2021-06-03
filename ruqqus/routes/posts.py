@@ -1010,6 +1010,19 @@ def toggle_comment_nsfw(cid, v):
     comment.over_18 = not comment.over_18
     g.db.add(comment)
     return "", 204
+    
+@app.route("/api/toggle_comment_nsfl/<cid>", methods=["POST"])
+@app.route("/api/v1/toggle_comment_nsfl/<cid>", methods=["POST"])
+@is_not_banned
+@api("update")
+@validate_formkey
+def toggle_comment_nsfl(cid, v):
+
+    comment = g.db.query(Comment).filter_by(id=base36decode(cid)).first()
+    if not comment.author_id == v.id and not v.admin_level >= 3: abort(403)
+    comment.is_nsfl = not comment.is_nsfl
+    g.db.add(comment)
+    return "", 204
 
 @app.route("/api/toggle_post_nsfw/<pid>", methods=["POST"])
 @app.route("/api/v1/toggle_post_nsfw/<pid>", methods=["POST"])

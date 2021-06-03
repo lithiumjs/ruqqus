@@ -161,10 +161,6 @@
 
             <li class="list-inline-item"><a href="{{ p.permalink }}"><i class="fas fa-comment-dots"></i>{{ p.comment_count }}</a></li>
 
-            {% if p.url and p.has_thumb==False and v and (v.id==p.author_id or v.admin_level>=3) %}
-            <li class="list-inline-item"><a href="javascript:void(0)" onclick="post_toast('/retry_thumb/{{ p.base36id }}')"><i class="fas fa-image"></i>Retry thumb</a></li>
-            {% endif %}
-
             <li class="list-inline-item"><a href="javascript:void(0);" role="button" class="copy-link" data-clipboard-text="{{ p.permalink | full_link }}"><i class="fas fa-copy"></i>Copy link</a></li>
 
             {% if v and v.admin_level==0 and not v.id==p.author_id %}

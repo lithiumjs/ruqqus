@@ -911,9 +911,13 @@ def submit_post(v):
     g.db.commit()
     cache.delete_memoized(Board.idlist, board, sort="new")
 
-    for follow in v.followers:
-        user = get_account(follow.user_id)
-        send_notification(user, f"@{v.username} has made a new post: https://rdrama.net{new_post.permalink}")
+    try:
+        for follow in v.followers:
+            user = get_account(follow.user_id)
+            send_notification(user, f"@{v.username} has made a new post: https://rdrama.net{new_post.permalink}")
+    except Exception as e:
+        print(e)
+        pass
 
     # print(f"Content Event: @{new_post.author.username} post
     # {new_post.base36id}")

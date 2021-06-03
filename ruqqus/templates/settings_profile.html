@@ -245,16 +245,16 @@
               
               <div class="body d-lg-flex border-bottom">
 
-                <label for="bio" class="text-black w-lg-25">Title</label>
+                <label for="bio" class="text-black w-lg-25">Flair</label>
 
                 <div class="w-lg-100">
 
                   <form id="profile-settings" action="/settings/title_change" method="post">
                     <input type="hidden" name="formkey" value="{{ v.formkey }}">
-                    <input type="text" name="title" class="form-control" placeholder='Enter a title here' value="{{ v.customtitle }}">
+                    <input type="text" name="title" class="form-control" placeholder='Enter a flair here' value="{{ v.customtitle }}">
                     <div class="d-flex mt-2">
                       <small>Limit of 50 characters</small>
-                      <input class="btn btn-primary ml-auto" id="titleSave" type="submit" value="Change Title">
+                      <input class="btn btn-primary ml-auto" id="titleSave" type="submit" value="Change Flair">
                     </div>
                   </form>
                 </div>
@@ -263,14 +263,14 @@
 
               <div class="body d-lg-flex border-bottom">
 
-               <label for="bio" class="text-black w-lg-25">Title Color</label>
+               <label for="bio" class="text-black w-lg-25">Flair Color</label>
 
               <div class="d-flex">
 
                  <form action="/settings/titlecolor" id="titlecolor-form" method="post" class="color-picker" style="line-height: 0">
                     <input type="hidden" name="formkey" value="{{ v.formkey }}">
 
-                    {% for titlecolor in ['cfcfcf','ff66ac','2a96f3','62ca56','eb4963','f39731','30409f','3e98a7','e4432d','7b9ae4','ec72de','7f8fa6'] %}
+                    {% for titlecolor in ['cfcfcf','ff66ac','2a96f3','62ca56','eb4963','ff0000','f39731','30409f','3e98a7','e4432d','7b9ae4','ec72de','7f8fa6'] %}
                     <input type="radio" name="titlecolor" id="titlecolor-{{ titlecolor }}" value="{{ titlecolor }}" {% if v.titlecolor == titlecolor %}checked{% endif %} onclick="document.getElementById('titlecolor-form').submit()"/>
                     <label class="color-radio" for="titlecolor-{{ titlecolor }}">
                       <span style="background-color: #{{ titlecolor }}">

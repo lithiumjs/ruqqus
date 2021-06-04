@@ -18,7 +18,6 @@ from .flags import Flag
 from .badwords import *
 from .comment import Comment
 from .titles import Title
-from .boards import Board
 
 class SubmissionAux(Base):
 
@@ -236,13 +235,8 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
     #    if request.args.get("sort", "Hot") != "new":
     #        self.replies = [x for x in self.replies if x.is_pinned] + [x for x in self.replies if not x.is_pinned]
 
-        board = g.db.query(Board).options(
-            joinedload(Board.moderators).joinedload(ModRelationship.user),
-            joinedload(Board.subcat).joinedload(SubCategory.category)
-            ).filter_by(
-                    id=base36decode(bid)).first()
-        nsfw = (v and v.over_18) or session_over18(board)
-        nsfl = (v and v.show_nsfl) or session_isnsfl(board)
+        nsfw = (v and v.over_18) or session_over18(self.board)
+        nsfl = (v and v.show_nsfl) or session_isnsfl(self.board)
         return render_template(template,
                                v=v,
                                nsfw=nsfw,

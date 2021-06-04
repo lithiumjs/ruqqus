@@ -8,7 +8,7 @@ import random
 from os import environ
 import requests
 from .mix_ins import *
-from ruqqus.classes.boards import *
+from ruqqus.classes.boards import Board
 from ruqqus.helpers.base36 import *
 from ruqqus.helpers.lazy import lazy
 import ruqqus.helpers.aws as aws

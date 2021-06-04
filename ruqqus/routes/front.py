@@ -623,8 +623,8 @@ def all_comments(v):
 
     idlist = idlist[0:25]
 
-    nsfw = v.over_18 or session_over18(comment.board)
-    nsfl = v.show_nsfl or session_isnsfl(comment.board)
+    nsfw = (v and v.over_18) or session_over18(comments[0].board)
+    nsfl = (v and v.show_nsfl) or session_isnsfl(comments[0].board)
     return {"html": lambda: render_template("home_comments.html",
                                             v=v,
                                             nsfw=nsfw,

@@ -507,8 +507,8 @@ def api_comment(v):
 
     # print(f"Content Event: @{v.username} comment {c.base36id}")
 
-    nsfw = v.over_18 or session_over18(comment.board)
-    nsfl = v.show_nsfl or session_isnsfl(comment.board)
+    nsfw = (v and v.over_18) or session_over18(comment.board)
+    nsfl = (v and v.show_nsfl) or session_isnsfl(comment.board)
     return {"html": lambda: jsonify({"html": render_template("comments.html",
                                                              v=v,
                                                              nsfw=nsfw,

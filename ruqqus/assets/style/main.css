@@ -13999,10 +13999,10 @@ div.deleted.banned {
     display: block; }
     
 .spoiler{ 
-  color: black; 
-  background-color:black;
+  color: white; 
+  background-color:white;
 }
 
 .spoiler:hover { 
-  background-color:white; 
-  }
+  color: black; 
+}

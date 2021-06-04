@@ -547,6 +547,8 @@ def edit_comment(cid, v):
     with CustomRenderer(post_id=c.post.base36id) as renderer:
         body_md = renderer.render(mistletoe.Document(body))
     body_html = sanitize(body_md, linkgen=True)
+    
+    if '[s]' in body_html and '[/s]' in body_html: body_html = body_html.replace('[s]', '<p class="spoiler">').replace('[/s]', '</p>')
 
     # Run safety filter
     bans = filter_comment_html(body_html)

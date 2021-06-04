@@ -8,7 +8,6 @@ import random
 from os import environ
 import requests
 from .mix_ins import *
-from ruqqus.helpers.get import get_board
 from ruqqus.helpers.base36 import *
 from ruqqus.helpers.lazy import lazy
 import ruqqus.helpers.aws as aws
@@ -237,7 +236,11 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
     #    if request.args.get("sort", "Hot") != "new":
     #        self.replies = [x for x in self.replies if x.is_pinned] + [x for x in self.replies if not x.is_pinned]
 
-        board = get_board(1)
+        board = g.db.query(Board).options(
+            joinedload(Board.moderators).joinedload(ModRelationship.user),
+            joinedload(Board.subcat).joinedload(SubCategory.category)
+            ).filter_by(
+                    id=base36decode(bid)).first()
         nsfw = (v and v.over_18) or session_over18(board)
         nsfl = (v and v.show_nsfl) or session_isnsfl(board)
         return render_template(template,

@@ -23,10 +23,7 @@ services:
 
   redis:
     image: redis
-    command: bash -c "
-        redis-server /usr/local/etc/redis/redis.conf
-        && redis-server config set dir "/usr/local"
-      "
+    command: redis-server /usr/local/etc/redis/redis.conf
     volumes:
       - ./redis.conf:/usr/local/etc/redis/redis.conf
     ports:

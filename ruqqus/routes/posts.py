@@ -77,7 +77,6 @@ def incoming_post_shortlink(base36id=None):
 @app.route("/api/v1/post/<base36id>", methods=["GET"])
 @app.route("/test/post/<base36id>", methods=["GET"])
 @auth_desired
-
 @api("read")
 def post_base36id(base36id, anything=None, v=None):
     

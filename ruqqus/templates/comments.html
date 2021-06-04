@@ -7,7 +7,7 @@
 
 <!--conditions under which a comment might be hidden-->
 
-{% if (c.over_18 and not v.over_18) or (c.is_nsfl and not v.show_nsfl) or (((c.is_banned or c.deleted_utc) or ((c.is_blocking or c.is_blocked) and not (c.is_guildmaster('content') and c.original_board_id==c.post.board_id))) and not c.distinguish_level and not (v and v.admin_level>=3)) %}
+{% if (c.over_18 and not nsfw) or (c.is_nsfl and not nsfl) or (((c.is_banned or c.deleted_utc) or ((c.is_blocking or c.is_blocked) and not (c.is_guildmaster('content') and c.original_board_id==c.post.board_id))) and not c.distinguish_level and not (v and v.admin_level>=3)) %}
 
 
 
@@ -21,7 +21,7 @@
         <div id="comment-{{ c.base36id }}-only" class="">
 
             <div class="user-info">{% if standalone and c.over_18 %}<span class="badge badge-danger">NSFW</span> {% endif %}
-                [{% if c.is_banned %}Removed by administrators{% elif c.deleted_utc > 0 %}Deleted by author{% elif c.is_blocking %}You are blocking @{{ c.author.username }}{% elif c.is_blocked %}This user has blocked you{% endif %}]
+                [{% if c.is_banned %}Removed by administrators{% elif c.deleted_utc > 0 %}Deleted by author{% elif c.is_blocking %}You are blocking @{{ c.author.username }}{% elif c.is_blocked %}This user has blocked you{% elif c.over_18 %}Enable viewing NSFW content in the settings to view this comment{% else %}Enable viewing NSFL content in the settings to view this comment{% endif %}]
             </div>
 
 

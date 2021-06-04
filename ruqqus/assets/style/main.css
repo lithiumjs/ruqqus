@@ -14001,6 +14001,7 @@ div.deleted.banned {
 .spoiler{ 
   color: white; 
   background-color:white;
+  font-weight: 600 !important; }
 }
 
 .spoiler:hover { 

@@ -13613,4 +13613,11 @@ div.deleted.banned {
   .cat-item.selected {
     display: block; }
 
-/*# sourceMappingURL=main.css.map */
+.spoiler{ 
+  color: black; 
+  background-color:black;
+  font-weight: 600 !important; }
+}
+
+.spoiler:hover { 
+  color: white; 

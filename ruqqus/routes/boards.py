@@ -1531,7 +1531,7 @@ def guild_profile(guild):
     x = get_guild(guild)
 
     if x.over_18:
-        return redirect("/assets/images/icons/nsfw_guild_icon.png")
+        return redirect("/assets/images/nsfw_guild_icon.png")
     else:
         return redirect(x.profile_url)
 

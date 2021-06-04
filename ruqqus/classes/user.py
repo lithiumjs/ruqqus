@@ -724,7 +724,7 @@ class User(Base, Stndrd, Age_times):
             if self.bannerurl: return self.bannerurl
             else: return f"https://s3.eu-central-1.amazonaws.com/i.ruqqus.ga/uid/{self.base36id}/banner-{self.banner_nonce}.png"
         else:
-            return "/assets/images/profiles/default_bg.png"
+            return "/assets/images/default_bg.png"
 
     @property
     def profile_url(self):
@@ -732,7 +732,7 @@ class User(Base, Stndrd, Age_times):
             if self.profileurl: return self.profileurl
             else: return f"https://s3.eu-central-1.amazonaws.com/i.ruqqus.ga/uid/{self.base36id}/profile-{self.profile_nonce}.png"
         else:
-            return "/assets/images/profiles/default-profile-pic.png"
+            return "/assets/images/default-profile-pic.png"
 
     @property
     def available_titles(self):

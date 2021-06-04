@@ -18,7 +18,7 @@ class Image(Base):
     
     @property
     def path(self):
-        return f"/assets/images/states/{self.state.lower()}-{self.number}.jpg"
+        return f"/assets/images/platy.jpg"
 
 
 

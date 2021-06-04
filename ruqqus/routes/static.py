@@ -149,7 +149,7 @@ def settings_premium(v):
 
 @app.route("/assets/favicon.ico", methods=["GET"])
 def favicon():
-    return send_file("./assets/images/logo/favicon.png")
+    return send_file("./assets/images/favicon.png")
 
 
 #@app.route("/my_info", methods=["GET"])

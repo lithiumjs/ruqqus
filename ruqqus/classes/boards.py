@@ -412,7 +412,7 @@ class Board(Base, Stndrd, Age_times):
             return f"https://s3.eu-central-1.amazonaws.com/i.ruqqus.ga/board/{self.name.lower()}/profile-{self.profile_nonce}.png"
         else:
             if self.over_18:
-                return "/assets/images/icons/nsfw_guild_icon.png"
+                return "/assets/images/nsfw_guild_icon.png"
             else:
                 return "/assets/images/guilds/default-guild-icon.png"
 

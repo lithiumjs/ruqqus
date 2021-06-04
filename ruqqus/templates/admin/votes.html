@@ -33,16 +33,12 @@
 	<thead class="bg-primary text-white">
 		<tr>
 			<th>User</th>
-			<th>Voting IP</th>
-			<th>Account Creation IP</th>
 		</tr>
 	</thead>
 
 	{% for vote in ups %}
 	<tr>
 		<td>{{ vote.user.username }}</td>
-		<td>{{ vote.creation_ip }}</td>
-		<td>{{ vote.user.creation_ip }}</td>
 	</tr>
 	{% endfor %}
 </table>
@@ -52,16 +48,12 @@
 	<thead class="bg-primary text-white">
 		<tr>
 			<th>User</th>
-			<th>Voting IP</th>
-			<th>Account Creation IP</th>
 		</tr>
 	</thead>
 
 	{% for vote in downs %}
 	<tr>
 		<td>{{ vote.user.username }}</td>
-		<td>{{ vote.creation_ip }}</td>
-		<td>{{ vote.user.creation_ip }}</td>
 	</tr>
 	{% endfor %}
 </table>

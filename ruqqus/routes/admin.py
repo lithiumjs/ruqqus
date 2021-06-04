@@ -299,7 +299,7 @@ def money_stats(v):
 
 
 @app.route("/admin/vote_info", methods=["GET"])
-@auth_required
+@auth_desired
 def admin_vote_info_get(v):
 
     if not request.args.get("link"):

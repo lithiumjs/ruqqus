@@ -63,5 +63,9 @@ def set_nick(user, nick):
     data={"nick": nick}
     requests.patch(url, headers=headers, json=data)
 
-
-
+@discord_wrap
+def send_message(message):
+    url=f"{DISCORD_ENDPOINT}/channels/{SERVER_ID}/members/{user.discord_id}"
+    headers = {"Authorization": f"Bot {BOT_TOKEN}"}
+    data={"nick": nick}
+    requests.patch(url, headers=headers, json=data)

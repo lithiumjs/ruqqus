@@ -124,7 +124,9 @@ def discord_redirect(v):
     x=requests.put(url, headers=headers, json=data)
 
     if x.status_code in [201, 204]:
-                    
+
+        if v.admin_level > 0: add_role(v, "admin")
+
         add_role(v, "linked")
                         
         if v.is_banned and v.unban_utc==0:
@@ -157,8 +159,6 @@ def discord_redirect(v):
 
         #print(req.status_code)
         #print(url)
-
-    if v.admin_level > 0: add_role(v, "admin")
 
     return redirect(f"https://discord.com/channels/{SERVER_ID}/{WELCOME_CHANNEL}")
 

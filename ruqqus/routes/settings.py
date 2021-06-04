@@ -18,6 +18,7 @@ from ruqqus.__main__ import app, cache
 
 
 valid_username_regex = re.compile("^[a-zA-Z0-9_]{3,25}$")
+valid_title_regex = re.compile("^[a-zA-Z0-9_]{1,50}$")
 valid_password_regex = re.compile("^.{8,100}$")
 
 
@@ -711,7 +712,7 @@ def settings_name_change(v):
 @validate_formkey
 def settings_title_change(v):
 
-    new_name=request.form.get("title")
+    new_name=request.form.get("title").lstrip().rstrip()
 
     #make sure name is different
     if new_name==v.customtitle:
@@ -720,11 +721,14 @@ def settings_title_change(v):
                            error="You didn't change anything")
 
     #verify acceptability
-    if len(new_name) > 50:
+    if not re.match(valid_title_regex, new_name):
         return render_template("settings_profile.html",
                            v=v,
-                           error=f"Titles can't exceed 50 characters.")
+                           error=f"This isn't a valid flair.")
 
+    new_name=new_name.replace('_','\_')
+    new_name=preprocess(new_name)
+    
     v=g.db.query(User).with_for_update().options(lazyload('*')).filter_by(id=v.id).first()
 
     v.customtitle=new_name

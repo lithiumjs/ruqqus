@@ -212,6 +212,6 @@ def sanitize(text, bio=False, linkgen=False):
     else:
         sanitized = _clean_wo_links.clean(text)
 
-    if '[s]' in sanitized and '[/s]' in sanitized: sanitized = sanitized.replace('[s]', '<p class="spoiler">').replace('[/s]', '</p>')
+    if '&lt;s&gt;' in sanitized and '&lt;/s&gt;' in sanitized: sanitized = sanitized.replace('&lt;s&gt;', '<p class="spoiler">').replace('&lt;/s&gt;', '</p>')
 
     return sanitized

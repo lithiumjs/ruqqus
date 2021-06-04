@@ -720,12 +720,6 @@ def settings_title_change(v):
                            v=v,
                            error="You didn't change anything")
 
-    #verify acceptability
-    if not re.match(valid_title_regex, new_name):
-        return render_template("settings_profile.html",
-                           v=v,
-                           error=f"This isn't a valid flair.")
-
     new_name=new_name.replace('_','\_')
     new_name=preprocess(new_name)
     

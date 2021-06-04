@@ -21,18 +21,19 @@ services:
       - redis
       - postgres
 
-  redis:
+  redis:  
     image: redis
-    command: redis-server /usr/local/etc/redis/redis.conf
     volumes:
-      - ./redis.conf:/usr/local/etc/redis/redis.conf
+      - ./redis.conf:/opt/redis.conf
     ports:
-      - "6379:6379"
+      - "6379"
 
   postgres:
     image: postgres:12.3
     volumes:
       - "./schema.sql:/docker-entrypoint-initdb.d/00-schema.sql"
+      
+      
       - "./seed-db.sql:/docker-entrypoint-initdb.d/10-seed-db.sql"
     ports:
       - "5432:5432"

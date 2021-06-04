@@ -56,8 +56,13 @@ def notifications(v):
             c._is_username_mention = True
             listing.append(c)
 
+    board = get_board(1)
+    nsfw = (v and v.over_18) or session_over18(board)
+    nsfl = (v and v.show_nsfl) or session_isnsfl(board)
     return render_template("notifications.html",
                            v=v,
+                           nsfw = nsfw,
+                           nsfl = nsfl,
                            notifications=listing,
                            next_exists=next_exists,
                            page=page,
@@ -623,8 +628,9 @@ def all_comments(v):
 
     idlist = idlist[0:25]
 
-    nsfw = (v and v.over_18) or session_over18(comments[0].board)
-    nsfl = (v and v.show_nsfl) or session_isnsfl(comments[0].board)
+    board = get_board(1)
+    nsfw = (v and v.over_18) or session_over18(board)
+    nsfl = (v and v.show_nsfl) or session_isnsfl(board)
     return {"html": lambda: render_template("home_comments.html",
                                             v=v,
                                             nsfw=nsfw,

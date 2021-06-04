@@ -272,9 +272,14 @@ def u_username_comments(username, v=None):
 
     is_following = (v and user.has_follower(v))
 
+    board = get_board(1)
+    nsfw = (v and v.over_18) or session_over18(board)
+    nsfl = (v and v.show_nsfl) or session_isnsfl(board)
     return {"html": lambda: render_template("userpage_comments.html",
                                             u=user,
                                             v=v,
+                                            nsfw=nsfw,
+                                            nsfl=nsfl,
                                             listing=listing,
                                             page=page,
                                             next_exists=next_exists,

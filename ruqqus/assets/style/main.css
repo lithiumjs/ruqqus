@@ -13998,6 +13998,11 @@ div.deleted.banned {
   .cat-item.selected {
     display: block; }
     
-a[href$="submit"] {
-    color:#35363e!important;
+..spoiler{ 
+  color: black; 
+  background-color:black;
 }
+
+.spoiler:hover { 
+  background-color:white; 
+  }

@@ -235,8 +235,8 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
     #    if request.args.get("sort", "Hot") != "new":
     #        self.replies = [x for x in self.replies if x.is_pinned] + [x for x in self.replies if not x.is_pinned]
 
-        nsfw = (v and v.over_18) or session_over18(self.board)
-        nsfl = (v and v.show_nsfl) or session_isnsfl(self.board)
+        nsfw = v and v.over_18
+        nsfl = v and v.show_nsfl
         return render_template(template,
                                v=v,
                                nsfw=nsfw,

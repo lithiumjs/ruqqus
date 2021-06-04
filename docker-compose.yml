@@ -33,7 +33,7 @@ services:
 
   postgres:
     image: postgres:12.3
-    command: postgres -c config_file=/usr/local/etc/postgres.conf
+    command: postgres -c config_file=/opt/postgres.conf
     volumes:
       - "./schema.sql:/docker-entrypoint-initdb.d/00-schema.sql"
       - "./seed-db.sql:/docker-entrypoint-initdb.d/10-seed-db.sql"

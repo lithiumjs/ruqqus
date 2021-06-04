@@ -1,3 +1,4 @@
+  
 version: '2.3'
 
 services:
@@ -22,6 +23,12 @@ services:
 
   redis:
     image: redis
+    command: bash -c "
+        redis-server /usr/local/etc/redis/redis.conf
+        && redis-server config set dir "/usr/local"
+      "
+    volumes:
+      - ./redis.conf:/usr/local/etc/redis/redis.conf
     ports:
       - "6379:6379"
 

@@ -85,7 +85,8 @@ def frontlist(v=None, sort="hot", page=1, nsfw=False, nsfl=False,
 			lazyload('*')
 		).filter_by(
 			is_banned=False,
-			stickied=False
+			stickied=False,
+			private=False,
 		).filter(Submission.deleted_utc == 0)
 
 	if not nsfw:

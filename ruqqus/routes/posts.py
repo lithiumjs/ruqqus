@@ -182,7 +182,6 @@ def edit_post(pid, v):
 
 	p.body = body
 	p.body_html = body_html
-	p.title = "test"
 	p.edited_utc = int(time.time())
 
 	# offensive
@@ -795,6 +794,7 @@ def submit_post(v):
 			break
 
 	new_post = Submission(
+		private=bool(request.form.get("private","")),
 		author_id=v.id,
 		domain_ref=domain_obj.id if domain_obj else None,
 		board_id=board.id,

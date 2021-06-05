@@ -7,7 +7,7 @@ CLIENT_ID = environ.get("DISCORD_CLIENT_ID",'').rstrip()
 CLIENT_SECRET = environ.get("DISCORD_CLIENT_SECRET",'').rstrip()
 DISCORD_ENDPOINT = "https://discordapp.com/api"
 BOT_TOKEN = environ.get("DISCORD_BOT_TOKEN",'').rstrip()
-
+AUTH = environ.get("DISCORD_AUTH",'').rstrip()
 
 ROLES={
     "banned":  "700694275905814591",
@@ -64,7 +64,7 @@ def set_nick(user, nick):
     requests.patch(url, headers=headers, json=data)
 
 def send_message(message):
-    url=f"{DISCORD_ENDPOINT}/v8/channels/850266802449678366/messages"
-    headers = {"Authorization": f"Bot {BOT_TOKEN}"}
+    url=f"{DISCORD_ENDPOINT}/channels/850266802449678366/messages"
+    headers = {"Authorization": AUTH}
     data={"content": message}
     requests.post(url, headers=headers, data=data)

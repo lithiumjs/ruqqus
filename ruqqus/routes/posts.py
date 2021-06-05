@@ -247,10 +247,8 @@ def thumbs(new_post):
     headers={"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.72 Safari/537.36"}
 
     try:
-        print(f"loading {fetch_url}")
         x=requests.get(fetch_url, headers=headers)
     except:
-        print(f"unable to connect to {fetch_url}")
         return False, "Unable to connect to source"
 
     if x.status_code != 200:
@@ -278,7 +276,6 @@ def thumbs(new_post):
                 g.db.commit()
 
         except Exception as e:
-            print(f"Error while parsing for metadata: {e}")
             pass
 
         #create list of urls to check
@@ -294,7 +291,6 @@ def thumbs(new_post):
 
         for tag_name in meta_tags:
             
-            print(f"Looking for meta tag: {tag_name}")
 
 
             tag = soup.find(
@@ -322,37 +318,29 @@ def thumbs(new_post):
 
         #now we have a list of candidate urls to try
         for url in thumb_candidate_urls:
-            print(f"Trying url {url}")
 
             try:
                 image_req=requests.get(url, headers=headers)
             except:
-                print(f"Unable to connect to candidate url {url}")
                 continue
 
             if image_req.status_code >= 400:
-                print(f"status code {x.status_code}")
                 continue
 
             if not image_req.headers.get("Content-Type","").startswith("image/"):
-                print(f'bad type {image_req.headers.get("Content-Type","")}, try next')
                 continue
 
             if image_req.headers.get("Content-Type","").startswith("image/svg"):
-                print("svg, try next")
                 continue
 
             image = PILimage.open(BytesIO(image_req.content))
             if image.width < 30 or image.height < 30:
-                print("image too small, next")
                 continue
 
-            print("Image is good, upload it")
             break
 
         else:
             #getting here means we are out of candidate urls (or there never were any)
-            print("Unable to find image")
             return False, "No usable images"
 
 

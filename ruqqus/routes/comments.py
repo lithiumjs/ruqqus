@@ -453,13 +453,10 @@ def api_comment(v):
 										)
 			csam_thread.start()
 
-
-	body = "sex"
-
 	c_aux = CommentAux(
 		id=c.id,
 		body_html=body_html,
-		body=body
+		body="sex"
 	)
 
 	g.db.add(c_aux)

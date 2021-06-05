@@ -44,6 +44,9 @@ def publish(pid, v):
 	if not post.author_id == v.id: abort(403)
 	post.private = False
 	g.db.add(post)
+	cache.delete_memoized(frontlist)
+	g.db.commit()
+	cache.delete_memoized(Board.idlist, board, sort="new")
 	return "", 204
 
 @app.route("/submit", methods=["GET"])

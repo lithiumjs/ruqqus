@@ -22,14 +22,16 @@ def notifications(v):
 
 	page = int(request.args.get('page', 1))
 	all_ = request.args.get('all', False)
-
-	cids = v.notification_commentlisting(page=page,
-										 all_=all_
-										 )
-	next_exists = (len(cids) == 26)
-	cids = cids[0:25]
-
-	comments = get_comments(cids, v=v, sort_type="new", load_parent=True)
+	sent = request.args.get('sent', False)
+	if sent:
+		comments = v.sent()
+		next_exists = (len(comments) == 26)
+		comments = comments[0:25]
+	else:
+		cids = v.notification_commentlisting(page=page, all_=all_)
+		next_exists = (len(cids) == 26)
+		cids = cids[0:25]
+		comments = get_comments(cids, v=v, sort_type="new", load_parent=True)
 
 	listing = []
 	for c in comments:

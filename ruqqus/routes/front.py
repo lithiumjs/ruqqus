@@ -15,24 +15,16 @@ from ruqqus.classes.categories import CATEGORIES
 def slash_post():
 	return redirect("/")
 
+
 @app.route("/notifications", methods=["GET"])
-@app.route("/notifications/all", methods=["GET"])
-@app.route("/notifications/mentions", methods=["GET"])
-@app.route("/notifications/replies", methods=["GET"])
-@app.route("/notifications/system", methods=["GET"])
-@app.route("/api/v1/notifications", methods=["GET"])
 @auth_required
-@api("read")
 def notifications(v):
 
 	page = int(request.args.get('page', 1))
 	all_ = request.args.get('all', False)
 
 	cids = v.notification_commentlisting(page=page,
-										 all_=request.path=="/notifications/all",
-										 mentions_only=request.path=="/notifications/mentions",
-										 replies_only=request.path=="/notifications/replies",
-										 system_only=request.path=="/notifications/system"
+										 all_=all_
 										 )
 	next_exists = (len(cids) == 26)
 	cids = cids[0:25]
@@ -44,7 +36,7 @@ def notifications(v):
 		c._is_blocked = False
 		c._is_blocking = False
 		c.replies = []
-		if c.author_id == 1:
+		if c.author_id == 1046:
 			c._is_system = True
 			listing.append(c)
 		elif c.level > 1 and c.parent_comment and c.parent_comment.author_id == v.id:
@@ -57,24 +49,29 @@ def notifications(v):
 				parent.replies = [c]
 				listing.append(parent)
 
-		elif c.level == 1 and c.post.author_id == v.id:
+		elif c.level == 1 and c.post and c.post.author_id == v.id:
 			c._is_post_reply = True
 			listing.append(c)
 		else:
 			c._is_username_mention = True
 			listing.append(c)
 
-	return {'html': lambda: render_template("notifications.html",
-							v=v,
-							notifications=listing,
-							next_exists=next_exists,
-							page=page,
-							standalone=True,
-							render_replies=True,
-							is_notification_page=True),
-			'api': lambda: jsonify({"data": [x.json for x in listing]})}
+	board = get_board(1)
+	nsfw = (v and v.over_18) or session_over18(board)
+	nsfl = (v and v.show_nsfl) or session_isnsfl(board)
+	return render_template("notifications.html",
+						   v=v,
+						   nsfw = nsfw,
+						   nsfl = nsfl,
+						   notifications=listing,
+						   next_exists=next_exists,
+						   page=page,
+						   standalone=True,
+						   render_replies=True,
+						   is_notification_page=True)
 
 @cache.memoize(timeout=900)
+
 def frontlist(v=None, sort="hot", page=1, nsfw=False, nsfl=False,
 			  t="all", ids_only=True, filter_words='', **kwargs):
 

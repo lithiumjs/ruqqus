@@ -23,28 +23,28 @@
 
 <div class="col-12 mb-3 d-md-none">
 
-  <div class="d-flex flex-wrap justify-content-between align-items-center">
+	<div class="d-flex flex-wrap justify-content-between align-items-center">
 
-    <a class="card-title stretched-link mb-0" href="{{ b.permalink }}">
+		<a class="card-title stretched-link mb-0" href="{{ b.permalink }}">
 
-     <div class="d-flex align-items-center">
-        <img src="{{ b.profile_url }}" class="profile-pic-50 mr-2">
+		 <div class="d-flex align-items-center">
+				<img src="{{ b.profile_url }}" class="profile-pic-50 mr-2">
 
-        <div>
-         <div class="text-black" style="font-size: 16px;">+{{ b.name }} {% if b.over_18 %}<span class="badge badge-danger">NSFW</span>{% elif b.is_nsfl %}<span class="badge badge-danger">NSFL</span>{% endif %}</div>
-         {% if request.path=="/browse" %}<div class="text-small text-muted">{{ b.description|truncate(24, True) }}</div>{% endif %}
-       </div>
+				<div>
+				 <div class="text-black" style="font-size: 16px;">+{{ b.name }} {% if b.over_18 %}<span class="badge badge-danger">NSFW</span>{% elif b.is_nsfl %}<span class="badge badge-danger">NSFL</span>{% endif %}</div>
+				 {% if request.path=="/browse" %}<div class="text-small text-muted">{{ b.description|truncate(24, True) }}</div>{% endif %}
+			 </div>
 
-      </div>
+			</div>
 
-    </a>
+		</a>
 
-    {% if v and request.path=="/browse" %}
-    <div id="button-sub-mobile-{{ b.base36id }}" style="z-index: 2" class="{% if b.has_subscriber(v) %}d-none{% endif %}"><a class="btn btn-primary btn-sm" href="javascript:void(0)" onclick="post_toast('/api/subscribe/{{ b.name }}', callback=function(){document.getElementById('button-unsub-mobile-{{ b.base36id }}').classList.toggle('d-none');document.getElementById('button-sub-mobile-{{ b.base36id }}').classList.toggle('d-none');})">Join</a></div>
-    <div id="button-unsub-mobile-{{ b.base36id }}" style="z-index: 2" class="{% if not b.has_subscriber(v) %} d-none{% endif %}"><a class="btn btn-secondary btn-sm" href="javascript:void(0)" onclick="post_toast('/api/unsubscribe/{{ b.name }}', callback=function(){document.getElementById('button-unsub-mobile-{{ b.base36id }}').classList.toggle('d-none');document.getElementById('button-sub-mobile-{{ b.base36id }}').classList.toggle('d-none');})">Leave</a></div>
-    {% elif not v and request.path=="/browse" %}
-    <a class="btn btn-primary btn-sm" style="z-index: 2" href="/signup">Join</a>
-    {% endif %}
+		{% if v and request.path=="/browse" %}
+		<div id="button-sub-mobile-{{ b.base36id }}" style="z-index: 2" class="{% if b.has_subscriber(v) %}d-none{% endif %}"><a class="btn btn-primary btn-sm" href="javascript:void(0)" onclick="post_toast('/api/subscribe/{{ b.name }}', callback=function(){document.getElementById('button-unsub-mobile-{{ b.base36id }}').classList.toggle('d-none');document.getElementById('button-sub-mobile-{{ b.base36id }}').classList.toggle('d-none');})">Join</a></div>
+		<div id="button-unsub-mobile-{{ b.base36id }}" style="z-index: 2" class="{% if not b.has_subscriber(v) %} d-none{% endif %}"><a class="btn btn-secondary btn-sm" href="javascript:void(0)" onclick="post_toast('/api/unsubscribe/{{ b.name }}', callback=function(){document.getElementById('button-unsub-mobile-{{ b.base36id }}').classList.toggle('d-none');document.getElementById('button-sub-mobile-{{ b.base36id }}').classList.toggle('d-none');})">Leave</a></div>
+		{% elif not v and request.path=="/browse" %}
+		<a class="btn btn-primary btn-sm" style="z-index: 2" href="/signup">Join</a>
+		{% endif %}
 
 	</div>
 

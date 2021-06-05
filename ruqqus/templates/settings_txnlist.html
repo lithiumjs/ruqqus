@@ -7,21 +7,21 @@
 
 <div class="row">
 
-  <div class="col col-lg-8">
+	<div class="col col-lg-8">
 
-    <div class="settings">
+		<div class="settings">
 
-          <h2 id="ruqqus-premium" class="h5">Purchase History</h2>
+					<h2 id="ruqqus-premium" class="h5">Purchase History</h2>
 
-          {% with txns = v.txn_history %}
-          {% include "txn_listing.html" %}
-          {% endwith %}
+					{% with txns = v.txn_history %}
+					{% include "txn_listing.html" %}
+					{% endwith %}
 
-        </div>
+				</div>
 
-    </div>
+		</div>
 
-  </div>
+	</div>
 
 </div>
 

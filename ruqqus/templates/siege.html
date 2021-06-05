@@ -8,28 +8,28 @@
 	
 {% block content %}
 
-    {% if request.args.get('error') or error %}
-    <div class="alert alert-danger alert-dismissible fade show my-3" role="alert">
-      <i class="fas fa-exclamation-circle my-auto"></i>
-      <span>
-        {{ error if error else request.args.get('error') }}
-      </span>
-      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-        <span aria-hidden="true"><i class="far fa-times"></i></span>
-      </button>
-    </div>
-    {% endif %}
-    {% if request.args.get('msg') or msg %}
-    <div class="alert alert-success alert-dismissible fade show my-3" role="alert">
-      <i class="fas fa-check-circle my-auto" aria-hidden="true"></i>
-      <span>
-        {{ msg if msg else request.args.get('msg') }}
-      </span>
-      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-        <span aria-hidden="true"><i class="far fa-times"></i></span>
-      </button>
-    </div>
-    {% endif %}
+		{% if request.args.get('error') or error %}
+		<div class="alert alert-danger alert-dismissible fade show my-3" role="alert">
+			<i class="fas fa-exclamation-circle my-auto"></i>
+			<span>
+				{{ error if error else request.args.get('error') }}
+			</span>
+			<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+				<span aria-hidden="true"><i class="far fa-times"></i></span>
+			</button>
+		</div>
+		{% endif %}
+		{% if request.args.get('msg') or msg %}
+		<div class="alert alert-success alert-dismissible fade show my-3" role="alert">
+			<i class="fas fa-check-circle my-auto" aria-hidden="true"></i>
+			<span>
+				{{ msg if msg else request.args.get('msg') }}
+			</span>
+			<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+				<span aria-hidden="true"><i class="far fa-times"></i></span>
+			</button>
+		</div>
+		{% endif %}
 
 {% filter markdown %}
 
@@ -66,33 +66,33 @@ Sieges against [+general](/+general), or admin-controlled Guilds such as [+Drama
 
 {% if v %}
 
-  {% if not v.can_join_gms %}
+	{% if not v.can_join_gms %}
 
-    <p>You already lead the maximum number of guilds. You cannot siege a new guild unless you lead 9 or fewer guilds, but you can try to overthrow a top guildmaster in a guild you already lead.</p>
-  {% endif %}
-  {% if v.can_siege %}
+		<p>You already lead the maximum number of guilds. You cannot siege a new guild unless you lead 9 or fewer guilds, but you can try to overthrow a top guildmaster in a guild you already lead.</p>
+	{% endif %}
+	{% if v.can_siege %}
 
-    <label>Your name:</label>
-    <input class="form-control" type="text" name="username" value="{{ v.username }}" readonly="readonly">
+		<label>Your name:</label>
+		<input class="form-control" type="text" name="username" value="{{ v.username }}" readonly="readonly">
 
-    <form action="/siege_guild" method="post">
-      <input type="hidden" name="formkey" value="{{ v.formkey }}">
+		<form action="/siege_guild" method="post">
+			<input type="hidden" name="formkey" value="{{ v.formkey }}">
 
-      <label for="text-guild">Guild to siege:</label>
-      <input class="form-control" id="text-guild" type="text" name="guild">
+			<label for="text-guild">Guild to siege:</label>
+			<input class="form-control" id="text-guild" type="text" name="guild">
 
-      <input class="btn btn-primary" type="submit" value="Siege Guild">
-    </form>
+			<input class="btn btn-primary" type="submit" value="Siege Guild">
+		</form>
 
-  {% elif v.is_suspended %}
+	{% elif v.is_suspended %}
 
-    <p>You have been banned from Drama. You cannot siege any guilds.</p>
+		<p>You have been banned from Drama. You cannot siege any guilds.</p>
 
-  {% else %}
+	{% else %}
 
-    <p>You cannot siege any Guilds right now. You can only make one siege attempt every 7 days (and your account must be 30 days old).</p>
-  {% endif %}
+		<p>You cannot siege any Guilds right now. You can only make one siege attempt every 7 days (and your account must be 30 days old).</p>
+	{% endif %}
 {% else %}
-  <p>You need to be logged in to siege a Guild.</p>
+	<p>You need to be logged in to siege a Guild.</p>
 {% endif %}
 {% endblock %}

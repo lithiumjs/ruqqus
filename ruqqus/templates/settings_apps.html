@@ -17,10 +17,10 @@
 <form id="edit-app-{{ app.id }}" action="/edit_app/{{ app.id }}" method="post">
 	<div class="settings-section rounded">
 		<div class="d-lg-flex">
-		    <div class="title w-lg-25">
-                <label for="over18">{{ app.app_name }}</label>
-            </div>
-            <div class="body w-lg-100">
+				<div class="title w-lg-25">
+								<label for="over18">{{ app.app_name }}</label>
+						</div>
+						<div class="body w-lg-100">
 				<input type="hidden" name="formkey" value="{{ v.formkey }}">
 				<label for="edit-{{ app.id }}-name" class="mb-0 w-lg-25">App Name</label>
 				<input id="edit-{{ app.id }}-name" class="form-control" type="text" name="name" value="{{ app.app_name }}">
@@ -60,10 +60,10 @@
 <form id="edit-app-{{ app.id }}" action="/edit_app/{{ app.id }}" method="post">
 	<div class="settings-section rounded">
 		<div class="d-lg-flex">
-		    <div class="title w-lg-25">
-                <label for="over18">{{ app.app_name }}</label>
-            </div>
-            <div class="body w-lg-100">
+				<div class="title w-lg-25">
+								<label for="over18">{{ app.app_name }}</label>
+						</div>
+						<div class="body w-lg-100">
 				<input type="hidden" name="formkey" value="{{ v.formkey }}">
 				<label for="edit-{{ app.id }}-name" class="mb-0 w-lg-25">App Name</label>
 				<input id="edit-{{ app.id }}-name" class="form-control" type="text" name="name" value="{{ app.app_name }}">
@@ -101,10 +101,10 @@
 
 	<div id="auth-{{ auth.base36id }}" class="settings-section rounded">
 		<div class="d-lg-flex">
-		    <div class="title w-lg-25">
-                <label for="over18">{{ auth.application.app_name }}</label>
-            </div>
-            <div class="body w-lg-100">
+				<div class="title w-lg-25">
+								<label for="over18">{{ auth.application.app_name }}</label>
+						</div>
+						<div class="body w-lg-100">
 				<input type="hidden" name="formkey" value="{{ v.formkey }}">
 				<label class="mb-0 w-lg-25">Permissions</label>
 				<input class="form-control" type="text" name="name" value="{{ auth.scopelist }}" readonly="readonly">
@@ -154,14 +154,14 @@
 
 {% block clipboard %}
 <div class="toast clipboard" id="toast-success" role="alert" aria-live="assertive" aria-atomic="true" data-animation="true" data-autohide="true" data-delay="5000">
-  <div class="toast-body text-center">
-    <i class="fas fa-check-circle text-success mr-2"></i>Token copied to clipboard
-  </div>
+	<div class="toast-body text-center">
+		<i class="fas fa-check-circle text-success mr-2"></i>Token copied to clipboard
+	</div>
 </div>
 
 <div class="toast clipboard" id="toast-error" role="alert" aria-live="assertive" aria-atomic="true" data-animation="true" data-autohide="true" data-delay="5000">
-  <div class="toast-body text-center">
-    <i class="fas fa-exclamation-circle text-danger mr-2"></i>Unable to copy data
-  </div>
+	<div class="toast-body text-center">
+		<i class="fas fa-exclamation-circle text-danger mr-2"></i>Unable to copy data
+	</div>
 </div>
 {% endblock %}

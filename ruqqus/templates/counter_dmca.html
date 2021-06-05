@@ -8,34 +8,34 @@
 
 
 {% block content %}
-    {% if request.args.get('error') or error %}
-    <div class="alert alert-danger alert-dismissible fade show my-3" role="alert">
-      <i class="fas fa-exclamation-circle my-auto"></i>
-      <span>
-        {{ error if error else request.args.get('error') }}
-      </span>
-      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-        <span aria-hidden="true"><i class="far fa-times"></i></span>
-      </button>
-    </div>
-    {% endif %}
-    {% if request.args.get('msg') or msg %}
-    <div class="alert alert-success alert-dismissible fade show my-3" role="alert">
-      <i class="fas fa-check-circle my-auto" aria-hidden="true"></i>
-      <span>
-        {{ msg if msg else request.args.get('msg') }}
-      </span>
-      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-        <span aria-hidden="true"><i class="far fa-times"></i></span>
-      </button>
-    </div>
-    {% endif %}
+		{% if request.args.get('error') or error %}
+		<div class="alert alert-danger alert-dismissible fade show my-3" role="alert">
+			<i class="fas fa-exclamation-circle my-auto"></i>
+			<span>
+				{{ error if error else request.args.get('error') }}
+			</span>
+			<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+				<span aria-hidden="true"><i class="far fa-times"></i></span>
+			</button>
+		</div>
+		{% endif %}
+		{% if request.args.get('msg') or msg %}
+		<div class="alert alert-success alert-dismissible fade show my-3" role="alert">
+			<i class="fas fa-check-circle my-auto" aria-hidden="true"></i>
+			<span>
+				{{ msg if msg else request.args.get('msg') }}
+			</span>
+			<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+				<span aria-hidden="true"><i class="far fa-times"></i></span>
+			</button>
+		</div>
+		{% endif %}
 {% filter markdown %}
 # DMCA Counter-Request
 
 If any of your content saved to Drama has been removed pursuant to a DMCA Takedown Request filed by a copyright holder, you are entitled to submit a DMCA counter-request explaining why you believe use of the content was acceptable.
 
-Use this page to submit a DMCA counter-notice request to Drama.  
+Use this page to submit a DMCA counter-notice request to Drama.	
 
 Abuse of this form may lead to the termination of your Drama account, at the discretion of Drama staff.
 

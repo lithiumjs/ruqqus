@@ -30,10 +30,10 @@
 
 <div class="settings-section rounded">
 	<div class="d-lg-flex">
-	    <div class="title w-lg-25">
-            <label for="over18"><a href="{{ thing.oauth_app.permalink }}" target="_blank">{{ thing.oauth_app.app_name }}</a></label>
-        </div>
-        <div class="body w-lg-100">
+			<div class="title w-lg-25">
+						<label for="over18"><a href="{{ thing.oauth_app.permalink }}" target="_blank">{{ thing.oauth_app.app_name }}</a></label>
+				</div>
+				<div class="body w-lg-100">
 			<label for="edit-{{ thing.oauth_app.id }}-author" class="mb-0 w-lg-25">User</label>
 			<input id="edit-{{ thing.oauth_app.id }}-author" class="form-control" type="text" name="name" value="{{ thing.oauth_app.author.username }}" readonly=readonly>
 

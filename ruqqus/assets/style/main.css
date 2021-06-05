@@ -12685,14 +12685,36 @@ ul.comment-section {
   align-items: center;
   bottom: 0;
   left: 0;
+  padding: 0.5rem 0;
   width: 100%;
   z-index: 3; }
 
 .comment-write .comment-format .format {
+  padding: 0 .5rem;
   font-size: 1rem;
   color: #8f8f90; }
 
 .comment-write .comment-format .format:hover {
+  color: #CFCFCF; }
+
+.comment-write .comment-format2 {
+  display: none; }
+
+.comment-write.collapsed .comment-format2 {
+  display: flex;
+  align-items: center;
+  bottom: 0;
+  left: 0;
+  padding: 0.5rem 0;
+  width: 100%;
+  z-index: 3; }
+
+.comment-write .comment-format2 .format {
+  padding: 0 .5rem;
+  font-size: 1rem;
+  color: #8f8f90; }
+
+.comment-write .comment-format2 .format:hover {
   color: #CFCFCF; }
 
 .comment .comment-collapse {
@@ -13886,6 +13908,9 @@ pre .clo, pre .opn, pre .pun, code .clo, code .opn, code .pun {
     font-size: 1rem; }
 
   .comment-write .comment-format .format {
+    display: none; }
+
+  .comment-write .comment-format2 .format {
     display: none; }
 
   .post-filter {

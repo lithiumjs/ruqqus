@@ -36,6 +36,16 @@ BAN_REASONS = ['',
 
 BUCKET = "i.ruqqus.ga"
 
+@app.route("/api/publish/<pid>", methods=["POST"])
+@is_not_banned
+@validate_formkey
+def publish(pid, v):
+	post = get_post(pid)
+	if not post.author_id == v.id: abort(403)
+	post.private = True
+	g.db.add(post)
+	return "", 204
+
 @app.route("/submit", methods=["GET"])
 @is_not_banned
 @no_negative_balance("html")

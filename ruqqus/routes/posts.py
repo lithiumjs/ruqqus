@@ -230,6 +230,163 @@ def get_post_title(v):
     except BaseException:
         return jsonify({"error": f"Could not find a title"}), 400
 
+def thumbs(new_post):
+    pid = new_post.base36id
+    post = get_post(pid, graceful=True, session=g.db)
+    if not post:
+        # account for possible follower lag
+        time.sleep(60)
+        post = get_post(pid, session=g.db)
+
+    fetch_url=post.url
+
+    #get the content
+
+    #mimic chrome browser agent
+    headers={"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.72 Safari/537.36"}
+
+    try:
+        print(f"loading {fetch_url}")
+        x=requests.get(fetch_url, headers=headers)
+    except:
+        print(f"unable to connect to {fetch_url}")
+        return False, "Unable to connect to source"
+
+    if x.status_code != 200:
+        return False, f"Source returned status {x.status_code}."
+
+    #if content is image, stick with that. Otherwise, parse html.
+
+    if x.headers.get("Content-Type","").startswith("text/html"):
+        #parse html, find image, load image
+        soup=BeautifulSoup(x.content, 'html.parser')
+        #parse html
+
+        #first, set metadata
+        try:
+            meta_title=soup.find('title')
+            if meta_title:
+                post.submission_aux.meta_title=str(meta_title.string)[0:500]
+
+            meta_desc = soup.find('meta', attrs={"name":"description"})
+            if meta_desc:
+                post.submission_aux.meta_description=meta_desc['content'][0:1000]
+
+            if meta_title or meta_desc:
+                g.db.add(post.submission_aux)
+                g.db.commit()
+
+        except Exception as e:
+            print(f"Error while parsing for metadata: {e}")
+            pass
+
+        #create list of urls to check
+        thumb_candidate_urls=[]
+
+        #iterate through desired meta tags
+        meta_tags = [
+            "ruqqus:thumbnail",
+            "twitter:image",
+            "og:image",
+            "thumbnail"
+            ]
+
+        for tag_name in meta_tags:
+            
+            print(f"Looking for meta tag: {tag_name}")
+
+
+            tag = soup.find(
+                'meta', 
+                attrs={
+                    "name": tag_name, 
+                    "content": True
+                    }
+                )
+            if not tag:
+                tag = soup.find(
+                    'meta',
+                    attrs={
+                        'property': tag_name,
+                        'content': True
+                        }
+                    )
+            if tag:
+                thumb_candidate_urls.append(expand_url(post.url, tag['content']))
+
+        #parse html doc for <img> elements
+        for tag in soup.find_all("img", attrs={'src':True}):
+            thumb_candidate_urls.append(expand_url(post.url, tag['src']))
+
+
+        #now we have a list of candidate urls to try
+        for url in thumb_candidate_urls:
+            print(f"Trying url {url}")
+
+            try:
+                image_req=requests.get(url, headers=headers)
+            except:
+                print(f"Unable to connect to candidate url {url}")
+                continue
+
+            if image_req.status_code >= 400:
+                print(f"status code {x.status_code}")
+                continue
+
+            if not image_req.headers.get("Content-Type","").startswith("image/"):
+                print(f'bad type {image_req.headers.get("Content-Type","")}, try next')
+                continue
+
+            if image_req.headers.get("Content-Type","").startswith("image/svg"):
+                print("svg, try next")
+                continue
+
+            image = PILimage.open(BytesIO(image_req.content))
+            if image.width < 30 or image.height < 30:
+                print("image too small, next")
+                continue
+
+            print("Image is good, upload it")
+            break
+
+        else:
+            #getting here means we are out of candidate urls (or there never were any)
+            print("Unable to find image")
+            return False, "No usable images"
+
+
+
+
+    elif x.headers.get("Content-Type","").startswith("image/"):
+        #image is originally loaded fetch_url
+        print("post url is direct image")
+        image_req=x
+        image = PILimage.open(BytesIO(x.content))
+
+    else:
+
+        print(f'Unknown content type {x.headers.get("Content-Type")}')
+        return False, f'Unknown content type {x.headers.get("Content-Type")} for submitted content'
+
+
+    print(f"Have image, uploading")
+
+    name = f"posts/{post.base36id}/thumb.png"
+    tempname = name.replace("/", "_")
+
+    with open(tempname, "wb") as file:
+        for chunk in image_req.iter_content(1024):
+            file.write(chunk)
+
+    post.thumburl = aws.upload_from_file(name, tempname, resize=(375, 227))
+    post.has_thumb = True
+    g.db.add(post)
+
+    g.db.commit()
+
+    try: remove(tempname)
+    except FileNotFoundError: pass
+
 @app.route("/submit", methods=['POST'])
 @app.route("/api/v1/submit", methods=["POST"])
 @app.route("/api/vue/submit", methods=["POST"])
@@ -321,6 +478,8 @@ def submit_post(v):
     else:
         url = ""
 
+    if "i.imgur.com" in url: url = url.replace(".png", "_d.png").replace(".jpg", "_d.jpg").replace(".jpeg", "_d.jpeg") + "?maxwidth=8888"
+    
     body = request.form.get("body", "")
     # check for duplicate
     dup = g.db.query(Submission).join(Submission.submission_aux).filter(
@@ -747,164 +906,7 @@ def submit_post(v):
     g.db.commit()
 
     # spin off thumbnail generation and csam detection as  new threads
-    if (new_post.url or request.files.get('file')) and (v.is_activated or request.headers.get('cf-ipcountry')!="T1"): 
-        pid = new_post.base36id
-
-        post = get_post(pid, graceful=True, session=g.db)
-        if not post:
-            # account for possible follower lag
-            time.sleep(60)
-            post = get_post(pid, session=g.db)
-
-        fetch_url=post.url
-
-        #get the content
-
-        #mimic chrome browser agent
-        headers={"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.72 Safari/537.36"}
-
-        try:
-            print(f"loading {fetch_url}")
-            x=requests.get(fetch_url, headers=headers)
-        except:
-            print(f"unable to connect to {fetch_url}")
-            return False, "Unable to connect to source"
-
-        if x.status_code != 200:
-            return False, f"Source returned status {x.status_code}."
-
-        #if content is image, stick with that. Otherwise, parse html.
-
-        if x.headers.get("Content-Type","").startswith("text/html"):
-            #parse html, find image, load image
-            soup=BeautifulSoup(x.content, 'html.parser')
-            #parse html
-
-            #first, set metadata
-            try:
-                meta_title=soup.find('title')
-                if meta_title:
-                    post.submission_aux.meta_title=str(meta_title.string)[0:500]
-
-                meta_desc = soup.find('meta', attrs={"name":"description"})
-                if meta_desc:
-                    post.submission_aux.meta_description=meta_desc['content'][0:1000]
-
-                if meta_title or meta_desc:
-                    g.db.add(post.submission_aux)
-                    g.db.commit()
-
-            except Exception as e:
-                print(f"Error while parsing for metadata: {e}")
-                pass
-
-            #create list of urls to check
-            thumb_candidate_urls=[]
-
-            #iterate through desired meta tags
-            meta_tags = [
-                "ruqqus:thumbnail",
-                "twitter:image",
-                "og:image",
-                "thumbnail"
-                ]
-
-            for tag_name in meta_tags:
-                
-                print(f"Looking for meta tag: {tag_name}")
-
-
-                tag = soup.find(
-                    'meta', 
-                    attrs={
-                        "name": tag_name, 
-                        "content": True
-                        }
-                    )
-                if not tag:
-                    tag = soup.find(
-                        'meta',
-                        attrs={
-                            'property': tag_name,
-                            'content': True
-                            }
-                        )
-                if tag:
-                    thumb_candidate_urls.append(expand_url(post.url, tag['content']))
-
-            #parse html doc for <img> elements
-            for tag in soup.find_all("img", attrs={'src':True}):
-                thumb_candidate_urls.append(expand_url(post.url, tag['src']))
-
-
-            #now we have a list of candidate urls to try
-            for url in thumb_candidate_urls:
-                print(f"Trying url {url}")
-
-                try:
-                    image_req=requests.get(url, headers=headers)
-                except:
-                    print(f"Unable to connect to candidate url {url}")
-                    continue
-
-                if image_req.status_code >= 400:
-                    print(f"status code {x.status_code}")
-                    continue
-
-                if not image_req.headers.get("Content-Type","").startswith("image/"):
-                    print(f'bad type {image_req.headers.get("Content-Type","")}, try next')
-                    continue
-
-                if image_req.headers.get("Content-Type","").startswith("image/svg"):
-                    print("svg, try next")
-                    continue
-
-                image = PILimage.open(BytesIO(image_req.content))
-                if image.width < 30 or image.height < 30:
-                    print("image too small, next")
-                    continue
-
-                print("Image is good, upload it")
-                break
-
-            else:
-                #getting here means we are out of candidate urls (or there never were any)
-                print("Unable to find image")
-                return False, "No usable images"
-
-
-
-
-        elif x.headers.get("Content-Type","").startswith("image/"):
-            #image is originally loaded fetch_url
-            print("post url is direct image")
-            image_req=x
-            image = PILimage.open(BytesIO(x.content))
-
-        else:
-
-            print(f'Unknown content type {x.headers.get("Content-Type")}')
-            return False, f'Unknown content type {x.headers.get("Content-Type")} for submitted content'
-
-
-        print(f"Have image, uploading")
-
-        name = f"posts/{post.base36id}/thumb.png"
-        tempname = name.replace("/", "_")
-
-        with open(tempname, "wb") as file:
-            for chunk in image_req.iter_content(1024):
-                file.write(chunk)
-
-        post.thumburl = aws.upload_from_file(name, tempname, resize=(375, 227))
-        post.has_thumb = True
-        g.db.add(post)
-
-        g.db.commit()
-
-        try: remove(tempname)
-        except FileNotFoundError: pass
-
+    if (new_post.url or request.files.get('file')) and (v.is_activated or request.headers.get('cf-ipcountry')!="T1"): thumbs(newpost)
     # expire the relevant caches: front page new, board new
     cache.delete_memoized(frontlist)
     g.db.commit()

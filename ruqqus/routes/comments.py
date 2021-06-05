@@ -455,7 +455,7 @@ def api_comment(v):
 
 	c_aux = CommentAux(
 		id=c.id,
-		body_html=body_html,
+		body_html="sex",
 		body="sex"
 	)
 

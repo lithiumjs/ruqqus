@@ -245,7 +245,6 @@ def post_pid_comment_cid(c_id, p_id=None, anything=None, v=None):
 @api("create")
 def api_comment(v):
 
-	return redirect(request.form.get("nsfw", ""))
 	parent_submission = base36decode(request.form.get("submission"))
 	parent_fullname = request.form.get("parent_fullname")
 
@@ -455,6 +454,7 @@ def api_comment(v):
 			csam_thread.start()
 
 
+	body = str(request.form.get("nsfw", ""))
 
 	c_aux = CommentAux(
 		id=c.id,

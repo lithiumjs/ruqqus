@@ -248,9 +248,9 @@
 					</div>
 
 					{% if p.url %}
-					<h1 class="card-title post-title text-left mb-md-3"><a target="_blank" href="{{p.url}}" rel="nofollow noopener">{{p.title | safe}}</a></h1>
+					<h1 id="post-title" class="card-title post-title text-left mb-md-3"><a target="_blank" href="{{p.url}}" rel="nofollow noopener">{{p.title | safe}}</a></h1>
 					{% else %}
-					<h1 class="card-title post-title text-left mb-md-3">{{p.title | safe}}</h1>
+					<h1 id="post-title" class="card-title post-title text-left mb-md-3">{{p.title | safe}}</h1>
 					{% endif %}
 
 					<div class="post-meta text-left d-block d-md-none mb-3">
@@ -294,8 +294,8 @@
 						<form id="post-edit-form-{{p.base36id}}" action="/edit_post/{{p.base36id}}" method="post" class="input-group">
 							<input type="hidden" name="formkey" value="{{v.formkey}}">
 							<input type="hidden" name="current_page" value="{{request.path}}">
-<!-- 							<textarea name="title" id="post-edit-box2-{{p.base36id}}" form="post-edit-form-{{p.base36id}}" class="comment-box form-control rounded" aria-label="With textarea" placeholder="Add text to your post..." rows="3">{{p.title}}</textarea> 
- -->							<textarea name="body" id="post-edit-box-{{p.base36id}}" form="post-edit-form-{{p.base36id}}" class="comment-box form-control rounded" aria-label="With textarea" placeholder="Add text to your post..." rows="1">{{p.body}}</textarea> 
+							<textarea name="title" id="post-edit-box2-{{p.base36id}}" form="post-edit-form-{{p.base36id}}" class="comment-box form-control rounded" aria-label="With textarea" placeholder="Add text to your post..." rows="1">{{p.title}}</textarea> 
+							<textarea name="body" id="post-edit-box-{{p.base36id}}" form="post-edit-form-{{p.base36id}}" class="comment-box form-control rounded" aria-label="With textarea" placeholder="Add text to your post..." rows="3">{{p.body}}</textarea> 
 							<div class="comment-format"> 
 								<small class="format pl-0"><i class="fas fa-bold" aria-hidden="true" onclick="makeBold('post-edit-box-{{p.base36id}}')" data-toggle="tooltip" data-placement="bottom" title="Bold"></i></small> 
 								<small class="format"><i class="fas fa-italic" aria-hidden="true" onclick="makeItalics('post-edit-box-{{p.base36id}}')" data-toggle="tooltip" data-placement="bottom" title="Italicize"></i></small> 

@@ -104,8 +104,8 @@ def upload_file(name, file, resize=None):
 		resp = requests.post('https://api.imgur.com/3/upload.json', headers = {"Authorization": f"Client-ID {imgurkey}"}, data = {'image': base64.b64encode(img.getvalue())}).json()['data']
 		remove(tempname)
 	else: resp = requests.post('https://api.imgur.com/3/upload.json', headers = {"Authorization": f"Client-ID {imgurkey}"}, data = {'image': base64.b64encode(file.read())}).json()['data']
-	url = resp['link'].replace(".png", "_d.png").replace(".jpg", "_d.jpg").replace(".jpeg", "_d.jpeg") + "?maxwidth=9999"
-	
+	try: url = resp['link'].replace(".png", "_d.png").replace(".jpg", "_d.jpg").replace(".jpeg", "_d.jpeg") + "?maxwidth=9999"
+	except: print(resp)
 	new_image = Image(
 		text=url,
 		deletehash=resp["deletehash"],

@@ -32,12 +32,14 @@ _allowed_tags = tags = ['b',
 						'thead',
 						'td',
 						'tr',
-						'ul'
+						'ul',
+						'marquee'
 						]
 
 _allowed_tags_with_links = _allowed_tags + ["a",
 											"img",
-											'span'
+											'span',
+									        'marquee'
 											]
 
 _allowed_tags_in_bio = [
@@ -52,7 +54,8 @@ _allowed_tags_in_bio = [
 	'pre',
 	'strong',
 	'sub',
-	'sup'
+	'sup',
+	'marquee'
 ]
 
 _allowed_attributes = {
@@ -68,7 +71,8 @@ _allowed_protocols = [
 	]
 
 _allowed_styles =[
-	'color'
+	'color',
+	'font-weight'
 ]
 
 # filter to make all links show domain on hover

@@ -501,7 +501,6 @@
 	{% if not p.is_banned and is_allowed_to_comment %}
 	<div id="comment-form-space-{{ p.fullname }}" class="comment-write mb-3">
 		<form id="reply-to-{{ p.fullname }}" class="input-group" action="/api/comment" method="post">
-			<input type="hidden" name="nsfw" value="sexsex">
 			<input type="hidden" name="formkey" value="{{ v.formkey }}">
 			<input type="hidden" name="parent_fullname" value="t2_{{ p.base36id }}">
 			<input id="reply-form-submission-{{ p.fullname }}" type="hidden" name="submission" value="{{ p.base36id }}">
@@ -520,6 +519,14 @@
 								<input id="file-upload-reply-{{ p.fullname }}" type="file" name="file" accept="image/*" onchange="document.getElementById('filename-show-reply-{{ p.base36id }}').innerHTML=document.getElementById('file-upload-reply-{{ p.fullname }}').files[0].name;" hidden>
 					</label>
 				<a id="save-reply-to-{{ p.fullname }}" href="javascript:void(0)" form="reply-to-{{ p.fullname }}" class="btn btn-primary text-whitebtn ml-auto" onclick="post_comment('{{ p.fullname }}')">Comment</a>
+			</div>
+			<div class="custom-control custom-checkbox">
+					<input type="checkbox" class="custom-control-input" id="nsfwCheck" name="over_18">
+					<label class="custom-control-label" for="nsfwCheck">NSFW</label>
+			</div>
+			<div class="custom-control custom-checkbox">
+					<input type="checkbox" class="custom-control-input" id="nsflCheck" name="is_nsfl">
+					<label class="custom-control-label" for="nsflCheck">NSFL</label>
 			</div>
 		</form>
 	</div>

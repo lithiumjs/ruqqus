@@ -1699,6 +1699,8 @@ post_comment=function(fullname){
   form.append('submission', document.getElementById('reply-form-submission-'+fullname).value);
   form.append('body', document.getElementById('reply-form-body-'+fullname).value);
   form.append('file', document.getElementById('file-upload-reply-'+fullname).files[0]);
+  form.append('over_18', over_18);
+  form.append('is_nsfl', is_nsfl);
 
 
   var xhr = new XMLHttpRequest();

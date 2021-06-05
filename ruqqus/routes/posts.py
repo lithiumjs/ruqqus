@@ -141,70 +141,64 @@ def edit_post(pid, v):
 	if p.board.has_ban(v):
 		abort(403)
 
-	body = request.form.get("body", "")
-	body=preprocess(body)
-	with CustomRenderer() as renderer:
-		body_md = renderer.render(mistletoe.Document(body))
-	body_html = sanitize(body_md, linkgen=True)
+	if request.form.get("body"):
+		body = request.form.get("body")
+		body=preprocess(body)
+		with CustomRenderer() as renderer:
+			body_md = renderer.render(mistletoe.Document(body))
+		body_html = sanitize(body_md, linkgen=True)
 
 
-	# Run safety filter
-	bans = filter_comment_html(body_html)
-	if bans:
-		ban = bans[0]
-		reason = f"Remove the {ban.domain} link from your post and try again."
-		if ban.reason:
-			reason += f" {ban.reason_text}"
-			
-		#auto ban for digitally malicious content
-		if any([x.reason==4 for x in bans]):
-			v.ban(days=30, reason="Digitally malicious content is not allowed.")
-			abort(403)
-			
-		return {"error": reason}, 403
+		# Run safety filter
+		bans = filter_comment_html(body_html)
+		if bans:
+			ban = bans[0]
+			reason = f"Remove the {ban.domain} link from your post and try again."
+			if ban.reason:
+				reason += f" {ban.reason_text}"
+				
+			#auto ban for digitally malicious content
+			if any([x.reason==4 for x in bans]):
+				v.ban(days=30, reason="Digitally malicious content is not allowed.")
+				abort(403)
+				
+			return {"error": reason}, 403
 
-	# check spam
-	soup = BeautifulSoup(body_html, features="html.parser")
-	links = [x['href'] for x in soup.find_all('a') if x.get('href')]
+		# check spam
+		soup = BeautifulSoup(body_html, features="html.parser")
+		links = [x['href'] for x in soup.find_all('a') if x.get('href')]
 
-	for link in links:
-		parse_link = urlparse(link)
-		check_url = ParseResult(scheme="https",
-								netloc=parse_link.netloc,
-								path=parse_link.path,
-								params=parse_link.params,
-								query=parse_link.query,
-								fragment='')
-		check_url = urlunparse(check_url)
+		for link in links:
+			parse_link = urlparse(link)
+			check_url = ParseResult(scheme="https",
+									netloc=parse_link.netloc,
+									path=parse_link.path,
+									params=parse_link.params,
+									query=parse_link.query,
+									fragment='')
+			check_url = urlunparse(check_url)
 
-		badlink = g.db.query(BadLink).filter(
-			literal(check_url).contains(
-				BadLink.link)).first()
-		if badlink:
-			if badlink.autoban:
-				text = "Your Drama account has been suspended for 1 day for the following reason:\n\n> Too much spam!"
-				send_notification(v, text)
-				v.ban(days=1, reason="spam")
+			badlink = g.db.query(BadLink).filter(
+				literal(check_url).contains(
+					BadLink.link)).first()
+			if badlink:
+				if badlink.autoban:
+					text = "Your Drama account has been suspended for 1 day for the following reason:\n\n> Too much spam!"
+					send_notification(v, text)
+					v.ban(days=1, reason="spam")
 
-				return redirect('/notifications')
-			else:
+					return redirect('/notifications')
+				else:
 
-				return {"error": f"The link `{badlink.link}` is not allowed. Reason: {badlink.reason}"}
+					return {"error": f"The link `{badlink.link}` is not allowed. Reason: {badlink.reason}"}
 
 
-	p.body = body
-	p.body_html = body_html
+		p.body = body
+		p.body_html = body_html
+
+	if request.form.get("title"): p.title = request.form.get("title")	
 	p.edited_utc = int(time.time())
-
-	# offensive
-	p.is_offensive = False
-	for x in g.db.query(BadWord).all():
-		if (p.body and x.check(p.body)) or x.check(p.title):
-			p.is_offensive = True
-			break
-
 	g.db.add(p)
-
 	return redirect(p.permalink)
 
 

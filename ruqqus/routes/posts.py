@@ -42,7 +42,7 @@ BUCKET = "i.ruqqus.ga"
 def publish(pid, v):
 	post = get_post(pid)
 	if not post.author_id == v.id: abort(403)
-	post.private = True
+	post.private = False
 	g.db.add(post)
 	return "", 204
 

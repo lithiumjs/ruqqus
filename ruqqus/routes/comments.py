@@ -410,7 +410,7 @@ def api_comment(v):
 				parent_comment_id=parent_comment_id,
 				level=level,
 				over_18=post.over_18 or request.form.get("over_18","")=="true",
-				is_nsfl=post.is_nsfl or request.form.get("over_18","")=="true",
+				is_nsfl=post.is_nsfl or request.form.get("is_nsfl","")=="true",
 				is_offensive=is_offensive,
 				original_board_id=parent_post.board_id,
 				is_bot=is_bot,

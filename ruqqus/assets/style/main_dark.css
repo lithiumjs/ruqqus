@@ -12322,6 +12322,24 @@ ul.comment-section {
 .comment-write .comment-format .format:hover {
   color: #718096; }
 
+.comment-write .comment-format2 {
+  display: none; }
+
+.comment-write.collapsed .comment-format2 {
+  display: flex;
+  align-items: center;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  z-index: 3; }
+
+.comment-write .comment-format2 .format {
+  font-size: 1rem;
+  color: #A0AEC0; }
+
+.comment-write .comment-format2 .format:hover {
+  color: #718096; }
+
 .comment .comment-collapse {
   padding-right: 15px; }
 
@@ -13505,6 +13523,9 @@ pre .clo, pre .opn, pre .pun, code .clo, code .opn, code .pun {
     font-size: 1rem; }
 
   .comment-write .comment-format .format {
+    display: none; }
+
+  .comment-write .comment-format2 .format {
     display: none; }
 
   .post-filter {

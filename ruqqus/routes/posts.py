@@ -22,6 +22,7 @@ from ruqqus.helpers.thumbs import *
 from ruqqus.helpers.session import *
 from ruqqus.helpers.aws import *
 from ruqqus.helpers.alerts import send_notification
+from ruqqus.helpers.discord import send_message
 from ruqqus.classes import *
 from .front import frontlist
 from flask import *
@@ -923,6 +924,7 @@ def submit_post(v):
     # print(f"Content Event: @{new_post.author.username} post
     # {new_post.base36id}")
 
+    send_message(f"https://rdrama.net{new_post.permalink}")
     return {"html": lambda: redirect(new_post.permalink),
             "api": lambda: jsonify(new_post.json)
             }

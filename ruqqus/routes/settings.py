@@ -725,6 +725,9 @@ def settings_title_change(v):
 	
 	v=g.db.query(User).with_for_update().options(lazyload('*')).filter_by(id=v.id).first()
 
+	with CustomRenderer() as renderer: new_name = renderer.render(mistletoe.Document(new_name))
+	new_name = sanitize(new_name, linkgen=True)
+
 	v.customtitle=new_name
 
 	g.db.add(v)

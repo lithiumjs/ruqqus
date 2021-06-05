@@ -260,13 +260,13 @@ togglePostEdit=function(id){
   body=document.getElementById("post-body");
   form=document.getElementById("edit-post-body-"+id);
   box=document.getElementById("post-edit-box-"+id);
-  box2=document.getElementById("post-edit-box2-"+id);
-
+/*   box2=document.getElementById("post-edit-box2-"+id);
+ */
   body.classList.toggle("d-none");
   form.classList.toggle("d-none");
   autoExpand(box);
-  autoExpand(box2);
-};
+/*   autoExpand(box2);
+ */};
 
 //comment modding
 function removeComment(post_id) {

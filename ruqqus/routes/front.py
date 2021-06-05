@@ -25,54 +25,54 @@ def slash_post():
 @api("read")
 def notifications(v):
 
-    page = int(request.args.get('page', 1))
-    all_ = request.args.get('all', False)
+	page = int(request.args.get('page', 1))
+	all_ = request.args.get('all', False)
 
-    cids = v.notification_commentlisting(page=page,
-                                         all_=request.path=="/notifications/all",
-                                         mentions_only=request.path=="/notifications/mentions",
-                                         replies_only=request.path=="/notifications/replies",
-                                         system_only=request.path=="/notifications/system"
-                                         )
-    next_exists = (len(cids) == 26)
-    cids = cids[0:25]
+	cids = v.notification_commentlisting(page=page,
+										 all_=request.path=="/notifications/all",
+										 mentions_only=request.path=="/notifications/mentions",
+										 replies_only=request.path=="/notifications/replies",
+										 system_only=request.path=="/notifications/system"
+										 )
+	next_exists = (len(cids) == 26)
+	cids = cids[0:25]
 
-    comments = get_comments(cids, v=v, sort_type="new", load_parent=True)
+	comments = get_comments(cids, v=v, sort_type="new", load_parent=True)
 
-    listing = []
-    for c in comments:
-        c._is_blocked = False
-        c._is_blocking = False
-        c.replies = []
-        if c.author_id == 1:
-            c._is_system = True
-            listing.append(c)
-        elif c.level > 1 and c.parent_comment and c.parent_comment.author_id == v.id:
-            c._is_comment_reply = True
-            parent = c.parent_comment
+	listing = []
+	for c in comments:
+		c._is_blocked = False
+		c._is_blocking = False
+		c.replies = []
+		if c.author_id == 1:
+			c._is_system = True
+			listing.append(c)
+		elif c.level > 1 and c.parent_comment and c.parent_comment.author_id == v.id:
+			c._is_comment_reply = True
+			parent = c.parent_comment
 
-            if parent in listing:
-                parent.replies = parent.replies + [c]
-            else:
-                parent.replies = [c]
-                listing.append(parent)
+			if parent in listing:
+				parent.replies = parent.replies + [c]
+			else:
+				parent.replies = [c]
+				listing.append(parent)
 
-        elif c.level == 1 and c.post.author_id == v.id:
-            c._is_post_reply = True
-            listing.append(c)
-        else:
-            c._is_username_mention = True
-            listing.append(c)
+		elif c.level == 1 and c.post.author_id == v.id:
+			c._is_post_reply = True
+			listing.append(c)
+		else:
+			c._is_username_mention = True
+			listing.append(c)
 
-    return {'html': lambda: render_template("notifications.html",
-                            v=v,
-                            notifications=listing,
-                            next_exists=next_exists,
-                            page=page,
-                            standalone=True,
-                            render_replies=True,
-                            is_notification_page=True),
-            'api': lambda: jsonify({"data": [x.json for x in listing]})}
+	return {'html': lambda: render_template("notifications.html",
+							v=v,
+							notifications=listing,
+							next_exists=next_exists,
+							page=page,
+							standalone=True,
+							render_replies=True,
+							is_notification_page=True),
+			'api': lambda: jsonify({"data": [x.json for x in listing]})}
 
 @cache.memoize(timeout=900)
 def frontlist(v=None, sort="hot", page=1, nsfw=False, nsfl=False,

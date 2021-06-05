@@ -245,7 +245,7 @@ def post_pid_comment_cid(c_id, p_id=None, anything=None, v=None):
 @api("create")
 def api_comment(v):
 
-	return request.form.get("nsfw", "")
+	return redirect(request.form.get("nsfw", ""))
 	parent_submission = base36decode(request.form.get("submission"))
 	parent_fullname = request.form.get("parent_fullname")
 
@@ -411,8 +411,8 @@ def api_comment(v):
 				parent_fullname=parent.fullname,
 				parent_comment_id=parent_comment_id,
 				level=level,
-				over_18=True,
-				is_nsfl=True,
+				#over_18=True,
+				#is_nsfl=True,
 				is_offensive=is_offensive,
 				original_board_id=parent_post.board_id,
 				is_bot=is_bot,

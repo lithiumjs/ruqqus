@@ -15,6 +15,11 @@ from ruqqus.classes.categories import CATEGORIES
 def slash_post():
 	return redirect("/")
 
+@app.route("/notifications", methods=["GET"])
+@app.route("/notifications/all", methods=["GET"])
+@app.route("/notifications/mentions", methods=["GET"])
+@app.route("/notifications/replies", methods=["GET"])
+@app.route("/notifications/system", methods=["GET"])
 @app.route("/api/v1/notifications", methods=["GET"])
 @auth_required
 @api("read")

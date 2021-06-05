@@ -541,30 +541,69 @@ class User(Base, Stndrd, Age_times):
 	def __repr__(self):
 		return f"<User(username={self.username})>"
 
-	def notification_commentlisting(self, page=1, all_=False):
+    def notification_commentlisting(self, page=1, all_=False, replies_only=False, mentions_only=False, system_only=False):
 
-		notifications = self.notifications.join(Notification.comment).filter(
-			Comment.is_banned == False,
-			Comment.deleted_utc == 0)
 
-		if not all_:
-			notifications = notifications.filter(Notification.read == False)
+        notifications = self.notifications.options(
+            lazyload('*'),
+            joinedload(Notification.comment).lazyload('*'),
+            joinedload(Notification.comment).joinedload(Comment.comment_aux)
+            ).join(
+            Notification.comment
+            ).filter(
+            Comment.is_banned == False,
+            Comment.deleted_utc == 0)
 
-		notifications = notifications.options(
-			contains_eager(Notification.comment)
-		)
 
-		notifications = notifications.order_by(
-			Notification.id.desc()).offset(25 * (page - 1)).limit(26)
 
-		output = []
-		for x in notifications:
-			x.read = True
-			g.db.add(x)
-			output.append(x.comment_id)
+        if replies_only:
+            cs=g.db.query(Comment.id).filter(Comment.author_id==self.id).subquery()
+            ps=g.db.query(Submission.id).filter(Submission.author_id==self.id).subquery()
+            notifications=notifications.filter(
+                or_(
+                    Comment.parent_comment_id.in_(cs),
+                    and_(
+                        Comment.level==1,
+                        Comment.parent_submission.in_(ps)
+                        )
+                    )
+                )
 
-		g.db.commit()
-		return output
+        elif mentions_only:
+            cs=g.db.query(Comment.id).filter(Comment.author_id==self.id).subquery()
+            ps=g.db.query(Submission.id).filter(Submission.author_id==self.id).subquery()
+            notifications=notifications.filter(
+                and_(
+                    Comment.parent_comment_id.notin_(cs),
+                    or_(
+                        Comment.level>1,
+                        Comment.parent_submission.notin_(ps)
+                        )
+                    )
+                )
+        elif system_only:
+            notifications=notifications.filter(Comment.author_id==1)
+
+        elif not all_:
+            notifications = notifications.filter(Notification.read == False)
+
+
+        notifications = notifications.options(
+            contains_eager(Notification.comment)
+        )
+
+        notifications = notifications.order_by(
+            Notification.id.desc()).offset(25 * (page - 1)).limit(26)
+
+        output = []
+        for x in notifications[0:25]:
+            x.read = True
+            g.db.add(x)
+            output.append(x.comment_id)
+
+        g.db.commit()
+
+        return output
 
 	@property
 	@lazy

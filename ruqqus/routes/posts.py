@@ -155,6 +155,33 @@ def edit_post(pid, v):
 	soup = BeautifulSoup(body_html, features="html.parser")
 	links = [x['href'] for x in soup.find_all('a') if x.get('href')]
 
+
+
+	title = request.form.get("title", "")
+	title=preprocess(title)
+	with CustomRenderer() as renderer: title_md = renderer.render(mistletoe.Document(title))
+	title_html = sanitize(title_md, linkgen=True)
+
+
+	# Run safety filter
+	bans = filter_comment_html(title_html)
+	if bans:
+		ban = bans[0]
+		reason = f"Remove the {ban.domain} link from your post and try again."
+		if ban.reason:
+			reason += f" {ban.reason_text}"
+			
+		#auto ban for digitally malicious content
+		if any([x.reason==4 for x in bans]):
+			v.ban(days=30, reason="Digitally malicious content is not allowed.")
+			abort(403)
+			
+		return {"error": reason}, 403
+
+	# check spam
+	soup = BeautifulSoup(title_html, features="html.parser")
+	links += [x['href'] for x in soup.find_all('a') if x.get('href')]
+
 	for link in links:
 		parse_link = urlparse(link)
 		check_url = ParseResult(scheme="https",
@@ -182,6 +209,7 @@ def edit_post(pid, v):
 
 	p.body = body
 	p.body_html = body_html
+	p.title = title
 	p.edited_utc = int(time.time())
 
 	# offensive

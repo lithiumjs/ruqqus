@@ -46,7 +46,6 @@ def publish(pid, v):
 	g.db.add(post)
 	cache.delete_memoized(frontlist)
 	g.db.commit()
-	cache.delete_memoized(Board.idlist, board, sort="new")
 	return "", 204
 
 @app.route("/submit", methods=["GET"])

@@ -567,7 +567,7 @@ class User(Base, Stndrd, Age_times):
 		return output
 
 	def sent(self):
-		return g.db.query(Comment).filter_by(author=self, parent_submission is None).all()
+		return g.db.query(Comment).filter_by(author=self).filter(Comment.parent_submission is None).all()
 
 	@property
 	@lazy

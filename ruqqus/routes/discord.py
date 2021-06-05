@@ -128,7 +128,9 @@ def discord_redirect(v):
 		if v.admin_level > 0: add_role(v, "admin")
 
 		add_role(v, "linked")
-						
+
+		add_role(v, "feedback")
+
 		if v.is_banned and v.unban_utc==0:
 			add_role(v, "banned")
 

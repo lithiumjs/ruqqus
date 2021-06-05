@@ -220,5 +220,5 @@ def sanitize(text, bio=False, linkgen=False):
 	end = '&lt;/s&gt;' 
 	if start in sanitized and end in sanitized and start in sanitized.split(end)[0] and end in sanitized.split(start)[1]: sanitized = sanitized.replace(start, '<span class="spoiler">').replace(end, '</span>')
 	
-	sanitized = sanitized.replace(':chad:', '<img src="/assets/images/emojis/chad.png"')
+	sanitized = sanitized.replace(':chad:', '<img src="/assets/images/emojis/chad.png" <span> ')
 	return sanitized

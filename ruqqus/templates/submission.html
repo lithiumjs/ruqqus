@@ -501,7 +501,8 @@
   {% if not p.is_banned and is_allowed_to_comment %}
   <div id="comment-form-space-{{ p.fullname }}" class="comment-write mb-3">
     <form id="reply-to-{{ p.fullname }}" class="input-group" action="/api/comment" method="post">
-      <input type="checkbox" name="over_18" class="custom-control-input">
+      <input type="checkbox" name="over_18" class="custom-control-input" id="nsfwCheck">
+      <label class="custom-control-label" for="nsfwCheck">NSFW</label>
       <input type="hidden" name="formkey" value="{{ v.formkey }}">
       <input type="hidden" name="parent_fullname" value="t2_{{ p.base36id }}">
       <input id="reply-form-submission-{{ p.fullname }}" type="hidden" name="submission" value="{{ p.base36id }}">

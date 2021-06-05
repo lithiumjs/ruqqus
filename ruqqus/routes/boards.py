@@ -25,19 +25,6 @@ from ruqqus.__main__ import app, limiter, cache
 
 valid_board_regex = re.compile("^[a-zA-Z0-9][a-zA-Z0-9_]{2,24}$")
 
-@app.route("/mod/<bid>/settings/disallowbots", methods=["POST"])
-@auth_required
-@is_guildmaster("config")
-@validate_formkey
-def mod_bid_settings_disallowbots(bid, board, v):
-
-	# toggle disallowing bots setting
-	board.disallowbots = bool(
-		request.form.get(
-			"disallowbots",
-			False) == 'true')
-	return "", 204
-
 @app.route("/api/board_available/<name>", methods=["GET"])
 @app.route("/api/v1/board_available/<name>", methods=["GET"])
 @auth_desired

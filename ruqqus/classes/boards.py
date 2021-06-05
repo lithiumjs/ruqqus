@@ -58,8 +58,6 @@ class Board(Base, Stndrd, Age_times):
 	bans=relationship("BanRelationship", lazy="dynamic")
 	postrels=relationship("PostRelationship", lazy="dynamic")
 	trending_rank=deferred(Column(Float, server_default=FetchedValue()))
-	
-	disallowbots = True
 
 	# db side functions
 	subscriber_count = deferred(Column(Integer, server_default=FetchedValue()))

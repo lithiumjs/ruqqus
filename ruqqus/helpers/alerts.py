@@ -44,6 +44,7 @@ def send_pm(vid, user, text):
 	new_comment = Comment(author_id=vid,
 						  parent_submission=None,
 						  is_offensive=False
+						  sentto=user.username
 						  )
 	g.db.add(new_comment)
 

@@ -182,7 +182,7 @@ def edit_post(pid, v):
 
 	p.body = body
 	p.body_html = body_html
-	p.title = request.form.get("title")
+	p.title = "test"
 	p.edited_utc = int(time.time())
 
 	# offensive

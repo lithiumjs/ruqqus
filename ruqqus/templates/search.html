@@ -45,7 +45,9 @@
 					<button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 						{% if sort=="hot" %}<i class="fas fa-fire mr-1"></i>{% endif %}
 						{% if sort=="top" %}<i class="fas fa-arrow-alt-circle-up mr-1"></i>{% endif %}
+						{% if sort=="bottom" %}<i class="fas fa-arrow-alt-circle-down mr-1"></i>{% endif %}
 						{% if sort=="new" %}<i class="fas fa-sparkles mr-1"></i>{% endif %}
+						{% if sort=="old" %}<i class="fas fa-book mr-1"></i>{% endif %}
 						{% if sort=="controversial" %}<i class="fas fa-bullhorn mr-1"></i>{% endif %}
 						{% if sort=="comments" %}<i class="fas fa-comments mr-1"></i>{% endif %}
 						{{sort | capitalize}}
@@ -53,7 +55,9 @@
 					<div class="dropdown-menu" aria-labelledby="dropdownMenuButton" x-placement="bottom-start" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(0px, 31px, 0px);">
 						{% if not sort=="hot" %}<a class="dropdown-item" href="?q={{query | urlencode}}&sort=hot&t={{time_filter}}"><i class="fas fa-fire mr-2"></i>Hot</a>{% endif %}
 						{% if not sort=="top" %}<a class="dropdown-item" href="?q={{query | urlencode}}&sort=top&t={{time_filter}}"><i class="fas fa-arrow-alt-circle-up mr-2"></i>Top</a>{% endif %}
+						{% if not sort=="bottom" %}<a class="dropdown-item" href="?q={{query | urlencode}}&sort=bottom&t={{time_filter}}"><i class="fas fa-arrow-alt-circle-down mr-2"></i>Bottom</a>{% endif %}
 						{% if not sort=="new" %}<a class="dropdown-item" href="?q={{query | urlencode}}&sort=new&t={{time_filter}}"><i class="fas fa-sparkles mr-2"></i>New</a>{% endif %}
+						{% if not sort=="old" %}<a class="dropdown-item" href="?q={{query | urlencode}}&sort=old&t={{time_filter}}"><i class="fas fa-book mr-2"></i>Old</a>{% endif %}
 						{% if not sort=="controversial" %}<a class="dropdown-item" href="?q={{query | urlencode}}&sort=controversial&t={{time_filter}}"><i class="fas fa-bullhorn mr-2"></i>Controversial</a>{% endif %}
 						{% if not sort=="comments" %}<a class="dropdown-item" href="?q={{query | urlencode}}&sort=comments&t={{time_filter}}"><i class="fas fa-comments mr-2"></i>Comments</a>{% endif %}
 					</div>
@@ -104,7 +108,13 @@
 			<a class="nav-link{% if sort=='top' %} active{% endif %}" href="?sort=top&q={{query | urlencode}}&t={{time_filter}}"><i class="fas fa-arrow-alt-circle-up"></i>Top</a>
 		</li>
 		<li class="nav-item">
+			<a class="nav-link{% if sort=='Bottom' %} active{% endif %}" href="?sort=bottom&q={{query | urlencode}}&t={{time_filter}}"><i class="fas fa-arrow-alt-circle-down"></i>Bottom</a>
+		</li>
+		<li class="nav-item">
 			<a class="nav-link{% if sort=='new' %} active{% endif %}" href="?sort=new&q={{query | urlencode}}&t={{time_filter}}"><i class="fas fa-sparkles"></i>New</a> 
+		</li>
+		<li class="nav-item">
+			<a class="nav-link{% if sort=='old' %} active{% endif %}" href="?sort=old&q={{query | urlencode}}&t={{time_filter}}"><i class="fas fa-book"></i>Old</a> 
 		</li>
 		<li class="nav-item">
 			<a class="nav-link{% if sort=='fiery' %} active{% endif %}" href="?sort=fiery&q={{query | urlencode}}&t={{time_filter}}"><i class="fas fa-bullhorn"></i>Controversial</a>
@@ -173,7 +183,9 @@
 							<button class="btn btn-link text-capitalize text-muted font-weight-normal dropdown-toggle px-0" type="button" id="dropdownMenuButtonMobile" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 								{% if sort=="hot" %}<i class="fas fa-fire mr-1"></i>{% endif %}
 								{% if sort=="top" %}<i class="fas fa-arrow-alt-circle-up mr-1"></i>{% endif %}
+								{% if sort=="bottom" %}<i class="fas fa-arrow-alt-circle-down mr-1"></i>{% endif %}
 								{% if sort=="new" %}<i class="fas fa-sparkles mr-1"></i>{% endif %}
+								{% if sort=="old" %}<i class="fas fa-book mr-1"></i>{% endif %}
 								{% if sort=="controversial" %}<i class="fas fa-bullhorn mr-1"></i>{% endif %}
 								{% if sort=="comments" %}<i class="fas fa-comments mr-1"></i>{% endif %}
 								{{sort}}
@@ -181,7 +193,9 @@
 							<div class="dropdown-menu" id="mobileSortDropdown" aria-labelledby="dropdownMenuButtonMobile" x-placement="bottom-start" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(0px, 31px, 0px);">
 								{% if not sort=="hot" %}<a class="dropdown-item" href="?sort=hot&q={{query | urlencode}}&t={{time_filter}}"><i class="fas fa-fire text-primary mr-3"></i>Hot</a>{% endif %}
 								{% if not sort=="top" %}<a class="dropdown-item" href="?sort=top&q={{query | urlencode}}&t={{time_filter}}"><i class="fas fa-arrow-alt-circle-up text-primary mr-3"></i>Top</a>{% endif %}
+								{% if not sort=="bottom" %}<a class="dropdown-item" href="?sort=bottom&q={{query | urlencode}}&t={{time_filter}}"><i class="fas fa-arrow-alt-circle-down text-primary mr-3"></i>Bottom</a>{% endif %}
 								{% if not sort=="new" %}<a class="dropdown-item" href="?sort=new&q={{query | urlencode}}&t={{time_filter}}"><i class="fas fa-sparkles text-primary mr-3"></i>New</a>{% endif %}
+								{% if not sort=="old" %}<a class="dropdown-item" href="?sort=old&q={{query | urlencode}}&t={{time_filter}}"><i class="fas fa-book text-primary mr-3"></i>Old</a>{% endif %}
 								{% if not sort=="controversial" %}<a class="dropdown-item" href="?sort=controversial&q={{query | urlencode}}&t={{time_filter}}"><i class="fas fa-bullhorn text-primary mr-3"></i>Controversial</a>{% endif %}
 								{% if not sort=="comments" %}<a class="dropdown-item" href="?sort=comments&q={{query | urlencode}}&t={{time_filter}}"><i class="fas fa-comments text-primary mr-3"></i>Comments</a>{% endif %}
 							</div>

@@ -40,6 +40,7 @@
 					<button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 						{% if sort=="hot" %}<i class="fas fa-fire mr-1"></i>{% endif %}
 						{% if sort=="top" %}<i class="fas fa-arrow-alt-circle-up mr-1"></i>{% endif %}
+						{% if sort=="bottom" %}<i class="fas fa-arrow-alt-circle-down mr-1"></i>{% endif %}
 						{% if sort=="new" %}<i class="fas fa-sparkles mr-1"></i>{% endif %}
 						{% if sort=="old" %}<i class="fas fa-book mr-1"></i>{% endif %}
 						{% if sort=="controversial" %}<i class="fas fa-bullhorn mr-1"></i>{% endif %}
@@ -49,6 +50,7 @@
 					<div class="dropdown-menu" aria-labelledby="dropdownMenuButton" x-placement="bottom-start" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(0px, 31px, 0px);">
 						{% if not sort=="hot" %}<a class="dropdown-item" href="?sort=hot&t={{time_filter}}"><i class="fas fa-fire mr-2"></i>Hot</a>{% endif %}
 						{% if not sort=="top" %}<a class="dropdown-item" href="?sort=top&t={{time_filter}}"><i class="fas fa-arrow-alt-circle-up mr-2"></i>Top</a>{% endif %}
+						{% if not sort=="bottom" %}<a class="dropdown-item" href="?sort=bottom&t={{time_filter}}"><i class="fas fa-arrow-alt-circle-down mr-2"></i>Bottom</a>{% endif %}
 						{% if not sort=="new" %}<a class="dropdown-item" href="?sort=new&t={{time_filter}}"><i class="fas fa-sparkles mr-2"></i>New</a>{% endif %}
 						{% if not sort=="old" %}<a class="dropdown-item" href="?sort=old&t={{time_filter}}"><i class="fas fa-book mr-2"></i>Old</a>{% endif %}
 						{% if not sort=="controversial" %}<a class="dropdown-item" href="?sort=controversial&t={{time_filter}}"><i class="fas fa-bullhorn mr-2"></i>Controversial</a>{% endif %}
@@ -151,6 +153,7 @@
 								<button class="btn btn-link text-capitalize text-muted font-weight-normal dropdown-toggle px-0" type="button" id="dropdownMenuButtonMobile" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 									{% if sort=="hot" %}<i class="fas fa-fire mr-1"></i>{% endif %}
 									{% if sort=="top" %}<i class="fas fa-arrow-alt-circle-up mr-1"></i>{% endif %}
+									{% if sort=="bottom" %}<i class="fas fa-arrow-alt-circle-down mr-1"></i>{% endif %}
 									{% if sort=="new" %}<i class="fas fa-sparkles mr-1"></i>{% endif %}
 									{% if sort=="old" %}<i class="fas fa-book mr-1"></i>{% endif %}
 									{% if sort=="controversial" %}<i class="fas fa-bullhorn mr-1"></i>{% endif %}
@@ -160,6 +163,7 @@
 								<div class="dropdown-menu" id="mobileSortDropdown" aria-labelledby="dropdownMenuButtonMobile" x-placement="bottom-start" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(0px, 31px, 0px);">
 									{% if not sort=="hot" %}<a class="dropdown-item" href="?sort=hot&t={{time_filter}}"><i class="fas fa-fire text-primary mr-3"></i>Hot</a>{% endif %}
 									{% if not sort=="top" %}<a class="dropdown-item" href="?sort=top&t={{time_filter}}"><i class="fas fa-arrow-alt-circle-up text-primary mr-3"></i>Top</a>{% endif %}
+									{% if not sort=="bottom" %}<a class="dropdown-item" href="?sort=bottom&t={{time_filter}}"><i class="fas fa-arrow-alt-circle-down text-primary mr-3"></i>Bottom</a>{% endif %}
 									{% if not sort=="new" %}<a class="dropdown-item" href="?sort=new&t={{time_filter}}"><i class="fas fa-sparkles text-primary mr-3"></i>New</a>{% endif %}
 									{% if not sort=="old" %}<a class="dropdown-item" href="?sort=old&t={{time_filter}}"><i class="fas fa-book text-primary mr-3"></i>Old</a>{% endif %}
 									{% if not sort=="controversial" %}<a class="dropdown-item" href="?sort=controversial&t={{time_filter}}"><i class="fas fa-bullhorn text-primary mr-3"></i>Controversial</a>{% endif %}

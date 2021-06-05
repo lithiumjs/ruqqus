@@ -135,7 +135,7 @@ def settings_profile_post(v):
 
 	defaultsorting = request.values.get("defaultsorting")
 	if defaultsorting:
-		if defaultsorting in ["hot", "new", "old", "activity", "disputed", "top"]:
+		if defaultsorting in ["hot", "new", "old", "activity", "disputed", "top", "bottom"]:
 			v.defaultsorting = defaultsorting
 			updated = True
 		else:

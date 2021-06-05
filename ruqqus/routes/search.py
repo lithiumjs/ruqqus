@@ -170,10 +170,16 @@ def searchlisting(criteria, v=None, page=1, t="None", sort="top", b=None):
 		posts = posts.order_by(Submission.score_hot.desc())
 	elif sort == "new":
 		posts = posts.order_by(Submission.created_utc.desc())
+	elif sort == "old":
+		posts = posts.order_by(Submission.created_utc.asc())
 	elif sort == "controversial":
 		posts = posts.order_by(Submission.score_disputed.desc())
 	elif sort == "top":
 		posts = posts.order_by(Submission.score_top.desc())
+	elif sort == "bottom":
+		posts = posts.order_by(Submission.score_top.asc())
+	elif sort == "comments":
+		posts = posts.order_by(Submission.comment_count.desc())
 
 	total = posts.count()
 	posts = [x for x in posts.offset(25 * (page - 1)).limit(26).all()]

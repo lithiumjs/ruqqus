@@ -204,6 +204,8 @@ def frontlist(v=None, sort="hot", page=1, nsfw=False, nsfl=False,
 		posts = posts.order_by(Submission.score_disputed.desc())
 	elif sort == "top":
 		posts = posts.order_by(Submission.score_top.desc())
+	elif sort == "bottom":
+		posts = posts.order_by(Submission.score_top.asc())
 	elif sort == "comments":
 		posts = posts.order_by(Submission.comment_count.desc())
 	else:

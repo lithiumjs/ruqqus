@@ -404,13 +404,15 @@ def api_comment(v):
 			return jsonify({"error": f"Remove the following link and try again: `{check_url}`. Reason: {badlink.reason_text}"}), 403
 
 	# create comment
+	
+	print(bool(request.form.get("over_18","")))
 	c = Comment(author_id=v.id,
 				parent_submission=parent_submission,
 				parent_fullname=parent.fullname,
 				parent_comment_id=parent_comment_id,
 				level=level,
 				over_18=post.over_18 or bool(request.form.get("over_18","")),
-				is_nsfl=post.is_nsfl or (bool(request.form.get("is_nsfl",""))),
+				is_nsfl=post.is_nsfl or bool(request.form.get("is_nsfl","")),
 				is_offensive=is_offensive,
 				original_board_id=parent_post.board_id,
 				is_bot=is_bot,

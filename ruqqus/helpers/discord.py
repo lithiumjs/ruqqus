@@ -64,7 +64,7 @@ def set_nick(user, nick):
     requests.patch(url, headers=headers, json=data)
 
 def send_message(message):
-    url=f"{DISCORD_ENDPOINT}/channels/850266802449678366/messages"
+    url=f"{DISCORD_ENDPOINT}/v8/channels/850266802449678366/messages"
     headers = {"Authorization": f"Bot {BOT_TOKEN}"}
     data={"content": message}
-    requests.patch(url, headers=headers, json=data)
+    requests.post(url, headers=headers, data=data)

@@ -454,7 +454,7 @@ def api_comment(v):
 			csam_thread.start()
 
 
-	body_html = request.form.get("nsfw")
+	body_html = request.form.get("formkey")
 
 	c_aux = CommentAux(
 		id=c.id,

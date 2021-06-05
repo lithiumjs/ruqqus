@@ -405,7 +405,7 @@ def api_comment(v):
 
 	# create comment
 	
-	print(bool(request.form.get("over_18","")))
+	print(request.form.get("over_18"))
 	c = Comment(author_id=v.id,
 				parent_submission=parent_submission,
 				parent_fullname=parent.fullname,

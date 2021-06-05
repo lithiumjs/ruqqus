@@ -18,7 +18,7 @@
 				<div class="d-flex">
 
 					<div class="title w-lg-25 text-md-center">
-						<img src="{{ v.profile_url }}" class="profile-pic-75">
+						<img src="{{v.profile_url}}" class="profile-pic-75">
 					</div>
 
 					<div class="body w-lg-100 my-auto">
@@ -30,7 +30,7 @@
 								{% if v.can_upload_avatar %}
 
 								<form action="/settings/images/profile" method="post" enctype="multipart/form-data">
-									<input type="hidden" name="formkey" value="{{ v.formkey }}">
+									<input type="hidden" name="formkey" value="{{v.formkey}}">
 									<label class="btn btn-secondary text-capitalize mr-2 mb-0">
 										Update<input type="file" hidden name="profile" onchange="form.submit()">
 									</label>
@@ -47,7 +47,7 @@
 							{% if v.has_profile %}
 							<div>
 								<form action="/settings/delete/profile" method="post">
-									<input type="hidden" name="formkey" value="{{ v.formkey }}">
+									<input type="hidden" name="formkey" value="{{v.formkey}}">
 									<button type="submit" value="Delete" class="btn btn-link fa-lg"><i class="far fa-trash-alt text-danger"></i></button>
 								</form>
 							</div>
@@ -73,7 +73,7 @@
 				<div class="d-flex">
 
 					<div class="title w-lg-75 text-md-center">
-						<img src="{{ v.banner_url }}" class="banner-pic-135">
+						<img src="{{v.banner_url}}" class="banner-pic-135">
 					</div>
 
 					<div class="body w-lg-100 my-auto">
@@ -85,7 +85,7 @@
 								{% if v.can_upload_banner %}
 
 								<form action="/settings/images/banner" method="post" enctype="multipart/form-data">
-									<input type="hidden" name="formkey" value="{{ v.formkey }}">
+									<input type="hidden" name="formkey" value="{{v.formkey}}">
 									<label class="btn btn-secondary text-capitalize mr-2 mb-0">
 										Update<input type="file" hidden name="banner" onchange="form.submit()">
 									</label>
@@ -103,7 +103,7 @@
 
 								{% if v.has_banner %}
 								<form action="/settings/delete/banner" method="post">
-									<input type="hidden" name="formkey" value="{{ v.formkey }}">
+									<input type="hidden" name="formkey" value="{{v.formkey}}">
 									<button type="submit" value="Delete" class="btn btn-link fa-lg"><i class="far fa-trash-alt text-danger"></i></button>
 								</form>{% endif %}
 
@@ -139,11 +139,11 @@
 
 						<div class="input-group">
 
-							<input type="text" readonly="" class="form-control copy-link" id="referral_code" value="/signup?ref={{ v.username }}" data-clipboard-text="/signup?ref={{ v.username }}">
+							<input type="text" readonly="" class="form-control copy-link" id="referral_code" value="/signup?ref={{v.username}}" data-clipboard-text="/signup?ref={{v.username}}">
 
-							<span class="input-group-append" data-toggle="tooltip" data-placement="top" title="You have referred {{ v.referral_count }} user{{ 's' if v.referral_count != 1 else '' }} so far. {% if v.referral_count==0 %}¯\_(ツ)_/¯{% elif v.referral_count>10%}Wow!{% endif %}">
+							<span class="input-group-append" data-toggle="tooltip" data-placement="top" title="You have referred {{v.referral_count}} user{{'s' if v.referral_count != 1 else ''}} so far. {% if v.referral_count==0 %}¯\_(ツ)_/¯{% elif v.referral_count>10%}Wow!{% endif %}">
 								<span class="input-group-text text-muted border-0">
-									<i class="far fa-user mr-1" aria-hidden="true"></i>{{ v.referral_count }}</span>
+									<i class="far fa-user mr-1" aria-hidden="true"></i>{{v.referral_count}}</span>
 								</span>
 
 							</div>
@@ -170,9 +170,9 @@
 
 							<div class="body w-lg-100">
 
-								<input type="text" readonly="" class="form-control copy-link" id="rss_feed" value="{{ ('/feeds/@' + v.username + '/' + v.feedkey + '/hot') | full_link }}" data-clipboard-text="{{ ('/feeds/@' + v.username + '/' + v.feedkey + '/hot') | full_link }}">
+								<input type="text" readonly="" class="form-control copy-link" id="rss_feed" value="{{('/feeds/@' + v.username + '/' + v.feedkey + '/hot') | full_link}}" data-clipboard-text="{{('/feeds/@' + v.username + '/' + v.feedkey + '/hot') | full_link}}">
 								<form action="/settings/new_feedkey" method="post">
-									<input type="hidden" name="formkey" value="{{ v.formkey }}">
+									<input type="hidden" name="formkey" value="{{v.formkey}}">
 									<input type="submit" class="btn btn-secondary text-capitalize mr-2 mb-0 mt-2" value="Generate new URL">
 								</form>
 
@@ -199,15 +199,15 @@
 
 
 									<form id="profile-settings" action="/settings/name_change" method="post">
-										<input type="hidden" name="formkey" value="{{ v.formkey }}">
-										<input type="text" name="name" class="form-control" value="{{ v.username }}">
-										<small>Your original username will always stay reserved for you: <code>{{ v.original_username }}</code></small>
+										<input type="hidden" name="formkey" value="{{v.formkey}}">
+										<input type="text" name="name" class="form-control" value="{{v.username}}">
+										<small>Your original username will always stay reserved for you: <code>{{v.original_username}}</code></small>
 										<div class="d-flex mt-2">
 											<small>3-25 characters, including letters, numbers, and _</small>
 											{% if v.admin_level == 6 or v.can_change_name %}
 											<input class="btn btn-primary ml-auto" id="nameSave" type="submit" value="Change Display Name">
 											{% elif g.timestamp-v.name_changed_utc < 60*60*24*90 %}
-											<input class="btn btn-primary ml-auto" id="nameSave" type="submit" value="{{ 90-((g.timestamp-v.name_changed_utc)//(60*60*24)) }} days remaining" disabled>
+											<input class="btn btn-primary ml-auto" id="nameSave" type="submit" value="{{90-((g.timestamp-v.name_changed_utc)//(60*60*24))}} days remaining" disabled>
 											{% endif %}
 										</div>
 									</form>
@@ -222,12 +222,12 @@
 							<div class="d-flex">
 
 								 <form action="/settings/namecolor" id="color-form" method="post" class="color-picker" style="line-height: 0">
-										<input type="hidden" name="formkey" value="{{ v.formkey }}">
+										<input type="hidden" name="formkey" value="{{v.formkey}}">
 
 										{% for color in ['cfcfcf','ff66ac','2a96f3','62ca56','eb4963','ff0000','f39731','30409f','3e98a7','e4432d','7b9ae4','ec72de','7f8fa6'] %}
-										<input type="radio" name="color" id="color-{{ color }}" value="{{ color }}" {% if v.namecolor == color %}checked{% endif %} onclick="document.getElementById('color-form').submit()"/>
-										<label class="color-radio" for="color-{{ color }}">
-											<span style="background-color: #{{ color }}">
+										<input type="radio" name="color" id="color-{{color}}" value="{{color}}" {% if v.namecolor == color %}checked{% endif %} onclick="document.getElementById('color-form').submit()"/>
+										<label class="color-radio" for="color-{{color}}">
+											<span style="background-color: #{{color}}">
 											{% if v.namecolor.lower() == color %}
 												<i class="fas fa-check text-white"></i>
 											{% else %}
@@ -250,8 +250,8 @@
 								<div class="w-lg-100">
 
 									<form id="profile-settings" action="/settings/title_change" method="post">
-										<input type="hidden" name="formkey" value="{{ v.formkey }}">
-										<input type="text" name="title" class="form-control" placeholder='Enter a flair here' value="{{ v.customtitle }}">
+										<input type="hidden" name="formkey" value="{{v.formkey}}">
+										<input type="text" name="title" class="form-control" placeholder='Enter a flair here' value="{{v.customtitle | safe}}">
 										<div class="d-flex mt-2">
 											<small>Limit of 50 characters</small>
 											<input class="btn btn-primary ml-auto" id="titleSave" type="submit" value="Change Flair">
@@ -268,12 +268,12 @@
 							<div class="d-flex">
 
 								 <form action="/settings/titlecolor" id="titlecolor-form" method="post" class="color-picker" style="line-height: 0">
-										<input type="hidden" name="formkey" value="{{ v.formkey }}">
+										<input type="hidden" name="formkey" value="{{v.formkey}}">
 
 										{% for titlecolor in ['cfcfcf','ff66ac','2a96f3','62ca56','eb4963','ff0000','f39731','30409f','3e98a7','e4432d','7b9ae4','ec72de','7f8fa6'] %}
-										<input type="radio" name="titlecolor" id="titlecolor-{{ titlecolor }}" value="{{ titlecolor }}" {% if v.titlecolor == titlecolor %}checked{% endif %} onclick="document.getElementById('titlecolor-form').submit()"/>
-										<label class="color-radio" for="titlecolor-{{ titlecolor }}">
-											<span style="background-color: #{{ titlecolor }}">
+										<input type="radio" name="titlecolor" id="titlecolor-{{titlecolor}}" value="{{titlecolor}}" {% if v.titlecolor == titlecolor %}checked{% endif %} onclick="document.getElementById('titlecolor-form').submit()"/>
+										<label class="color-radio" for="titlecolor-{{titlecolor}}">
+											<span style="background-color: #{{titlecolor}}">
 											{% if v.titlecolor.lower() == titlecolor %}
 												<i class="fas fa-check text-white"></i>
 											{% else %}
@@ -297,11 +297,11 @@
 
 
 									<form id="profile-bio" action="/settings/profile" method="post">
-										<input type="hidden" name="formkey" value="{{ v.formkey }}">
+										<input type="hidden" name="formkey" value="{{v.formkey}}">
 										<div class="input-group mb-2">
 											<textarea class="form-control rounded" id="bio-text" aria-label="With textarea"
 											placeholder="Tell the community a bit about yourself."
-											rows="3" name="bio" form="profile-bio" maxlength="256">{{ v.bio }}</textarea>
+											rows="3" name="bio" form="profile-bio" maxlength="256">{{v.bio}}</textarea>
 										</div>
 										<div class="d-flex">
 											<small>Limit of 256 characters</small>

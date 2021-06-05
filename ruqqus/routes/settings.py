@@ -722,7 +722,6 @@ def settings_title_change(v):
 
 	new_name=new_name.replace('_','\_')
 	new_name=preprocess(new_name)
-	#with CustomRenderer() as renderer: new_name = renderer.render(mistletoe.Document(new_name))
 	new_name = sanitize(new_name, linkgen=True)
 
 	v=g.db.query(User).with_for_update().options(lazyload('*')).filter_by(id=v.id).first()

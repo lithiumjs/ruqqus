@@ -4,7 +4,7 @@
 <h1>User Information Request</h1>
 <form action="/legal/final" method="post" enctype="multipart/form-data">
 	{% for k in request.form %}
-		<input type="hidden" name="{{ k }}" value="{{ request.form[k] }}">
+		<input type="hidden" name="{{k}}" value="{{request.form[k]}}">
 	{% endfor %}
 
 	<div class="h6 mt-5">List the username(s) of the account(s) whose information is being requested.</div>

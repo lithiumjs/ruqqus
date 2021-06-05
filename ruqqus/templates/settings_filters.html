@@ -25,7 +25,7 @@
 							<div class="input-group mb2">
 								<select id='defaultsorting' class="form-control" form="profile-settings" name="defaultsorting" onchange="post_toast('/settings/profile?defaultsorting='+document.getElementById('defaultsorting').value)">
 								 {% for entry in ["hot", "new", "old", "top", "disputed", "activity"] %}
-								 <option value="{{ entry }}"{{ ' selected' if v.defaultsorting==entry else '' }}>{{ entry }}</option>
+								 <option value="{{entry}}"{{' selected' if v.defaultsorting==entry else ''}}>{{entry}}</option>
 								 {% endfor %}
 							 </select>
 							</div>
@@ -44,7 +44,7 @@
 							<div class="input-group mb2">
 								<select id='defaulttime' class="form-control" form="profile-settings" name="defaulttime" onchange="post_toast('/settings/profile?defaulttime='+document.getElementById('defaulttime').value)">
 								 {% for entry in ["day", "week", "month", "year", "all"] %}
-								 <option value="{{ entry }}"{{ ' selected' if v.defaulttime==entry else '' }}>{{ entry }}</option>
+								 <option value="{{entry}}"{{' selected' if v.defaulttime==entry else ''}}>{{entry}}</option>
 								 {% endfor %}
 							 </select>
 							</div>
@@ -106,12 +106,12 @@
 
 								<div class="body w-lg-100">
 									<form id="custom-filter" action="/settings/profile" method="post">
-										<input type="hidden" name="formkey" value="{{ v.formkey }}">
+										<input type="hidden" name="formkey" value="{{v.formkey}}">
 											<small>Hides matching content from Home, All, and Trending, and collapses matching comments.</small>
 										<div class="input-group mb-2">
 											<textarea class="form-control rounded" id="filters-text" aria-label="With textarea"
 											placeholder="Add your own custom content filters."
-											rows="3" name="filters" form="custom-filter" maxlength="1000">{{ v.custom_filter_list }}</textarea>
+											rows="3" name="filters" form="custom-filter" maxlength="1000">{{v.custom_filter_list}}</textarea>
 										</div>
 										<div class="d-flex">
 											<small>Use a new line for each filter entry. Limit of 1000 characters.</small>

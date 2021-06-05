@@ -1,6 +1,6 @@
 {% extends "guild/guild_settings.html" %}
 
-{% block pagetitle %}+{{ b.name }} Guildmasters - Drama Guildmaster Tools{% endblock %}
+{% block pagetitle %}+{{b.name}} Guildmasters - Drama Guildmaster Tools{% endblock %}
 
 {% block scripts %}
 		<script>
@@ -9,7 +9,7 @@
 				document.getElementById("stepDownButton").onclick = function() {
 					this.innerHTML='<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Stepping down';
 					this.disabled = true;
-					post('/mod/{{ b.base36id }}/remove/' + mod,
+					post('/mod/{{b.base36id}}/remove/' + mod,
 						callback = function() {
 							location.reload();
 						}
@@ -41,7 +41,7 @@
 			<div class="alert alert-danger alert-dismissible fade show my-3" role="alert">
 				<i class="fas fa-exclamation-circle my-auto"></i>
 				<span>
-					{{ error if error else request.args.get('error') }}
+					{{error if error else request.args.get('error')}}
 				</span>
 				<button type="button" class="close" data-dismiss="alert" aria-label="Close">
 					<span aria-hidden="true"><i class="far fa-times"></i></span>
@@ -53,7 +53,7 @@
 			<div class="alert alert-success alert-dismissible fade show my-3" role="alert">
 				<i class="fas fa-check-circle my-auto" aria-hidden="true"></i>
 				<span>
-					{{ msg if msg else request.args.get('msg') }}
+					{{msg if msg else request.args.get('msg')}}
 				</span>
 				<button type="button" class="close" data-dismiss="alert" aria-label="Close">
 					<span aria-hidden="true"><i class="far fa-times"></i></span>
@@ -70,12 +70,12 @@
 					 <div class="d-md-flex justify-content-between mb-3">
 
 				<div>
-				 <h2 class="h5" name="guild_name">Guildmasters of +{{ b.name }}</h2>
+				 <h2 class="h5" name="guild_name">Guildmasters of +{{b.name}}</h2>
 			 </div>
 
 			 <div class="mt-auto">
 				{% if me %}
-				<a href="javascript:void(0)" class="btn btn-outline-primary mr-2" data-toggle="modal" data-target="#stepDownModal" onclick="step_downModal('{{ v.username }}')">Resign</a>
+				<a href="javascript:void(0)" class="btn btn-outline-primary mr-2" data-toggle="modal" data-target="#stepDownModal" onclick="step_downModal('{{v.username}}')">Resign</a>
 				{% endif %}
 				{% if me and me.perm_full %}
 				<a href="javascript:void(0)" class="btn btn-primary" data-toggle="modal" data-target="#guildmasterInviteModal"><i class="fas fa-plus mr-2"></i>Add guildmaster</a>
@@ -99,11 +99,11 @@
 					{% for mod in b.mods_list %}
 					<tr>
 						<td>
-							<a href="{{ mod.user.permalink }}">
-								<img src="{{ mod.user.profile_url }}" class="profile-pic-20 align-top mr-2">@{{ mod.user.username }}</a>
+							<a href="{{mod.user.permalink}}">
+								<img src="{{mod.user.profile_url}}" class="profile-pic-20 align-top mr-2">@{{mod.user.username}}</a>
 							</td>
-							<td>{{ mod.created_date }}</td>
-							<td>{{ mod.permlist }}</td>
+							<td>{{mod.created_date}}</td>
+							<td>{{mod.permlist}}</td>
 
 							<td>
 								{% if me and me.perm_full and me.id < mod.id %}
@@ -112,8 +112,8 @@
 										<i class="fas fa-ellipsis-h text-muted"></i>
 									</a>
 									<div class="dropdown-menu border-0 shadow dropdown-menu-right mt-2" aria-labelledby="dropdownMoreLink" x-placement="bottom-end" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(21px, 18px, 0px);">
-										<a class="dropdown-item" href="javascript:void(0)" data-toggle="modal" data-target="#editPermsModal" onclick="permsEdit('{{ mod.user.username }}','{{ mod.permlist }}')"><i class="fas fa-user-cog fa-fw"></i>Edit permissions</a>
-										<a class="dropdown-item" href="javascript:void(0)" onclick="post('/mod/{{ b.base36id }}/remove/{{ mod.user.username }}', callback=function(){window.location.reload(true)})"><i class="fas fa-trash-alt"></i>Remove guildmaster</a>
+										<a class="dropdown-item" href="javascript:void(0)" data-toggle="modal" data-target="#editPermsModal" onclick="permsEdit('{{mod.user.username}}','{{mod.permlist}}')"><i class="fas fa-user-cog fa-fw"></i>Edit permissions</a>
+										<a class="dropdown-item" href="javascript:void(0)" onclick="post('/mod/{{b.base36id}}/remove/{{mod.user.username}}', callback=function(){window.location.reload(true)})"><i class="fas fa-trash-alt"></i>Remove guildmaster</a>
 									</div>
 								</div>
 								{% endif %}
@@ -133,7 +133,7 @@
 
 			<h2 class="h5" name="guild_name">Pending guildmasters</h2>
 
-			<p class="text-small text-muted">These users have been invited to moderate +{{ b.name }}.</p>
+			<p class="text-small text-muted">These users have been invited to moderate +{{b.name}}.</p>
 
 			<div class="card mb-5">
 				<table class="table table-hover rounded mb-0">
@@ -150,11 +150,11 @@
 						{% for m in b.mod_invites %}
 						<tr>
 							<td>
-								<a href="{{ m.user.permalink }}">
-									<img src="{{ m.user.profile_url }}" class="profile-pic-20 align-top mr-2">@{{ m.user.username }}</a>
+								<a href="{{m.user.permalink}}">
+									<img src="{{m.user.profile_url}}" class="profile-pic-20 align-top mr-2">@{{m.user.username}}</a>
 								</td>
-								<td>{{ m.created_date }}</td>
-								<td>{{ m.permlist }}</td>
+								<td>{{m.created_date}}</td>
+								<td>{{m.permlist}}</td>
 								<td>
 										{% if me.perm_full %}
 									<div class="dropdown float-right dropdown-actions">
@@ -162,8 +162,8 @@
 											<i class="fas fa-ellipsis-h text-muted"></i>
 										</a>
 										<div class="dropdown-menu border-0 shadow dropdown-menu-right mt-2" aria-labelledby="dropdownMoreLink" x-placement="bottom-end" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(21px, 18px, 0px);">
-											<a class="dropdown-item" href="javascript:void(0)" data-toggle="modal" data-target="#editPermsModal" onclick="permsEdit('{{ m.user.username }}','{{ m.permlist }}')"><i class="fas fa-user-cog fa-fw"></i>Edit permissions</a>
-											<a class="dropdown-item text-danger" href="javascript:void(0)" onclick="post('/mod/{{ b.base36id }}/rescind/{{ m.user.username }}', callback=function(){window.location.reload(true)})"><i class="fas fa-times text-danger fa-fw"></i>Cancel invite</a>
+											<a class="dropdown-item" href="javascript:void(0)" data-toggle="modal" data-target="#editPermsModal" onclick="permsEdit('{{m.user.username}}','{{m.permlist}}')"><i class="fas fa-user-cog fa-fw"></i>Edit permissions</a>
+											<a class="dropdown-item text-danger" href="javascript:void(0)" onclick="post('/mod/{{b.base36id}}/rescind/{{m.user.username}}', callback=function(){window.location.reload(true)})"><i class="fas fa-times text-danger fa-fw"></i>Cancel invite</a>
 										</div>
 									</div>
 										{% endif %}
@@ -193,7 +193,7 @@
 <!-- Guildmaster Invite User Modal -->
 <div class="modal fade" id="guildmasterInviteModal" tabindex="-1" role="dialog" aria-labelledby="guildmasterInviteModalTitle" aria-hidden="true">
 	<div class="modal-dialog modal-dialog-centered" role="document">
-		<form action="/mod/invite_mod/{{ b.base36id }}" id="invite-form" method="post" onsubmit="return false;">
+		<form action="/mod/invite_mod/{{b.base36id}}" id="invite-form" method="post" onsubmit="return false;">
 			<div class="modal-content">
 				<div class="modal-header">
 					<h5 class="modal-title">Invite user to be guildmaster</h5>
@@ -203,12 +203,12 @@
 				</div>
 				<div class="modal-body">
 					<p>Users invited to moderate a guild will need to accept their invite. They will receive a notification shortly after you invite them.</p>
-					<input type="hidden" name="formkey" value="{{ v.formkey }}">
+					<input type="hidden" name="formkey" value="{{v.formkey}}">
 					<input type="text" name="username" placeholder="enter username" id="invite-username" class="form-control" maxlength=25 required>
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-link text-muted" data-dismiss="modal">Cancel</button>
-					<button type="button" class="btn btn-primary" id="inviteUserButton" onclick="invite_mod_to_guild('{{ b.base36id }}')">Invite user</button>
+					<button type="button" class="btn btn-primary" id="inviteUserButton" onclick="invite_mod_to_guild('{{b.base36id}}')">Invite user</button>
 				</div>
 			</div>
 		</form>
@@ -230,7 +230,7 @@
 			</div>
 			<div class="modal-footer">
 				<button type="button" class="btn btn-link text-muted" data-dismiss="modal">Cancel</button>
-				<button class="btn btn-danger" onclick="post('/mod/{{ b.base36id }}/step_down', callback=function(){window.location.reload(true)})">Step down</button>
+				<button class="btn btn-danger" onclick="post('/mod/{{b.base36id}}/step_down', callback=function(){window.location.reload(true)})">Step down</button>
 			</div>
 
 		</div>
@@ -241,7 +241,7 @@
 <div class="modal fade" id="editPermsModal" tabindex="-1" role="dialog" aria-labelledby="stepDownModalTitle" aria-hidden="true">
 	<div class="modal-dialog modal-dialog-centered" role="document">
 		<div class="modal-content">
-			<form action="/+{{ b.name }}/mod/edit_perms" method="post">
+			<form action="/+{{b.name}}/mod/edit_perms" method="post">
 			<div class="modal-header">
 				<h5 class="modal-title">Edit guildmaster permissions on @<span id="permedit-user"></span></h5>
 				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -249,7 +249,7 @@
 				</button>
 			</div>
 			<div class="modal-body">
-				<input name="formkey" type="hidden" value="{{ v.formkey }}">
+				<input name="formkey" type="hidden" value="{{v.formkey}}">
 				<input id="edit-perm-username" name="username" type="hidden" value="">
 
 				<div class="form-group">

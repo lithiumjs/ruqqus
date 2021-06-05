@@ -4,7 +4,7 @@
 	<div class="container-fluid">
 		<div class="flex-grow-1"><a href="/" class="navbar-brand"><img src="/assets/images/drama.png" height="20"><span class="text-small-extra text-uppercase text-gray-400"> Sigma</span></a></div>
 		<div class="flex-grow-1 d-fl d-none d-md-block">
-			<form class="form-inline search flex-nowrap mx-0 mx-lg-auto" action="{% if b %}/+{{ b.name }}{% endif %}/search" method="get">
+			<form class="form-inline search flex-nowrap mx-0 mx-lg-auto" action="{% if b %}/+{{b.name}}{% endif %}/search" method="get">
 				<input class="form-control w-100" type="search" placeholder="Search posts and users" aria-label="Search posts and users" name="q">
 				<span class="input-group-append">
 					<span class="input-group-text border-0 bg-transparent" style="margin-left: -2.5rem;">
@@ -17,7 +17,7 @@
 		<a class="mobile-nav-icon d-block d-md-none" href="/admin"><i class="fas fa-crown align-middle text-gray-500"></i></a>
 		{% endif %}
 		{% if v %}
-		<a class="mobile-nav-icon d-block d-md-none" href="/submit{{ '?guild='+b.name if b else '' }}"><i class="fas fa-feather-alt align-middle text-gray-500"></i></a>
+		<a class="mobile-nav-icon d-block d-md-none" href="/submit{{'?guild='+b.name if b else ''}}"><i class="fas fa-feather-alt align-middle text-gray-500"></i></a>
 		{% else %}
 		<a class="mobile-nav-icon d-block d-md-none" href="/login"><i class="fas fa-feather-alt align-middle text-gray-500"></i></a>
 		{% endif %}
@@ -43,7 +43,7 @@
 			{% if v.notifications_count %}
 
 			<li class="nav-item d-flex align-items-center text-center justify-content-center mx-1">
-				<a class="nav-link position-relative" href="/notifications" data-toggle="tooltip" data-placement="bottom" title="Notifications"><i class="fas fa-bell text-danger"></i><span class="badge-count font-weight-bolder">{{ v.notifications_count }}</span></a>
+				<a class="nav-link position-relative" href="/notifications" data-toggle="tooltip" data-placement="bottom" title="Notifications"><i class="fas fa-bell text-danger"></i><span class="badge-count font-weight-bolder">{{v.notifications_count}}</span></a>
 			</li>
 
 			{% elif v.notifications_count > 9 %}
@@ -61,7 +61,7 @@
 			{% endif %}
 
 			<li class="nav-item d-flex align-items-center justify-content-center text-center mx-1">
-				<a class="nav-link" href="/submit{{ '?guild='+b.name if b else '' }}" data-toggle="tooltip" data-placement="bottom"	title="Create post"><i class="fas fa-feather-alt"></i></a>
+				<a class="nav-link" href="/submit{{'?guild='+b.name if b else ''}}" data-toggle="tooltip" data-placement="bottom"	title="Create post"><i class="fas fa-feather-alt"></i></a>
 			</li>
 
 			<li class="nav-item d-flex align-items-center justify-content-center text-center mx-1">
@@ -74,13 +74,13 @@
 
 			<li class="nav-item d-flex align-items-center justify-content-center text-center">
 				<div class="dropdown">
-					<a class="nav-link bg-transparent py-0 pr-0" href="{{ v.permalink }}" role="button" id="dropdownMenuLink" data-toggle="dropdown"
+					<a class="nav-link bg-transparent py-0 pr-0" href="{{v.permalink}}" role="button" id="dropdownMenuLink" data-toggle="dropdown"
 					aria-haspopup="true" aria-expanded="false">
 					<div class="d-flex">
-						<div><img src="{{ v.profile_url }}" class="profile-pic-35"></div>
+						<div><img src="{{v.profile_url}}" class="profile-pic-35"></div>
 						<div class="text-left pl-2">
-							<div class="text-small font-weight-bold">{{ v.username }}</div>
-							<div class="text-small-extra text-purple"><i class="fad fa-diamond mr-1"></i>{{ v.true_score }} Dramacoins</div>
+							<div class="text-small font-weight-bold">{{v.username}}</div>
+							<div class="text-small-extra text-purple"><i class="fad fa-diamond mr-1"></i>{{v.true_score}} Dramacoins</div>
 						</div>
 					</div>
 				</a>
@@ -88,13 +88,13 @@
 				aria-labelledby="dropdownMenuButton">
 				<div class="px-2">
 					<div class="dropdown-meta">
-						<div class="font-weight-bold mb-2">{{ v.username }}</div>
-						<div class="text-small text-purple"><i class="fad fa-diamond mr-1"></i>{{ v.true_score }} Dramacoins</div>
+						<div class="font-weight-bold mb-2">{{v.username}}</div>
+						<div class="text-small text-purple"><i class="fad fa-diamond mr-1"></i>{{v.true_score}} Dramacoins</div>
 					</div>
 				</div>
 				<hr class="my-2">
 				<div class="px-2">
-					<a class="dropdown-item" href="{{ v.permalink }}"><i class="fas fa-user-circle fa-fw text-left mr-3"></i>My
+					<a class="dropdown-item" href="{{v.permalink}}"><i class="fas fa-user-circle fa-fw text-left mr-3"></i>My
 						profile</a>
 							<a class="dropdown-item" href="/settings"><i class="fas fa-cog fa-fw text-left mr-3"></i>Settings</a>
 
@@ -110,7 +110,7 @@
 						</div>
 						<hr class="my-2">
 						<div class="px-2">
-							<button class="dropdown-item copy-link" data-clipboard-text="/signup?ref={{ v.username }}"><i class="fad fa-user-friends fa-fw text-left mr-3"></i>Invite friends</button>
+							<button class="dropdown-item copy-link" data-clipboard-text="/signup?ref={{v.username}}"><i class="fad fa-user-friends fa-fw text-left mr-3"></i>Invite friends</button>
 						</div>
 						<hr class="my-2">
 						<div class="px-2">
@@ -131,10 +131,10 @@
 			 <a class="btn btn-outline-purple" href="/contact">Contact us</a>
 		 </li>
 			<li class="nav-item d-flex align-items-center justify-content-center mx-1">
-			 <a class="btn btn-outline-purple" href="/login?redirect={{ request.path | urlencode}}">Sign in</a>
+			 <a class="btn btn-outline-purple" href="/login?redirect={{request.path | urlencode}}">Sign in</a>
 		 </li>
 		 <li class="nav-item d-flex align-items-center justify-content-center mx-1">
-			 <a class="btn btn-purple" href="/signup?redirect={{ request.path | urlencode}}">Sign up</a>
+			 <a class="btn btn-purple" href="/signup?redirect={{request.path | urlencode}}">Sign up</a>
 		 </li>
 		 {% endif %}
 	 </ul>
@@ -142,7 +142,7 @@
 	 <!-- Mobile Nav Menu -->
 	 <ul class="navbar-nav ml-auto d-flex d-md-none mt-3">
 		 <li class="nav-item pb-3">
-			<form id="searchform" class="form-inline search flex-nowrap mx-0 mx-lg-auto" action="{% if b %}/+{{ b.name }}{% endif %}/search" method="get">
+			<form id="searchform" class="form-inline search flex-nowrap mx-0 mx-lg-auto" action="{% if b %}/+{{b.name}}{% endif %}/search" method="get">
 				<input class="form-control form-control-sm w-100" type="search" placeholder="Search posts and users" aria-label="Search posts and users" name="q">
 				<span class="input-group-append">
 					<span class="input-group-text border-0 bg-transparent" style="margin-left: -2.5rem;" onclick="document.getElementById('searchform').submit()">
@@ -153,7 +153,7 @@
 		</li>
 		{% if v %}
 		<li class="nav-item">
-			<a class="nav-link" href="{{ v.permalink }}"><i class="fas fa-user-circle fa-fw mr-3"></i>@{{ v.username }}</a>
+			<a class="nav-link" href="{{v.permalink}}"><i class="fas fa-user-circle fa-fw mr-3"></i>@{{v.username}}</a>
 		</li>
 		<li class="nav-item">
 			<a class="nav-link {% if v.notifications_count %}position-relative{% endif %}" href="/notifications?all=true">
@@ -172,7 +172,7 @@
 		<li class="nav-item"><a class="nav-link" href="javascript:void(0)" onclick="switch_css()"><i class="fad fa-toggle-off fa-fw mr-3" id="dark-switch"></i>Light mode</a></li>
 		{% endif %}
 		
-		<li class="nav-item"><a class="nav-link copy-link" data-clipboard-text="/signup?ref={{ v.username }}"><i class="fad fa-user-friends fa-fw mr-3"></i>Invite friends</a></li>
+		<li class="nav-item"><a class="nav-link copy-link" data-clipboard-text="/signup?ref={{v.username}}"><i class="fad fa-user-friends fa-fw mr-3"></i>Invite friends</a></li>
 		<li class="nav-item"><a class="nav-link" href="/post/1xq/posting-guidelines-policies-legal-shit"><i class="fas fa-balance-scale fa-fw mr-3"></i>Rules</a></li>
 		<li class="nav-item"><a class="nav-link" href="https://github.com/Aevann1/Drama"><i class="fab fa-github fa-fw mr-3"></i>Source code</a></li>
 		<li class="nav-item"><a class="nav-link" href="/discord"><i class="fab fa-discord fa-fw mr-3"></i>Discord</a></li>
@@ -186,10 +186,10 @@
 			<a class="btn btn-outline-purple btn-block" href="/contact">Contact us</a>
 		</li>
 		<li class="nav-item d-flex align-items-center justify-content-center pb-3">
-			<a class="btn btn-outline-purple btn-block" href="/login?redirect={{ request.path | urlencode}}">Sign in</a>
+			<a class="btn btn-outline-purple btn-block" href="/login?redirect={{request.path | urlencode}}">Sign in</a>
 		</li>
 		<li class="nav-item d-flex align-items-center justify-content-center">
-			<a class="btn btn-purple btn-block" href="/signup?redirect={{ request.path | urlencode}}">Sign up</a>
+			<a class="btn btn-purple btn-block" href="/signup?redirect={{request.path | urlencode}}">Sign up</a>
 		</li>
 		{% endif %}
 </div>

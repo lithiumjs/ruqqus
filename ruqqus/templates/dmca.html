@@ -12,7 +12,7 @@
 		<div class="alert alert-danger alert-dismissible fade show my-3" role="alert">
 			<i class="fas fa-exclamation-circle my-auto"></i>
 			<span>
-				{{ error if error else request.args.get('error') }}
+				{{error if error else request.args.get('error')}}
 			</span>
 			<button type="button" class="close" data-dismiss="alert" aria-label="Close">
 				<span aria-hidden="true"><i class="far fa-times"></i></span>
@@ -23,7 +23,7 @@
 		<div class="alert alert-success alert-dismissible fade show my-3" role="alert">
 			<i class="fas fa-check-circle my-auto" aria-hidden="true"></i>
 			<span>
-				{{ msg if msg else request.args.get('msg') }}
+				{{msg if msg else request.args.get('msg')}}
 			</span>
 			<button type="button" class="close" data-dismiss="alert" aria-label="Close">
 				<span aria-hidden="true"><i class="far fa-times"></i></span>
@@ -46,11 +46,11 @@ Abuse of this form is a violation of the Drama [terms of service](/about/terms) 
 {% elif v and v.is_activated %}
 
 <div class="h6 mt-5">Email</div>
-<input type="text" name="email" class="form-control" value="{{ v.email }}" readonly="readonly">
+<input type="text" name="email" class="form-control" value="{{v.email}}" readonly="readonly">
 
 <form id="dmca-form" action="/dmca" method="post">
 	
-	<input type="hidden" name="formkey" value="{{ v.formkey }}">
+	<input type="hidden" name="formkey" value="{{v.formkey}}">
 
 	<label class="mt-5" for="input-links">Links to infringing content</label>
 	<textarea id="input-links" class="form-control" for="dmca-form" name="infringing_links" required></textarea>
@@ -82,7 +82,7 @@ Abuse of this form is a violation of the Drama [terms of service](/about/terms) 
 	<textarea id="input-corrob" class="form-control" for="dmca-form" name="corrob_evidence"></textarea>
 
 	<label class="mt-5">Required statements</label><br>
-	<input id="accept_email" type="checkbox" name="accept_email" value="true" required> I will accept correspondence related to this Request at the email address: {{ v.email }}.<br>
+	<input id="accept_email" type="checkbox" name="accept_email" value="true" required> I will accept correspondence related to this Request at the email address: {{v.email}}.<br>
 	<input id="swear_perjury" type="checkbox" name="swear_perjury" value="true" required> I swear, under penalty of perjury, that the information in this Request is accurate, that the linked content is not protected by Fair Use, and that I am authorized to act on behalf of the copyright owner.<br>
 
 	<input class="btn btn-primary mt-5" type="submit" value="Submit">

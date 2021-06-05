@@ -4,15 +4,15 @@
 
 {% block title %}
 <title>Reported Posts - Drama</title>
-<meta name="description" content="in {{ '+'+b.name if b else 'your guilds'}}">
+<meta name="description" content="in {{'+'+b.name if b else 'your guilds'}}">
 {% endblock %}
 
 {% block sidebarblock %}
 {% if b %}
 <div class="sidebar-section sidebar-profile-basic">
 	<div class="body">
-		<h1 class="h6 d-inline-block mb-0" style="color:black">{{ '+'+b.name+' ' if b else ''}}Reported Posts</h1>
-	<p>Posts in {{ '+'+b.name if b else 'your guilds'}} that users have reported as being off-topic.</p>
+		<h1 class="h6 d-inline-block mb-0" style="color:black">{{'+'+b.name+' ' if b else ''}}Reported Posts</h1>
+	<p>Posts in {{'+'+b.name if b else 'your guilds'}} that users have reported as being off-topic.</p>
 
 </div>
 </div>
@@ -66,14 +66,14 @@
 	<ul class="pagination pagination-sm py-3 pl-3 mb-0">
 		{% if page>1 %}
 		<li class="page-item">
-			<small><a class="page-link" href="?page={{ page-1 }}" tabindex="-1">Prev</a></small>
+			<small><a class="page-link" href="?page={{page-1}}" tabindex="-1">Prev</a></small>
 		</li>
 		{% else %}
 		<li class="page-item disabled"><span class="page-link">Prev</span></li>
 		{% endif %}
 		{% if next_exists %}
 		<li class="page-item">
-			<small><a class="page-link" href="?page={{ page+1 }}">Next</a></small>
+			<small><a class="page-link" href="?page={{page+1}}">Next</a></small>
 		</li>
 		{% else %}
 		<li class="page-item disabled"><span class="page-link">Next</span></li>

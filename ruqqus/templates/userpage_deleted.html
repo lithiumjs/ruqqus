@@ -31,7 +31,7 @@
 {% endblock %}
 
 {% block title %}
-<title>{{ u.username }}</title>
+<title>{{u.username}}</title>
 <meta name="description" content="[deleted]">
 {% endblock %}
 
@@ -40,13 +40,13 @@
 {% block adminpanel %}
 {% if v.admin_level >=3 and v.admin_level > u.admin_level %}
 {% if u.is_banned %}
-<form action="/api/unban_user/{{ u.id }}" method="post">
-	<input type="hidden" name="formkey", value="{{ v.formkey }}">
+<form action="/api/unban_user/{{u.id}}" method="post">
+	<input type="hidden" name="formkey", value="{{v.formkey}}">
 	<input type="submit" class="btn btn-success" value="Unban user">
 </form>
 {% else %}
-<form action="/api/ban_user/{{ u.id }}", method="post">
-	<input type="hidden" name="formkey", value="{{ v.formkey }}">
+<form action="/api/ban_user/{{u.id}}", method="post">
+	<input type="hidden" name="formkey", value="{{v.formkey}}">
 	<input type="submit" class="btn btn-warning" value="Ban user">
 </form>
 {% endif %}
@@ -59,7 +59,7 @@
 </tr>
 <tr>
 	<td>Account Creation IP</td>
-	<td>{{ u.creation_ip }}</td>
+	<td>{{u.creation_ip}}</td>
 </tr>
 </table>
 {% endif %}
@@ -75,7 +75,7 @@
 				<i class="fas text-danger fa-user-minus fa-stack-1x text-lg"></i>
 			</span>
 			<h2 class="h5">Deactivated Account</h2>
-			<p class="text-muted">@{{ u.username }} left Drama.</p>
+			<p class="text-muted">@{{u.username}} left Drama.</p>
 		</div>
 	</div>
 </div>

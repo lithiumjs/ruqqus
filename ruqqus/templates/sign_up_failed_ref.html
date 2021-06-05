@@ -10,7 +10,7 @@
 		<meta property="og:type" content="article" />
 		<meta property="og:title" content="Drama" />
 		<meta property="og:site_name" content="rdrama.net" />
-		<meta property="og:image" content="{{ '/assets/images/preview.png' | full_link }}" />
+		<meta property="og:image" content="{{'/assets/images/preview.png' | full_link}}" />
 		<meta property="og:url" content="https://rdrama.net">
 		<meta property="og:description" name="description" content="Sign up now! Dude bussy lmao">
 		<meta property="og:author" name="author" content="@ruqqus" />
@@ -21,10 +21,10 @@
 		<meta name="twitter:title" content="Drama" />
 		<meta name="twitter:creator" content="@ruqqus">
 		<meta name="twitter:description" content="Sign up now! Dude bussy lmao" />
-		<meta name="twitter:image" content="{{ '/assets/images/preview.png' | full_link }}" />
+		<meta name="twitter:image" content="{{'/assets/images/preview.png' | full_link}}" />
 		<meta name="twitter:url" content="https://rdrama.net" />
 
-		<title>{% if ref_user %}{{ ref_user.username }} invites you to Drama{% else %}Drama: the open, free-speech social platform{% endif %}</title>
+		<title>{% if ref_user %}{{ref_user.username}} invites you to Drama{% else %}Drama: the open, free-speech social platform{% endif %}</title>
 
 		<link href="https://fonts.googleapis.com/css?family=Open+Sans:400,600&display=swap" rel="stylesheet">
 
@@ -75,7 +75,7 @@
 												<h1 class="h4 font-weight-normal text-center">Whoops! You can't refer yourself!</h1>
 												<p class="text-center text-muted mb-md-5">Send this link to a friend instead :)</p>
 												<label>Referral code</label>
-												<input type="text" class="form-control copy-link" readonly value="/signup?ref={{ request.args.get('ref') }}" data-clipboard-text="/signup?ref={{ request.args.get('ref') }}">
+												<input type="text" class="form-control copy-link" readonly value="/signup?ref={{request.args.get('ref')}}" data-clipboard-text="/signup?ref={{request.args.get('ref')}}">
 
 												<div class="text-center mt-5 mb-3">
 														Already have an account? <a href="/login" class="font-weight-bold text-small toggle-login">Log in.</a>
@@ -94,7 +94,7 @@
 
 										<div class="splash-overlay"></div>
 
-										<img class="splash-img" src="{{ i.path }}"></img>
+										<img class="splash-img" src="{{i.path}}"></img>
 								</div>
 
 						</div>

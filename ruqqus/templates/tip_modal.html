@@ -13,7 +13,7 @@
 
 					<div class="d-flex align-items-center justify-content-around w-25 mx-auto mb-2">
 
-						<img id="tip-sender-pfp" src="{{ v.profile_url }}" class="profile-pic-50">
+						<img id="tip-sender-pfp" src="{{v.profile_url}}" class="profile-pic-50">
 						<i class="far fa-long-arrow-right text-muted text-lg mx-3"></i>
 						<img id="tip-recipient-pfp" src="" class="profile-pic-50">
 
@@ -79,7 +79,7 @@
 </div>
 <!-- Footer -->
 <div class="modal-footer bg-white border-top" style="background-image: none!important">
-	<div class="text-small text-muted font-weight-bold">Coin balance:<span class="text-muted"><img src="/assets/images/ruqqus-coin.png" class="ml-2 mr-1 mt-n1" style="width: 15px;"/>{{ v.coin_balance }}</span><a href="/settings/premium" class="font-weight-normal text-purple ml-2">Get more coins</a>
+	<div class="text-small text-muted font-weight-bold">Coin balance:<span class="text-muted"><img src="/assets/images/ruqqus-coin.png" class="ml-2 mr-1 mt-n1" style="width: 15px;"/>{{v.coin_balance}}</span><a href="/settings/premium" class="font-weight-normal text-purple ml-2">Get more coins</a>
 	</div>
 	<button type="button" class="btn btn-link text-muted ml-auto" data-dismiss="modal">Cancel</button>
 	<button type="button" id="sendTipButton" class="btn btn-warning" {% if not v.coin_balance %}disabled{% endif %}>Send Tip<span class="tip-content-type"></span></button>
@@ -87,5 +87,5 @@
 </div>
 </div>
 <!-- Coin balance -->
-<span id="coin-balance" data-model="balance" class="d-none">{{ v.coin_balance }}</span>
+<span id="coin-balance" data-model="balance" class="d-none">{{v.coin_balance}}</span>
 </div>

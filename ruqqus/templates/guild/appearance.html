@@ -1,13 +1,13 @@
 {% extends "guild/guild_settings.html" %}
 
-{% block pagetitle %}Edit +{{ b.name }} Appearance - Drama Guildmaster Tools{% endblock %}
+{% block pagetitle %}Edit +{{b.name}} Appearance - Drama Guildmaster Tools{% endblock %}
 
 {% block stylesheets %}
 
 {% if v and v.referral_count and session.get("dark_mode_enabled") %}
-<link id="css-link" rel="stylesheet" href="/+{{ p.board.name }}/dark.css">
+<link id="css-link" rel="stylesheet" href="/+{{p.board.name}}/dark.css">
 {% else %}
-<link id="css-link" rel="stylesheet" href="/+{{ p.board.name }}/main.css">
+<link id="css-link" rel="stylesheet" href="/+{{p.board.name}}/main.css">
 {% endif %}
 
 {% endblock %}
@@ -21,7 +21,7 @@
 		<div class="alert alert-danger alert-dismissible fade show my-3" role="alert">
 			<i class="fas fa-exclamation-circle my-auto"></i>
 			<span>
-				{{ error if error else request.args.get('error') }}
+				{{error if error else request.args.get('error')}}
 			</span>
 			<button type="button" class="close" data-dismiss="alert" aria-label="Close">
 				<span aria-hidden="true"><i class="far fa-times"></i></span>
@@ -32,7 +32,7 @@
 		<div class="alert alert-success alert-dismissible fade show my-3" role="alert">
 			<i class="fas fa-check-circle my-auto" aria-hidden="true"></i>
 			<span>
-				{{ msg if msg else request.args.get('msg') }}
+				{{msg if msg else request.args.get('msg')}}
 			</span>
 			<button type="button" class="close" data-dismiss="alert" aria-label="Close">
 				<span aria-hidden="true"><i class="far fa-times"></i></span>
@@ -45,7 +45,7 @@
 				var xhr = new XMLHttpRequest();
 				xhr.open("POST", url, true);
 				var form = new FormData()
-				form.append("formkey", "{{ v.formkey }}");
+				form.append("formkey", "{{v.formkey}}");
 				item=document.getElementById(type);
 				button=document.getElementById(id);
 				if (item.type=="checkbox") {
@@ -114,8 +114,8 @@
 
 							<div class="d-flex">
 
-								 <form action="/mod/{{ b.base36id }}/color" id="color-form" method="post" class="color-picker" style="line-height: 0">
-										<input type="hidden" name="formkey" value="{{ v.formkey }}">
+								 <form action="/mod/{{b.base36id}}/color" id="color-form" method="post" class="color-picker" style="line-height: 0">
+										<input type="hidden" name="formkey" value="{{v.formkey}}">
 
 										<input type="radio" name="color" id="purple" value="FF66AC" {% if b.color == 'FF66AC' %}checked{% endif %} onclick="document.getElementById('color-form').submit()"/>
 										<label class="color-radio" for="purple"><span class="purple" style="background-color: #FF66AC">
@@ -159,10 +159,10 @@
 							
 							<div class="d-flex">
 							
-								<form action="/mod/{{ b.base36id }}/color" id="color-code-form" method="post">
-									 <input type="hidden" name="formkey" value="{{ v.formkey }}">
+								<form action="/mod/{{b.base36id}}/color" id="color-code-form" method="post">
+									 <input type="hidden" name="formkey" value="{{v.formkey}}">
 
-									 <input class="form-control" type="text" name="color" id="color-code" value="{{ b.color }}">
+									 <input class="form-control" type="text" name="color" id="color-code" value="{{b.color}}">
 									 <label class="btn btn-secondary text-capitalize mr-2 mt-2 mb-0">Update<input type="text" for="color-code" onclick="form.submit()" hidden=""></label>
 								</form>
 								
@@ -181,7 +181,7 @@
 				<div class="d-lg-flex">
 
 					<div class="title w-lg-25 text-md-center">
-						<img src="{{ b.profile_url }}" class="profile-pic-75">
+						<img src="{{b.profile_url}}" class="profile-pic-75">
 					</div>
 
 					<div class="body w-lg-100 my-auto">
@@ -190,8 +190,8 @@
 
 							<div>
 
-							 <form action="/mod/{{ b.base36id }}/images/profile" method="post" enctype="multipart/form-data">
-								<input type="hidden" name="formkey" value="{{ v.formkey }}">
+							 <form action="/mod/{{b.base36id}}/images/profile" method="post" enctype="multipart/form-data">
+								<input type="hidden" name="formkey" value="{{v.formkey}}">
 								<label class="btn btn-secondary text-capitalize mr-2 mb-0">
 									Update<input type="file" hidden name="profile" onchange="form.submit()">
 								</label>
@@ -201,8 +201,8 @@
 
 						{% if b.has_profile %}
 						<div>
-							<form action="/mod/{{ b.base36id }}/delete/profile" method="post">
-								<input type="hidden" name="formkey" value="{{ v.formkey }}">
+							<form action="/mod/{{b.base36id}}/delete/profile" method="post">
+								<input type="hidden" name="formkey" value="{{v.formkey}}">
 								<button type="submit" value="Delete" class="btn btn-link fa-lg"><i class="far fa-trash-alt text-danger"></i></button>
 							</form>
 						</div>
@@ -225,7 +225,7 @@
 			<div class="d-lg-flex">
 
 				<div class="title w-lg-75 text-md-center">
-					<img src="{{ b.banner_url }}" class="banner-pic-135">
+					<img src="{{b.banner_url}}" class="banner-pic-135">
 				</div>
 
 				<div class="body w-lg-100 my-auto">
@@ -234,8 +234,8 @@
 
 						<div>
 
-						 <form action="/mod/{{ b.base36id }}/images/banner" method="post" enctype="multipart/form-data">
-							<input type="hidden" name="formkey" value="{{ v.formkey }}">
+						 <form action="/mod/{{b.base36id}}/images/banner" method="post" enctype="multipart/form-data">
+							<input type="hidden" name="formkey" value="{{v.formkey}}">
 							<label class="btn btn-secondary text-capitalize mr-2 mb-0">
 								Update<input type="file" hidden name="banner" onchange="form.submit()">
 							</label>
@@ -245,8 +245,8 @@
 
 					{% if b.has_banner %}
 					<div>
-						<form action="/mod/{{ b.base36id }}/delete/banner" method="post">
-							<input type="hidden" name="formkey" value="{{ v.formkey }}">
+						<form action="/mod/{{b.base36id}}/delete/banner" method="post">
+							<input type="hidden" name="formkey" value="{{v.formkey}}">
 							<button type="submit" value="Delete" class="btn btn-link fa-lg"><i class="far fa-trash-alt text-danger"></i></button>
 						</form>
 					</div>

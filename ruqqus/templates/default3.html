@@ -15,8 +15,8 @@
 	<meta property="og:type" content="article" />
 	<meta property="og:title" content="Drama" />
 	<meta property="og:site_name" content="rdrama.net" />
-	<meta property="og:image" content="{{ '/assets/images/preview.png' | full_link }}" />
-	<meta property="og:url" content="{{ request.path | full_link }}">
+	<meta property="og:image" content="{{'/assets/images/preview.png' | full_link}}" />
+	<meta property="og:url" content="{{request.path | full_link}}">
 	<meta property="og:description" name="description" content="Dude bussy lmao">
 	<meta property="og:author" name="author" content="@ruqqus" />
 	<meta property="og:site_name" content="rdrama.net" />
@@ -27,7 +27,7 @@
 	<meta name="twitter:creator" content="@ruqqus">
 	<meta name="twitter:description" content="Dude bussy lmao" />
 	<meta name="twitter:image" content="/assets/images/preview.png" />
-	<meta name="twitter:url" content="{{ request.path | full_link }}" />
+	<meta name="twitter:url" content="{{request.path | full_link}}" />
 	{% endblock %}
 
 	<!-- Bootstrap core CSS -->
@@ -204,7 +204,7 @@
 
 		<script>
 			function formkey() {
-			 return '{{ v.formkey }}';
+			 return '{{v.formkey}}';
 		 }
 	 </script>
 	 {% endif %}

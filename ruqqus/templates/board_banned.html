@@ -8,7 +8,7 @@
 
 
 {% block title %}
-<title>+{{ b.name }} - Drama</title>
+<title>+{{b.name}} - Drama</title>
 <meta name="description" content="This guild is banned.">
 {% endblock %}
 
@@ -25,8 +25,8 @@
 		<i class="far text-danger fa-ban fa-stack-2x"></i>
 </span>
 
-			<h1 class="h5">+{{ b.name }} is banned.</h1>
-			{% if b.ban_reason %}<p class="text-muted mb-5">Reason: {{ b.ban_reason }}</p>{% endif %}
+			<h1 class="h5">+{{b.name}} is banned.</h1>
+			{% if b.ban_reason %}<p class="text-muted mb-5">Reason: {{b.ban_reason}}</p>{% endif %}
 			<div><a href="/" class="btn btn-primary">Go to frontpage</a></div>
 		</div>
 	</div>

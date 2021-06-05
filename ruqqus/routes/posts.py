@@ -192,7 +192,7 @@ def edit_post(pid, v):
 
 	p.body = body
 	p.body_html = body_html
-	p.title = request.form.get("title")	
+	if request.form.get("title"): p.title = request.form.get("title")	
 	p.edited_utc = int(time.time())
 	g.db.add(p)
 	return redirect(p.permalink)

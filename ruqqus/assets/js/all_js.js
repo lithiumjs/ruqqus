@@ -1251,8 +1251,8 @@ var inlineImage = document.getElementById("desktop-expanded-image");
 
 inlineImage.src = image;
 
-linkText.href = link;
-imgLink.href=link;
+linkText.href = image;
+imgLink.href=image;
 
 if (image.includes("i.ruqqus.ga")) {
 	linkText.textContent = 'Go to website';

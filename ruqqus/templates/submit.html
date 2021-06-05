@@ -144,11 +144,11 @@
 
                         <div class="form-text text-small"><a href="/formatting" target="_blank">Formatting help</a></div>
 
-                        <label for="over_18" class="text-danger mt-3">NSFW?</label>
-
                         <div class="custom-control custom-checkbox">
-                            <input type="checkbox" class="custom-control-input" id="nsfwCheck" name="over_18"{% if b and b.over_18 %} checked disabled {% endif %}>
-                            <label class="custom-control-label" for="nsfwCheck">This post contains adult material.</label>
+                            <input type="checkbox" class="custom-control-input" id="nsfwCheck" name="over_18">
+                            <label class="custom-control-label" for="nsfwCheck">NSFW</label>
+                            <input type="checkbox" class="custom-control-input" id="nsflCheck" name="is_nsfl">
+                            <label class="custom-control-label" for="nsflCheck">NSFL</label>
                         </div>
 
 

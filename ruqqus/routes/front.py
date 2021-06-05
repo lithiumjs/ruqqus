@@ -24,7 +24,7 @@ def notifications(v):
 	all_ = request.args.get('all', False)
 	sent = request.args.get('sent', False)
 	if sent:
-		comments = v.sent()
+		comments = g.db.query(Comment).filter_by(author=v).all()
 		next_exists = (len(comments) == 26)
 		comments = comments[0:25]
 	else:

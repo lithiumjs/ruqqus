@@ -566,9 +566,6 @@ class User(Base, Stndrd, Age_times):
 		g.db.commit()
 		return output
 
-	def sent(self):
-		return g.db.query(Comment).filter_by(author=self).filter(Comment.parent_submission is None).all()
-
 	@property
 	@lazy
 	def notifications_count(self):

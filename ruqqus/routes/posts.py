@@ -894,7 +894,10 @@ def submit_post(v):
 	g.db.commit()
 
 	# spin off thumbnail generation and csam detection as  new threads
-	if (new_post.url or request.files.get('file')) and (v.is_activated or request.headers.get('cf-ipcountry')!="T1"): thumbs(new_post)
+	if (new_post.url or request.files.get('file')) and (v.is_activated or request.headers.get('cf-ipcountry')!="T1"):
+		thumb_thread=threading.Thread(target=thumbs, args=(new_post))
+		thumb_thread.start()
+
 	# expire the relevant caches: front page new, board new
 	cache.delete_memoized(frontlist)
 	g.db.commit()

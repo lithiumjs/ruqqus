@@ -501,6 +501,7 @@
   {% if not p.is_banned and is_allowed_to_comment %}
   <div id="comment-form-space-{{ p.fullname }}" class="comment-write mb-3">
     <form id="reply-to-{{ p.fullname }}" class="input-group" action="/api/comment" method="post">
+      <input type="checkbox" name="over_18" class="comment-format2 custom-control custom-checkbox custom-control-input">
       <input type="hidden" name="formkey" value="{{ v.formkey }}">
       <input type="hidden" name="parent_fullname" value="t2_{{ p.base36id }}">
       <input id="reply-form-submission-{{ p.fullname }}" type="hidden" name="submission" value="{{ p.base36id }}">
@@ -521,10 +522,6 @@
         <a id="save-reply-to-{{ p.fullname }}" href="javascript:void(0)" form="reply-to-{{ p.fullname }}" class="btn btn-primary text-whitebtn ml-auto" onclick="post_comment('{{ p.fullname }}')">Comment</a>
       </div>
     </form>
-    <div class="comment-format2 custom-control custom-checkbox">
-        <input type="checkbox" class="custom-control-input" id="nsfwCheck" name="over_18">
-        <label class="custom-control-label" for="nsfwCheck">NSFW</label>
-    </div>
   </div>
   {% endif %}
 

@@ -358,9 +358,6 @@ def thumbs(new_post):
 		print(f'Unknown content type {x.headers.get("Content-Type")}')
 		return False, f'Unknown content type {x.headers.get("Content-Type")} for submitted content'
 
-
-	print(f"Have image, uploading")
-
 	name = f"posts/{post.base36id}/thumb.png"
 	tempname = name.replace("/", "_")
 

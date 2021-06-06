@@ -141,7 +141,7 @@ def edit_post(pid, v):
 		abort(403)
 
 	body = request.form.get("body", "")
-	body=preprocess(body)
+	#body=preprocess(body)
 	with CustomRenderer() as renderer:
 		body_md = renderer.render(mistletoe.Document(body))
 	body_html = sanitize(body_md, linkgen=True)
@@ -691,7 +691,7 @@ def submit_post(v):
 
 	# render text
 
-	body=preprocess(body)
+	#body=preprocess(body)
 
 	with CustomRenderer() as renderer:
 		body_md = renderer.render(mistletoe.Document(body))

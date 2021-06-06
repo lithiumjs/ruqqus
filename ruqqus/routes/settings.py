@@ -67,7 +67,7 @@ def settings_profile_post(v):
 	if request.values.get("bio") is not None:
 		bio = request.values.get("bio")[0:256]
 
-		bio=preprocess(bio)
+		#bio=preprocess(bio)
 
 		if bio == v.bio:
 			return render_template("settings_profile.html",
@@ -135,7 +135,7 @@ def settings_profile_post(v):
 
 	defaultsorting = request.values.get("defaultsorting")
 	if defaultsorting:
-		if defaultsorting in ["hot", "new", "old", "activity", "disputed", "top", "bottom"]:
+		if defaultsorting in ["hot", "new", "old", "comments", "disputed", "top", "bottom"]:
 			v.defaultsorting = defaultsorting
 			updated = True
 		else:
@@ -721,7 +721,7 @@ def settings_title_change(v):
 						   error="You didn't change anything")
 
 	new_name=new_name.replace('_','\_')
-	new_name=preprocess(new_name)
+	#new_name=preprocess(new_name)
 	new_name = sanitize(new_name, linkgen=True)
 
 	v=g.db.query(User).with_for_update().options(lazyload('*')).filter_by(id=v.id).first()

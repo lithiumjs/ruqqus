@@ -558,7 +558,7 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
 
 	@property
 	def is_image(self):
-		return self.url.endswith('jpg') or self.url.endswith('png') or self.url.endswith('.gif') or self.url.endswith('jpeg') or self.url.endswith('?maxwidth=9999')
+		return self.url.endswith('jpg') or self.url.endswith('png') or self.url.endswith('.gif') or self.url.endswith('jpeg') or self.url.endswith('?maxwidth=9999') or self.url.endswith('?maxwidth=8888')
 
 	@property
 	def self_download_json(self):

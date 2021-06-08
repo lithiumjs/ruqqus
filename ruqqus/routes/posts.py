@@ -349,7 +349,6 @@ def thumbs(new_post):
 
 	elif x.headers.get("Content-Type","").startswith("image/"):
 		#image is originally loaded fetch_url
-		print("post url is direct image")
 		image_req=x
 		image = PILimage.open(BytesIO(x.content))
 

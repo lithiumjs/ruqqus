@@ -885,13 +885,22 @@ def submit_post(v):
 	g.db.commit()
 
     # spin off thumbnail generation and csam detection as  new threads
-	if (new_post.url or request.files.get('file')) and (v.is_activated or request.headers.get('cf-ipcountry')!="T1"):
-		thumbs(new_post)
+	if (new_post.url or request.files.get('file')) and (v.is_activated or request.headers.get('cf-ipcountry')!="T1"): thumbs(new_post)
 
 	# expire the relevant caches: front page new, board new
 	cache.delete_memoized(frontlist)
 	g.db.commit()
 	cache.delete_memoized(Board.idlist, board, sort="new")
+
+
+	# queue up notifications for username mentions
+	soup = BeautifulSoup(body_html, features="html.parser")
+	for mention in soup.find_all("a", href=re.compile("^/@(\w+)"), limit=3):
+		username = mention["href"].split("@")[1]
+		user = g.db.query(User).filter_by(username=username).first()
+		if user and not v.any_block_exists(user) and user.id != v.id: send_notification(user, f"@{v.username} has mentioned you: https://rdrama.net{new_post.permalink}")
+
+
 
 	try:
 		for follow in v.followers:

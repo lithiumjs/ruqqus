@@ -101,13 +101,15 @@ def upload_file(name, file, resize=None):
 		i = crop_and_resize(i, resize)
 		img = io.BytesIO()
 		i.save(img, format='PNG')
-		try: resp = requests.post('https://api.imgur.com/3/upload.json', headers = {"Authorization": f"Client-ID {imgurkey}"}, data = {'image': base64.b64encode(img.getvalue())}).json()['data']
+		req = requests.post('https://api.imgur.com/3/upload.json', headers = {"Authorization": f"Client-ID {imgurkey}"}, data = {'image': base64.b64encode(img.getvalue())})
+		try: resp = req.json()['data']
 		except Exception as e:
 			print(e)
 			return
 		remove(tempname)
 	else:
-		try: resp = requests.post('https://api.imgur.com/3/upload.json', headers = {"Authorization": f"Client-ID {imgurkey}"}, data = {'image': base64.b64encode(file.read())}).json()['data']
+		req = requests.post('https://api.imgur.com/3/upload.json', headers = {"Authorization": f"Client-ID {imgurkey}"}, data = {'image': base64.b64encode(file.read())})
+		try: resp = req.json()['data']
 		except Exception as e:
 			print(e)
 			return
@@ -139,7 +141,8 @@ def upload_from_file(name, filename, resize=None):
 	img = io.BytesIO()
 	i.save(img, format='PNG')
 	try: 
-		resp = requests.post('https://api.imgur.com/3/upload.json', headers = {"Authorization": f"Client-ID {imgurkey}"}, data = {'image': base64.b64encode(img.getvalue())}).json()['data']
+		req = requests.post('https://api.imgur.com/3/upload.json', headers = {"Authorization": f"Client-ID {imgurkey}"}, data = {'image': base64.b64encode(img.getvalue())})
+		resp = req.json()['data']
 		remove(filename)
 		url = resp['link'].replace(".png", "_d.png").replace(".jpg", "_d.jpg").replace(".jpeg", "_d.jpeg") + "?maxwidth=9999"
 	except Exception as e:

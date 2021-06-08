@@ -128,7 +128,6 @@
 				{% if c.edited_utc %}
 				<span class="time-edited"><span>&#183;</span> <span class="font-italic">Edited {{c.edited_string}}</span></span>
 				{% endif %}
-				{% if c.award_count %}<span><img src="/assets/images/ruqqus-coin.png" style="width: 15px; margin-bottom: 3px;"/><span class="pl-1 text-warning font-weight-bold">{{c.award_count}}</span></span>{% endif %}
 
 				<span class="comment-collapse d-md-none" onclick="collapse_comment('{{c.base36id}}')"></span>
 

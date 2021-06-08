@@ -220,6 +220,6 @@ def sanitize(text, bio=False, linkgen=False):
 	end = '&lt;/s&gt;' 
 	if start in sanitized and end in sanitized and start in sanitized.split(end)[0] and end in sanitized.split(start)[1]: sanitized = sanitized.replace(start, '<span class="spoiler">').replace(end, '</span>')
 	
-	for i in re.finditer(':(.{3,5}?):', sanitized): sanitized = sanitized.replace(f':{i.group(1)}:', f'<img src="/assets/images/emojis/{i.group(1)}.gif" <span> ')
+	for i in re.finditer(':(.{3,10}?):', sanitized): sanitized = sanitized.replace(f':{i.group(1)}:', f'<img src="/assets/images/emojis/{i.group(1)}.gif" <span> ')
 
 	return sanitized

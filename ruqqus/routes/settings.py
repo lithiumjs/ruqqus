@@ -712,7 +712,7 @@ def settings_name_change(v):
 @validate_formkey
 def settings_title_change(v):
 
-	new_name=request.form.get("title").lstrip().rstrip()
+	new_name=request.form.get("title")
 
 	#make sure name is different
 	if new_name==v.customtitle:
@@ -720,9 +720,7 @@ def settings_title_change(v):
 						   v=v,
 						   error="You didn't change anything")
 
-	new_name=new_name.replace('_','\_')
-	#new_name=preprocess(new_name)
-	new_name = sanitize(new_name, linkgen=True)
+	for i in re.finditer(':(.{3,10}?):', sanitized): new_name = new_name.replace(f':{i.group(1)}:', f'<img src="/assets/images/emojis/{i.group(1)}.gif" <span> ')
 
 	v=g.db.query(User).with_for_update().options(lazyload('*')).filter_by(id=v.id).first()
 	v.customtitle=new_name

@@ -230,6 +230,11 @@
 	<input id="user-ban-submit" type="submit" class="btn btn-warning" value="Ban user" disabled>
 </form>
 {% endif %}
+<form action="/admin/nuke_user" method="post">
+	<input type="hidden" name="formkey", value="{{v.formkey}}">
+	<input type="hidden" name="user" value="{{u.username}}">
+	<input type="submit" class="btn btn-danger" value="Nuke User's Content">
+</form>
 {% endif %}
 {% if u.is_suspended %}
 <p>Banned by: <a href="{{u.banned_by.permalink}}">@{{u.banned_by.username}}</a></p>

@@ -39,6 +39,7 @@ def discord_wrap(f):
 
 @discord_wrap
 def add_role(user, role_name):
+	if user.is_banned: return
 	role_id = ROLES[role_name]
 	url = f"{DISCORD_ENDPOINT}/guilds/{SERVER_ID}/members/{user.discord_id}/roles/{role_id}"
 	headers = {"Authorization": f"Bot {BOT_TOKEN}"}

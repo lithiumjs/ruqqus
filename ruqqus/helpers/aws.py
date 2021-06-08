@@ -102,13 +102,19 @@ def upload_file(name, file, resize=None):
 		img = io.BytesIO()
 		i.save(img, format='PNG')
 		try: resp = requests.post('https://api.imgur.com/3/upload.json', headers = {"Authorization": f"Client-ID {imgurkey}"}, data = {'image': base64.b64encode(img.getvalue())}).json()['data']
-		except: return
+		except Exception as e:
+			print(e)
+			return
 		remove(tempname)
 	else:
 		try: resp = requests.post('https://api.imgur.com/3/upload.json', headers = {"Authorization": f"Client-ID {imgurkey}"}, data = {'image': base64.b64encode(file.read())}).json()['data']
-		except: return
+		except Exception as e:
+			print(e)
+			return
 	try: url = resp['link'].replace(".png", "_d.png").replace(".jpg", "_d.jpg").replace(".jpeg", "_d.jpeg") + "?maxwidth=9999"
-	except: return
+	except Exception as e:
+		print(e)
+		return
 	
 	new_image = Image(
 		text=url,
@@ -136,7 +142,9 @@ def upload_from_file(name, filename, resize=None):
 		resp = requests.post('https://api.imgur.com/3/upload.json', headers = {"Authorization": f"Client-ID {imgurkey}"}, data = {'image': base64.b64encode(img.getvalue())}).json()['data']
 		remove(filename)
 		url = resp['link'].replace(".png", "_d.png").replace(".jpg", "_d.jpg").replace(".jpeg", "_d.jpeg") + "?maxwidth=9999"
-	except: return
+	except Exception as e:
+		print(e)
+		return
 	
 	new_image = Image(
 		text=url,

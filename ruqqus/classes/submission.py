@@ -312,7 +312,7 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
 
 		if self.has_thumb:
 			if self.thumburl: return self.thumburl
-			else: return f"https://s3.eu-central-1.amazonaws.com/i.ruqqus.ga/posts/{self.base36id}/thumb.png"
+			else: return None
 		elif self.is_image:
 			return self.url
 		else:
@@ -558,7 +558,8 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
 
 	@property
 	def is_image(self):
-		return self.url.endswith('jpg') or self.url.endswith('png') or self.url.endswith('.gif') or self.url.endswith('jpeg') or self.url.endswith('?maxwidth=9999') or self.url.endswith('?maxwidth=8888')
+		if self.url: return self.url.endswith('jpg') or self.url.endswith('png') or self.url.endswith('.gif') or self.url.endswith('jpeg') or self.url.endswith('?maxwidth=9999') or self.url.endswith('?maxwidth=8888')
+		else: return False
 
 	@property
 	def self_download_json(self):

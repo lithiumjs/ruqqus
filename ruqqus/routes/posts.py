@@ -366,9 +366,8 @@ def thumbs(new_post):
 			file.write(chunk)
 
 	post.thumburl = aws.upload_from_file(name, tempname, resize=(375, 227))
-	post.has_thumb = True
+	if post.thumburl: post.has_thumb = True
 	g.db.add(post)
-
 	g.db.commit()
 
 	try: remove(tempname)

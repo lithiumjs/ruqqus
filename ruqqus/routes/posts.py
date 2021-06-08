@@ -892,14 +892,16 @@ def submit_post(v):
 	cache.delete_memoized(Board.idlist, board, sort="new")
 
 
-	# queue up notifications for username mentions
+	notify_users = set()
+	
 	soup = BeautifulSoup(body_html, features="html.parser")
 	for mention in soup.find_all("a", href=re.compile("^/@(\w+)"), limit=3):
 		username = mention["href"].split("@")[1]
 		user = g.db.query(User).filter_by(username=username).first()
-		if user and not v.any_block_exists(user) and user.id != v.id: send_notification(user, f"@{v.username} has mentioned you: https://rdrama.net{new_post.permalink}")
-
-
+		if user and not v.any_block_exists(user) and user.id != v.id: notify_users.add(user.id)
+		
+	for x in notify_users: send_notification(user, f"@{v.username} has mentioned you: https://rdrama.net{new_post.permalink}")
+		
 
 	try:
 		for follow in v.followers:

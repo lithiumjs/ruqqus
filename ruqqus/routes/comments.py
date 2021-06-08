@@ -712,18 +712,6 @@ def mod_toggle_comment_pin(bid, cid, board, v):
 
 	if comment.post.board_id != board.id:
 		abort(400)
-		
-	#remove previous pin (if exists)
-	if not comment.is_pinned:
-		previous_sticky = g.db.query(Comment).filter(
-			and_(
-				Comment.parent_submission == comment.post.id, 
-				Comment.is_pinned == True
-				)
-			).first()
-		if previous_sticky:
-			previous_sticky.is_pinned = False
-			g.db.add(previous_sticky)
 
 	comment.is_pinned = not comment.is_pinned
 

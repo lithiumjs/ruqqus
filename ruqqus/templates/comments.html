@@ -1,8 +1,8 @@
 {% macro single_comment(c, level=1) %}
 <!---beginning of comment {{c.id}}--->
 
-{% set ups=c.upvotes_fuzzed %}
-{% set downs=c.downvotes_fuzzed %}
+{% set ups=c.upvotes %}
+{% set downs=c.downvotes %}
 {% set score=ups-downs %}
 
 <!--conditions under which a comment might be hidden-->

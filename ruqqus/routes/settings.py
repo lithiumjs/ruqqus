@@ -720,7 +720,7 @@ def settings_title_change(v):
 						   v=v,
 						   error="You didn't change anything")
 
-	for i in re.finditer(':(.{3,10}?):', sanitized): new_name = new_name.replace(f':{i.group(1)}:', f'<img src="/assets/images/emojis/{i.group(1)}.gif" <span> ')
+	for i in re.finditer(':(.{3,10}?):', new_name): new_name = new_name.replace(f':{i.group(1)}:', f'<img src="/assets/images/emojis/{i.group(1)}.gif" <span> ')
 
 	v=g.db.query(User).with_for_update().options(lazyload('*')).filter_by(id=v.id).first()
 	v.customtitle=new_name

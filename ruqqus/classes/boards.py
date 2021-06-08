@@ -412,7 +412,7 @@ class Board(Base, Stndrd, Age_times):
 			if self.over_18:
 				return "/assets/images/nsfw_guild_icon.png"
 			else:
-				return "/assets/images/guilds/default-guild-icon.png"
+				return "/assets/images/favicon.png"
 
 	@property
 	def css_url(self):

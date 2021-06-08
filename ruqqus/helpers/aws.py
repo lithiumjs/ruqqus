@@ -105,6 +105,8 @@ def upload_file(name, file, resize=None):
 		try: resp = req.json()['data']
 		except Exception as e:
 			print(e)
+			print(req)
+			print(req.text)
 			return
 		remove(tempname)
 	else:
@@ -112,10 +114,14 @@ def upload_file(name, file, resize=None):
 		try: resp = req.json()['data']
 		except Exception as e:
 			print(e)
+			print(req)
+			print(req.text)
 			return
 	try: url = resp['link'].replace(".png", "_d.png").replace(".jpg", "_d.jpg").replace(".jpeg", "_d.jpeg") + "?maxwidth=9999"
 	except Exception as e:
 		print(e)
+		print(req)
+		print(req.text)
 		return
 	
 	new_image = Image(
@@ -147,6 +153,8 @@ def upload_from_file(name, filename, resize=None):
 		url = resp['link'].replace(".png", "_d.png").replace(".jpg", "_d.jpg").replace(".jpeg", "_d.jpeg") + "?maxwidth=9999"
 	except Exception as e:
 		print(e)
+		print(req)
+		print(req.text)
 		return
 	
 	new_image = Image(

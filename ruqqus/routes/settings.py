@@ -336,6 +336,11 @@ def settings_log_out_others(v):
 @validate_formkey
 def settings_images_profile(v):
 	if v.can_upload_avatar:
+
+		if request.content_length > 16 * 1024 * 1024:
+			g.db.rollback()
+			abort(413)
+
 		v.set_profile(request.files["profile"])
 
 		# anti csam
@@ -359,6 +364,10 @@ def settings_images_profile(v):
 @validate_formkey
 def settings_images_banner(v):
 	if v.can_upload_banner:
+		if request.content_length > 16 * 1024 * 1024:
+			g.db.rollback()
+			abort(413)
+
 		v.set_banner(request.files["banner"])
 
 		# anti csam

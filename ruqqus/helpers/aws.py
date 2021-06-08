@@ -101,9 +101,12 @@ def upload_file(name, file, resize=None):
 		i = crop_and_resize(i, resize)
 		img = io.BytesIO()
 		i.save(img, format='PNG')
-		resp = requests.post('https://api.imgur.com/3/upload.json', headers = {"Authorization": f"Client-ID {imgurkey}"}, data = {'image': base64.b64encode(img.getvalue())}).json()['data']
+		try: resp = requests.post('https://api.imgur.com/3/upload.json', headers = {"Authorization": f"Client-ID {imgurkey}"}, data = {'image': base64.b64encode(img.getvalue())}).json()['data']
+		except: return
 		remove(tempname)
-	else: resp = requests.post('https://api.imgur.com/3/upload.json', headers = {"Authorization": f"Client-ID {imgurkey}"}, data = {'image': base64.b64encode(file.read())}).json()['data']
+	else:
+		try: resp = requests.post('https://api.imgur.com/3/upload.json', headers = {"Authorization": f"Client-ID {imgurkey}"}, data = {'image': base64.b64encode(file.read())}).json()['data']
+		except: return
 	try: url = resp['link'].replace(".png", "_d.png").replace(".jpg", "_d.jpg").replace(".jpeg", "_d.jpeg") + "?maxwidth=9999"
 	except: return
 	
@@ -129,9 +132,10 @@ def upload_from_file(name, filename, resize=None):
 	i = crop_and_resize(i, resize)
 	img = io.BytesIO()
 	i.save(img, format='PNG')
-	resp = requests.post('https://api.imgur.com/3/upload.json', headers = {"Authorization": f"Client-ID {imgurkey}"}, data = {'image': base64.b64encode(img.getvalue())}).json()['data']
-	remove(filename)
-	try: url = resp['link'].replace(".png", "_d.png").replace(".jpg", "_d.jpg").replace(".jpeg", "_d.jpeg") + "?maxwidth=9999"
+	try: 
+		resp = requests.post('https://api.imgur.com/3/upload.json', headers = {"Authorization": f"Client-ID {imgurkey}"}, data = {'image': base64.b64encode(img.getvalue())}).json()['data']
+		remove(filename)
+		url = resp['link'].replace(".png", "_d.png").replace(".jpg", "_d.jpg").replace(".jpeg", "_d.jpeg") + "?maxwidth=9999"
 	except: return
 	
 	new_image = Image(

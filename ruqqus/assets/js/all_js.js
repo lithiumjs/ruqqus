@@ -220,38 +220,6 @@ $('#new_email').on('input', function () {
 
   });
 
-/*   // When GIF keyboard is hidden, hide all GIFs
-
-  $('#emojiModal').on('hidden.bs.modal', function (e) {
-
-	document.getElementById('emojiSearch').value = null;
-
-	// no GIFs div
-
-	var noEMOJIs = document.getElementById('no-emojis-found');
-
-	// container div
-
-	var container = document.getElementById('EMOJIS');
-
-	// UI buttons
-
-	var backBtn = document.getElementById('emojis-back-btn');
-
-	var cancelBtn = document.getElementById('emojis-cancel-btn');
-
-	// Hide UI buttons
-
-	backBtn.innerHTML = null;
-
-	cancelBtn.innerHTML = null;
-
-	// Remove inner HTML from no gifs div
-
-	noEMOJIs.innerHTML = null;
-
-  });
- */
 // comment collapse
 
 // Toggle comment collapse

@@ -4787,7 +4787,7 @@ input[type="button"].btn-block {
       width: 100%; } }
 	  
 .emoji-columns .emojicard {
-  margin-bottom: 0.75rem; }
+  margin-bottom: 3rem; }
 @media (min-width: 576px) {
   .emoji-columns {
     column-count: 8;

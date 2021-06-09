@@ -246,7 +246,7 @@ $('#new_email').on('input', function () {
 
     // Remove inner HTML from container var
 
-    container.innerHTML = '<div class="card" onclick="getEmoji('lol');" style="overflow: hidden;"><img class="img-fluid" src="/assets/images/emojis/lol.emoji"></div><div class="card" onclick="getEmoji('makeout');" style="overflow: hidden;"><img class="img-fluid" src="/assets/images/emojis/makeout.emoji"></div><div class="card" onclick="getEmoji('marseysick');" style="overflow: hidden;"><img class="img-fluid" src="/assets/images/emojis/marseysick.emoji"></div><div class="card" onclick="getEmoji('tayaaa');" style="overflow: hidden;"><img class="img-fluid" src="/assets/images/emojis/tayaaa.emoji"></div>'
+    container.innerHTML = '<div class="card" onclick="getEmoji(\'lol\');" style="overflow: hidden;"><img class="img-fluid" src="/assets/images/emojis/lol.gif"></div><div class="card" onclick="getEmoji(\'makeout\');" style="overflow: hidden;"><img class="img-fluid" src="/assets/images/emojis/makeout.gif"></div><div class="card" onclick="getEmoji(\'marseysick\');" style="overflow: hidden;"><img class="img-fluid" src="/assets/images/emojis/marseysick.gif"></div><div class="card" onclick="getEmoji(\'tayaaa\');" style="overflow: hidden;"><img class="img-fluid" src="/assets/images/emojis/tayaaa.gif"></div>'
 
     // Hide UI buttons
 

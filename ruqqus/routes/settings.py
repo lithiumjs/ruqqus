@@ -715,13 +715,12 @@ def settings_name_change(v):
 					   v=v,
 					   msg=f"Username changed successfully.")
 
-
 @app.route("/settings/title_change", methods=["POST"])
 @auth_required
 @validate_formkey
 def settings_title_change(v):
 
-	new_name=request.form.get("title")
+	new_name=request.form.get("title").lstrip().rstrip()
 
 	#verify acceptability
 	if not re.match(valid_title_regex, new_name):
@@ -735,7 +734,8 @@ def settings_title_change(v):
 						   v=v,
 						   error="You didn't change anything")
 
-	for i in re.finditer(':(.{3,10}?):', new_name): new_name = new_name.replace(f':{i.group(1)}:', f'<img src="/assets/images/emojis/{i.group(1)}.gif" <span> ')
+	new_name=new_name.replace('_','\_')
+	new_name = sanitize(new_name, linkgen=True)
 
 	v=g.db.query(User).with_for_update().options(lazyload('*')).filter_by(id=v.id).first()
 	v.customtitle=new_name
@@ -746,8 +746,6 @@ def settings_title_change(v):
 	return render_template("settings_profile.html",
 					   v=v,
 					   msg=f"Title changed successfully.")
-
-
 
 @app.route("/settings/badges", methods=["POST"])
 @auth_required

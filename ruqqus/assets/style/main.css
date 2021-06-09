@@ -4789,6 +4789,8 @@ input[type="button"].btn-block {
 .emoji-columns .emojicard {
   margin-bottom: 2rem; }
   .emoji-columns {
+	display: grid;
+    grid-template-columns: auto auto auto auto auto auto auto auto;
     column-count: 8;
     column-gap: 1.25rem;
     orphans: 1;

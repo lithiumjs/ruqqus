@@ -165,7 +165,7 @@ $('#new_email').on('input', function () {
   
 	// Insert EMOJI markdown into comment box function
 
-  function getEmoji(searchTerm) {
+  function getEmoji(searchTerm, commentFormID) {
 
 	var emoji = '<img src="/assets/images/emojis/'+searchTerm+'.gif" <span> '
 		

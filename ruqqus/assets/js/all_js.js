@@ -168,6 +168,8 @@ $('#new_email').on('input', function () {
 
     var emoji = '<img src="/assets/images/emojis/'+searchTerm+'.gif" <span> '
 	
+	log(commentFormID)
+	
     var commentBox = document.getElementById(commentFormID);
 
     var old  = commentBox.value;

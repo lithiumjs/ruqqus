@@ -227,10 +227,6 @@ $('#new_email').on('input', function () {
 
 	document.getElementById('emojiSearch').value = null;
 
-	// load more gifs div
-
-	var loadEMOJIs = document.getElementById('emojis-load-more');
-
 	// no GIFs div
 
 	var noEMOJIs = document.getElementById('no-emojis-found');
@@ -258,10 +254,6 @@ $('#new_email').on('input', function () {
 	// Remove inner HTML from no gifs div
 
 	noEMOJIs.innerHTML = null;
-
-	// Hide no more gifs div
-
-	loadEMOJIs.innerHTML = null;
 
   });
 

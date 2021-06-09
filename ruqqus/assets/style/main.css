@@ -4786,16 +4786,15 @@ input[type="button"].btn-block {
       display: inline-block;
       width: 100%; } }
 	  
-.emoji-columns .card {
-  margin-bottom: 0.75rem; }
+.emoji-columns .emojicard {
+  margin-bottom: 1rem; }
 @media (min-width: 576px) {
   .emoji-columns {
-    column-count: 10;
+    column-count: 8;
     column-gap: 1.25rem;
     orphans: 1;
     widows: 1; }
-    .emoji-columns .card {
-      display: inline-block;
+    .emoji-columns .emojicard {
       width: 100%; } }
 
 .accordion > .card {

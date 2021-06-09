@@ -673,7 +673,7 @@ class User(Base, Stndrd, Age_times):
 		self.del_profile()
 		self.profile_nonce += 1
 
-		self.profileurl = aws.upload_file(name=f"uid/{self.base36id}/profile-{self.profile_nonce}.png", file=file, resize=(100, 100))
+		self.profileurl = aws.upload_file(name=f"uid/{self.base36id}/profile-{self.profile_nonce}.png", file=file)
 		self.has_profile = True
 		self.profile_upload_ip=request.remote_addr
 		self.profile_set_utc=int(time.time())

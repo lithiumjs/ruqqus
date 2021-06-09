@@ -161,6 +161,20 @@ $('#new_email').on('input', function () {
     commentBox.value = old + gif;
 
   }
+  
+    // Insert EMOJI markdown into comment box function
+
+  function getEmoji(searchTerm) {
+
+    var emoji = '<img src="/assets/images/emojis/'+searchTerm+'.gif" <span> '
+	
+    var commentBox = document.getElementById(form);
+
+    var old  = commentBox.value;
+
+    commentBox.value = old + emoji;
+
+  }
 
   // When GIF keyboard is hidden, hide all GIFs
 
@@ -203,6 +217,50 @@ $('#new_email').on('input', function () {
     // Hide no more gifs div
 
     loadGIFs.innerHTML = null;
+
+  });
+
+  // When GIF keyboard is hidden, hide all GIFs
+
+  $('#emojiModal').on('hidden.bs.modal', function (e) {
+
+    document.getElementById('emojiSearch').value = null;
+
+    // load more gifs div
+
+    var loadEMOJIs = document.getElementById('emojis-load-more');
+
+    // no GIFs div
+
+    var noEMOJIs = document.getElementById('no-emojis-found');
+
+    // container div
+
+    var container = document.getElementById('EMOJIS');
+
+    // UI buttons
+
+    var backBtn = document.getElementById('emojis-back-btn');
+
+    var cancelBtn = document.getElementById('emojis-cancel-btn');
+
+    // Remove inner HTML from container var
+
+    container.innerHTML = '<div class="card" onclick="getEmoji('lol');" style="overflow: hidden;"><img class="img-fluid" src="/assets/images/emojis/lol.emoji"></div><div class="card" onclick="getEmoji('makeout');" style="overflow: hidden;"><img class="img-fluid" src="/assets/images/emojis/makeout.emoji"></div><div class="card" onclick="getEmoji('marseysick');" style="overflow: hidden;"><img class="img-fluid" src="/assets/images/emojis/marseysick.emoji"></div><div class="card" onclick="getEmoji('tayaaa');" style="overflow: hidden;"><img class="img-fluid" src="/assets/images/emojis/tayaaa.emoji"></div>'
+
+    // Hide UI buttons
+
+    backBtn.innerHTML = null;
+
+    cancelBtn.innerHTML = null;
+
+    // Remove inner HTML from no gifs div
+
+    noEMOJIs.innerHTML = null;
+
+    // Hide no more gifs div
+
+    loadEMOJIs.innerHTML = null;
 
   });
 

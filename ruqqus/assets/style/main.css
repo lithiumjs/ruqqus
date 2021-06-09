@@ -4787,7 +4787,7 @@ input[type="button"].btn-block {
       width: 100%; } }
 	  
 .emoji-columns .emojicard {
-  margin-bottom: 1rem; }
+  margin-bottom: 0.75rem; }
 @media (min-width: 576px) {
   .emoji-columns {
     column-count: 8;
@@ -4795,6 +4795,7 @@ input[type="button"].btn-block {
     orphans: 1;
     widows: 1; }
     .emoji-columns .emojicard {
+      display: inline-block;
       width: 100%; } }
 
 .accordion > .card {

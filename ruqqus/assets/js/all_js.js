@@ -65,7 +65,7 @@ $('#new_email').on('input', function () {
 		
 		var container = document.getElementById('EMOJIS');
 			
-		container.innerHTML = '<div class="emojicard" href="javascript:void(0)" onclick="getEmoji('{{emoji}}')" style="overflow: hidden;"><img width=40 src="/assets/images/emojis/platydown.gif"></div>'
+		container.innerHTML = '<div class="emojicard" href="javascript:void(0)" onclick="getEmoji(\'platydown\')" style="overflow: hidden;"><img width=40 src="/assets/images/emojis/platydown.gif"></div>'
 	}
 
 	function getGif(searchTerm) {

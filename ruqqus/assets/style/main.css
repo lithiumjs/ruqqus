@@ -4786,17 +4786,15 @@ input[type="button"].btn-block {
       display: inline-block;
       width: 100%; } }
 	  
+.emoji-columns {
+	column-count: 8;
+	column-gap: 1.25rem;
+	orphans: 1;
+	widows: 1; }
 .emoji-columns .emojicard {
-  margin-bottom: 2rem; }
-@media (min-width: 576px) {
-  .emoji-columns {
-    column-count: 8;
-    column-gap: 1.25rem;
-    orphans: 1;
-    widows: 1; }
-    .emoji-columns .emojicard {
-      display: inline-block;
-      width: 100%; } }
+  margin-bottom: 2rem;
+  display: inline-block;
+  width: 100%; } }
 
 .accordion > .card {
   overflow: hidden; }

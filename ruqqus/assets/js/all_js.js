@@ -43,7 +43,6 @@ $('#new_email').on('input', function () {
   var commentFormID;
 
   function commentForm(form) {
-	console.log(form)
 	commentFormID = form;
   };
 

@@ -222,6 +222,8 @@ def sanitize(text, bio=False, linkgen=False):
 	if start in sanitized and end in sanitized and start in sanitized.split(end)[0] and end in sanitized.split(start)[1]: sanitized = sanitized.replace(start, '<span class="spoiler">').replace(end, '</span>')
 	
 	for i in re.finditer(':(.{1,30}?):', sanitized):
-		if os.path.isfile(f'/d/ruqqus/assets/images/emojis/{i.group(1)}.gif'): sanitized = sanitized.replace(f':{i.group(1)}:', f'<img height=20 width=20 src="/assets/images/emojis/{i.group(1)}.gif" <span> ')
+		if os.path.isfile(f'/d/ruqqus/assets/images/emojis/{i.group(1)}.gif'):
+			if 'platy' or 'marsey' in i.group(1): sanitized = sanitized.replace(f':{i.group(1)}:', f'<img height=20 width=20 src="/assets/images/emojis/{i.group(1)}.gif" <span> ')
+			else: sanitized = sanitized.replace(f':{i.group(1)}:', f'<img src="/assets/images/emojis/{i.group(1)}.gif" <span> ')
 
 	return sanitized

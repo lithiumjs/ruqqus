@@ -13659,3 +13659,7 @@ div.deleted.banned {
     .emoji-columns .emojicard {
       display: inline-block;
       width: 100%; } }
+	  
+.sortingbarmargin {
+	margin-top: 10px !important;
+}

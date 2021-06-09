@@ -14046,6 +14046,6 @@ div.deleted.banned {
   color: black; 
 }
 
-sortingbarmargin {
-	margin-top: 10px;
+.sortingbarmargin {
+	margin-top: 10px !important;
 }

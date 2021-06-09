@@ -14044,3 +14044,8 @@ div.deleted.banned {
 
 .spoiler:hover { 
   color: black; 
+}
+
+sortingbarmargin {
+	margin-top: 10px;
+}

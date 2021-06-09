@@ -96,6 +96,8 @@
 	<span class="mr-2 d-block d-md-none"><a href="{{c.author.permalink}}">{% if c.level > 1 %}&nbsp;&nbsp;&nbsp;&nbsp;{% endif %}</a></span>
 
 	<span class="comment-collapse" onclick="collapse_comment('{{c.base36id}}')"></span>
+	
+	&nbsp;&nbsp;
 
 	<div class="comment-body">
 
@@ -128,8 +130,6 @@
 				{% if c.edited_utc %}
 				<span class="time-edited"><span>&#183;</span> <span class="font-italic">Edited {{c.edited_string}}</span></span>
 				{% endif %}
-
-				<span class="comment-collapse d-md-none" onclick="collapse_comment('{{c.base36id}}')"></span>
 
 			</div>
 

@@ -167,7 +167,7 @@ $('#new_email').on('input', function () {
 
   function getEmoji(searchTerm) {
 
-	var emoji = '<img src="/assets/images/emojis/'+searchTerm+'.gif" <span> '
+	var emoji = ':'+searchTerm+':'
 		
 	var commentBox = document.getElementById(commentFormID);
 
@@ -247,7 +247,7 @@ $('#new_email').on('input', function () {
 
 	// Remove inner HTML from container var
 
-	container.innerHTML = '<div class="card" onclick="getEmoji(\'lol\');" style="overflow: hidden;"><img class="img-fluid" src="/assets/images/emojis/lol.gif"></div><div class="card" onclick="getEmoji(\'makeout\');" style="overflow: hidden;"><img class="img-fluid" src="/assets/images/emojis/makeout.gif"></div><div class="card" onclick="getEmoji(\'marseysick\');" style="overflow: hidden;"><img class="img-fluid" src="/assets/images/emojis/marseysick.gif"></div><div class="card" onclick="getEmoji(\'tayaaa\');" style="overflow: hidden;"><img class="img-fluid" src="/assets/images/emojis/tayaaa.gif"></div>'
+	container.innerHTML = '<div href="javascript:void(0)" onclick="commentForm(\'reply-form-body-{{p.fullname}}\');getEmoji(\'lol\')" style="overflow: hidden;"><img class="img-fluid" src="/assets/images/emojis/lol.gif"></div><div href="javascript:void(0)" onclick="commentForm(\'reply-form-body-{{p.fullname}}\');getEmoji(\'makeout\')" style="overflow: hidden;"><img class="img-fluid" src="/assets/images/emojis/makeout.gif"></div><div href="javascript:void(0)" onclick="commentForm(\'reply-form-body-{{p.fullname}}\');getEmoji(\'marseysick\')" style="overflow: hidden;"><img class="img-fluid" src="/assets/images/emojis/marseysick.gif"></div><div href="javascript:void(0)" onclick="commentForm(\'reply-form-body-{{p.fullname}}\');getEmoji(\'tayaaa\')" style="overflow: hidden;"><img class="img-fluid" src="/assets/images/emojis/tayaaa.gif"></div>'
 
 	// Hide UI buttons
 

@@ -46,6 +46,23 @@ $('#new_email').on('input', function () {
     commentFormID = form;
   };
 
+
+	// Insert EMOJI markdown into comment box function
+
+  function getEmoji(searchTerm) {
+
+	var emoji = ' :'+searchTerm+': '
+		
+	var commentBox = document.getElementById(commentFormID);
+
+	var old  = commentBox.value;
+
+	commentBox.value = old + emoji;
+
+  }
+
+
+
   function getGif(searchTerm) {
 
     if (searchTerm !== undefined) {

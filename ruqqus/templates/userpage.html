@@ -214,7 +214,7 @@
 {% if u.is_deleted %}
 <p>User account is deleted</p>
 {% endif %}
-<p>user id: {{u.base36id}}</p>
+<p>user id: {{u.id}}</p>
 {% if v.admin_level >=3 and v.admin_level > u.admin_level %}
 {% if u.is_suspended %}
 <form action="/api/unban_user/{{u.id}}" method="post">

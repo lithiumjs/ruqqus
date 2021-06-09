@@ -673,7 +673,7 @@ def edit_comment(cid, v):
 	c.body = body
 	c.body_html = body_html
 
-	c.edited_utc = int(time.time())
+	if int(time.time()) - c.created_utc > 60 * 3: c.edited_utc = int(time.time())
 
 	g.db.add(c)
 

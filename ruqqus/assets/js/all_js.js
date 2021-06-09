@@ -43,6 +43,7 @@ $('#new_email').on('input', function () {
   var commentFormID;
 
   function commentForm(form) {
+	console.log(form)
 	commentFormID = form;
   };
 
@@ -167,9 +168,7 @@ $('#new_email').on('input', function () {
   function getEmoji(searchTerm) {
 
 	var emoji = '<img src="/assets/images/emojis/'+searchTerm+'.gif" <span> '
-	
-	console.log(commentFormID)
-	
+		
 	var commentBox = document.getElementById(commentFormID);
 
 	var old  = commentBox.value;

@@ -397,22 +397,11 @@ class Board(Base, Stndrd, Age_times):
 
 	@property
 	def banner_url(self):
-
-		if self.has_banner:
-			return f"https://s3.eu-central-1.amazonaws.com/i.ruqqus.ga/board/{self.name.lower()}/banner-{self.banner_nonce}.png"
-		else:
-			return "/assets/images/guilds/default-guild-banner.png"
+		return "/assets/images/preview.png"
 
 	@property
 	def profile_url(self):
-
-		if self.has_profile:
-			return f"https://s3.eu-central-1.amazonaws.com/i.ruqqus.ga/board/{self.name.lower()}/profile-{self.profile_nonce}.png"
-		else:
-			if self.over_18:
-				return "/assets/images/nsfw_guild_icon.png"
-			else:
-				return "/assets/images/favicon.png"
+			return "/assets/images/favicon.png"
 
 	@property
 	def css_url(self):

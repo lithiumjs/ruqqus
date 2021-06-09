@@ -4786,15 +4786,15 @@ input[type="button"].btn-block {
       display: inline-block;
       width: 100%; } }
 	  
-.emoji-columns .card {
-  margin-bottom: 1rem; }
+.emoji-columns .emojicard {
+  margin-bottom: 0.75rem; }
 @media (min-width: 576px) {
   .emoji-columns {
     column-count: 8;
     column-gap: 1.25rem;
     orphans: 1;
     widows: 1; }
-    .emoji-columns .card {
+    .emoji-columns .emojicard {
       display: inline-block;
       width: 100%; } }
 

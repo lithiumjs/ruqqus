@@ -900,7 +900,7 @@ def submit_post(v):
 		user = g.db.query(User).filter_by(username=username).first()
 		if user and not v.any_block_exists(user) and user.id != v.id: notify_users.add(user.id)
 		
-	for x in notify_users: send_notification(user, f"@{v.username} has mentioned you: https://rdrama.net{new_post.permalink}")
+	for x in notify_users: send_notification(x, f"@{v.username} has mentioned you: https://rdrama.net{new_post.permalink}")
 		
 
 	try:

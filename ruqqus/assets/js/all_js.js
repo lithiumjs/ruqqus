@@ -166,7 +166,7 @@ $('#new_email').on('input', function () {
 
   function getEmoji(searchTerm) {
 
-	var emoji = ':'+searchTerm+':'
+	var emoji = ' :'+searchTerm+': '
 		
 	var commentBox = document.getElementById(commentFormID);
 

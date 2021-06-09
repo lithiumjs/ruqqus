@@ -100,7 +100,7 @@ def upload_file(name, file, resize=None):
 		i = IImage.open(tempname)
 		i = crop_and_resize(i, resize)
 		img = io.BytesIO()
-		i.save(img, format='PNG')
+		i.save(img, format='GIF')
 		img = img.getvalue()
 		remove(tempname)
 	else: img = file.read()

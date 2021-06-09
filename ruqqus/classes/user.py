@@ -686,12 +686,10 @@ class User(Base, Stndrd, Age_times):
 		self.banner_nonce += 1
 
 		self.bannerurl = aws.upload_file(name=f"uid/{self.base36id}/banner-{self.banner_nonce}.png", file=file)
-
 		self.has_banner = True
 		self.banner_upload_ip=request.remote_addr
 		self.banner_set_utc=int(time.time())
 		self.banner_upload_region=request.headers.get("cf-ipcountry")
-
 		g.db.add(self)
 
 	def del_profile(self):

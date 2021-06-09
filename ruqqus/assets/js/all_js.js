@@ -220,7 +220,7 @@ $('#new_email').on('input', function () {
 
   });
 
-  // When GIF keyboard is hidden, hide all GIFs
+/*   // When GIF keyboard is hidden, hide all GIFs
 
   $('#emojiModal').on('hidden.bs.modal', function (e) {
 
@@ -240,10 +240,6 @@ $('#new_email').on('input', function () {
 
 	var cancelBtn = document.getElementById('emojis-cancel-btn');
 
-	// Remove inner HTML from container var
-
-/* 	container.innerHTML = '<div href="javascript:void(0)" onclick="commentForm(\'reply-form-body-{{p.fullname}}\');getEmoji(\'lol\')" style="overflow: hidden;"><img class="img-fluid" src="/assets/images/emojis/lol.gif"></div><div href="javascript:void(0)" onclick="commentForm(\'reply-form-body-{{p.fullname}}\');getEmoji(\'makeout\')" style="overflow: hidden;"><img class="img-fluid" src="/assets/images/emojis/makeout.gif"></div><div href="javascript:void(0)" onclick="commentForm(\'reply-form-body-{{p.fullname}}\');getEmoji(\'marseysick\')" style="overflow: hidden;"><img class="img-fluid" src="/assets/images/emojis/marseysick.gif"></div><div href="javascript:void(0)" onclick="commentForm(\'reply-form-body-{{p.fullname}}\');getEmoji(\'tayaaa\')" style="overflow: hidden;"><img class="img-fluid" src="/assets/images/emojis/tayaaa.gif"></div>'
- */
 	// Hide UI buttons
 
 	backBtn.innerHTML = null;
@@ -255,7 +251,7 @@ $('#new_email').on('input', function () {
 	noEMOJIs.innerHTML = null;
 
   });
-
+ */
 // comment collapse
 
 // Toggle comment collapse

@@ -168,7 +168,7 @@ $('#new_email').on('input', function () {
 
 	var emoji = '<img src="/assets/images/emojis/'+searchTerm+'.gif" <span> '
 	
-	log(commentFormID)
+	console.log(commentFormID)
 	
 	var commentBox = document.getElementById(commentFormID);
 

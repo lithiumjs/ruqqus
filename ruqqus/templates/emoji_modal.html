@@ -1,4 +1,4 @@
-<!-- Emoji Selection Modal - Powered by GIPHY -->
+<!-- Emoji Selection Modal -->
 <div class="modal fade" id="emojiModal" tabindex="-1" role="dialog" aria-labelledby="emojiModalTitle" aria-hidden="true">
 	<div class="modal-dialog modal-dialog-scrollable modal-dialog-centered p-5" role="document">
 		<div class="modal-content">
@@ -16,18 +16,11 @@
 					</div>
 
 					<div class="emoji-columns pt-3 px-3 pb-0" id="EMOJIS">
-						<div href="javascript:void(0)" onclick="commentForm('reply-form-body-{{p.fullname}}');getEmoji('lol')" style="overflow: hidden;">
-							<img class="img-fluid" src="/assets/images/emojis/lol.gif">
-						</div>
-						<div href="javascript:void(0)" onclick="commentForm('reply-form-body-{{p.fullname}}');getEmoji('makeout')" style="overflow: hidden;">
-							<img class="img-fluid" src="/assets/images/emojis/makeout.gif">
-						</div>
-						<div href="javascript:void(0)" onclick="commentForm('reply-form-body-{{p.fullname}}');getEmoji('marseysick')" style="overflow: hidden;">
-							<img class="img-fluid" src="/assets/images/emojis/marseysick.gif">
-						</div>
-						<div href="javascript:void(0)" onclick="commentForm('reply-form-body-{{p.fullname}}');getEmoji('tayaaa')" style="overflow: hidden;">
-							<img class="img-fluid" src="/assets/images/emojis/tayaaa.gif">
-						</div>
+						{% for emoji in ['2thumbsup','aliendj','ambulance','angry','angrywhip','argue','aroused','ashamed','badass','banana','band','banghead','bigeyes','bite','blind','blowkiss','blush','bong','bounce','bow','breakheart','bs','cartwheel','cat','celebrate','chad','chainsaw','cheers','clap','cold','confused','crazyeyes','cry','cthulhu','cute','D','daydream','ddr','deadpool','devilsmile','diddle','die','distress','disturbing','dizzy','dj','domo','doughboy','drink','drool','dudeweedlmao','edward','electro','elephant','embarrassed','emo','emo2','evil','evilclown','evilgrin','facepalm','fap','flamethrower','flipbird','flirt','frown','gasp','glomp','go','gooby','grr','gtfo','guitar','haha','handshake','happydance','headbang','heart','heartbeat','hearts','highfive','hmm','hmph','holdhands','horny','hug','hugging','hugs','hump','humpbed','hysterical','ily','inlove','jason','jawdrop','jedi','jester','kaboom','kick','kiss','kitty','laughchair','lick','link','lol','lolbeat','loving','makeout','marseyangel','marseyblowkiss','marseycry','marseydead','marseyexcited','marset','marseyinabox','marseylaugh','marseylove','marseymad','marseyparty','marseyrain','marseyreading','marseyready','marseysad','marseyshook','marseysick','marseysleep','marseythumbsup','marseywave','medal','meow','metime','mooning','mummy','na','nauseous','nervous','ninja','nod','nono','omg','onfire','ooo','orly','p','paddle','pandabutt','paranoid','party','pat','peek','pikachu','pimp','platyblush','platybruh','platycaveman','platycheer','platydown','platyeyes','platyheart','platylol','platymicdrop','platynooo','platysalute','platyseethe','platythumbsup','platywave','plzdie','poke','pout','probe','puke','punch','quote','raccoon','roar','rofl','roflmao','rolleyes','sad','sadeyes','sadhug','samurai','sarcasm','scoot','scream','shmoopy','shrug','skull','slap','slapfight','sleepy','smackfish','smackhead','smh','smile','smoke','sonic','spank','sparta','sperm','spiderman','stab','star','stare','stfu','suicide','surprisehug','suspicious','sweat','swordfight','taco','talk2hand','tantrum','tayaaa','taycat','taycelebrate','taychefkiss','taychristmas','tayclap','taycold','taycrown','tayflex','tayflirt','taygrimacing','tayhappy','tayheart','tayhmm','tayhuh','tayhyperdab','tayjammin','taylaugh','taymindblown','tayno','taynod','taypeace','taypray','tayrun','tayscrunch','tayshake','tayshrug','taysilly','tayslide','taysmart','taystop','taytantrum','taytea','taythink','tayvibin','taywhat','taywine','taywine2','taywink','tayyes','teehee','thinking','threesome','throw','throwaway','tickle','typing','uhuh','vampbat','viking','violin','vulgar','wah','wat','whip','whipping','wink','witch','wizard','woah','woo','work','worship','wow','XD','yay','zzz'] %}
+							<div href="javascript:void(0)" onclick="commentForm('reply-form-body-{{p.fullname}}');getEmoji('{{emoji}}')" style="overflow: hidden;">
+								<img class="img-fluid" src="/assets/images/emojis/{{emoji}}.gif">
+							</div>
+						{% endfor %}
 					</div>
 				</div>
 			</div>

@@ -684,6 +684,47 @@ def admin_nuke_user(v):
 
 	return redirect(user.permalink)
 
+@app.route("/admin/unnuke_user", methods=["POST"])
+@admin_level_required(4)
+@validate_formkey
+def admin_nuke_user(v):
+
+	user=get_user(request.form.get("user"))
+
+	for post in g.db.query(Submission).filter_by(author_id=user.id).all():
+		if not post.is_banned:
+			continue
+			
+		post.is_banned=False
+		g.db.add(post)
+
+		ma=ModAction(
+			kind="unban_post",
+			user_id=v.id,
+			target_submission_id=post.id,
+			board_id=post.board_id,
+			note="admin action"
+			)
+		g.db.add(ma)
+
+	for comment in g.db.query(Comment).filter_by(author_id=user.id).all():
+		if not comment.is_banned:
+			continue
+
+		comment.is_banned=False
+		g.db.add(comment)
+
+		ma=ModAction(
+			kind="unban_comment",
+			user_id=v.id,
+			target_comment_id=comment.id,
+			board_id=comment.post.board_id,
+			note="admin action"
+			)
+		g.db.add(ma)
+
+	return redirect(user.permalink)
+
 @app.route("/admin/demod_user", methods=["POST"])
 @admin_level_required(4)
 @validate_formkey

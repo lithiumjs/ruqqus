@@ -115,11 +115,19 @@
 					 {% endif %}
 					 {% if v and v.id != u.id and v.admin_level > 0 %}
 						<pre></pre>
+						{% if u.nuked %)
+						<form action="/admin/unnuke_user" method="post">
+							<input type="hidden" name="formkey", value="{{v.formkey}}">
+							<input type="hidden" name="user" value="{{u.username}}">
+							<input type="submit" class="btn btn-success" value="Approve User's Content">
+						</form>
+						{% else %}
 						<form action="/admin/nuke_user" method="post">
 							<input type="hidden" name="formkey", value="{{v.formkey}}">
 							<input type="hidden" name="user" value="{{u.username}}">
-							<input type="submit" class="btn btn-danger" value="Nuke User's Content">
+							<input type="submit" class="btn btn-danger" value="Remove User's Content">
 						</form>
+						{% endif %}
 					{% endif %}
 				 </div>
 

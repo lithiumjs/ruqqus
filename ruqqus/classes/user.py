@@ -199,6 +199,13 @@ class User(Base, Stndrd, Age_times):
 		boards = [
 			x.board for x in self.subscriptions if x.is_active and not x.board.is_banned]
 		return boards
+		
+	@property
+	def nuked(self):
+		submissions = g.db.query(Submission).options(lazyload('*')).filter_by(author_id=self.id)
+		for p in submissions:
+			if not p.is_banned: return False
+		return True
 
 	@property
 	def age(self):

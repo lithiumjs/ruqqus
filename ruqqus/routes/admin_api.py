@@ -687,7 +687,7 @@ def admin_nuke_user(v):
 @app.route("/admin/unnuke_user", methods=["POST"])
 @admin_level_required(4)
 @validate_formkey
-def admin_nuke_user(v):
+def admin_nunuke_user(v):
 
 	user=get_user(request.form.get("user"))
 

@@ -253,7 +253,7 @@
 										<input type="hidden" name="formkey" value="{{v.formkey}}">
 										<input type="text" name="title" class="form-control" placeholder='Enter a flair here' value="{{v.customtitle}}">
 										<div class="d-flex mt-2">
-											<small>Limit of 50 characters</small>
+											<small>Limit of 100 characters</small>
 											<input class="btn btn-primary ml-auto" id="titleSave" type="submit" value="Change Flair">
 										</div>
 									</form>
@@ -301,10 +301,10 @@
 										<div class="input-group mb-2">
 											<textarea class="form-control rounded" id="bio-text" aria-label="With textarea"
 											placeholder="Tell the community a bit about yourself."
-											rows="3" name="bio" form="profile-bio" maxlength="256">{{v.bio}}</textarea>
+											rows="3" name="bio" form="profile-bio" maxlength="500">{{v.bio}}</textarea>
 										</div>
 										<div class="d-flex">
-											<small>Limit of 256 characters</small>
+											<small>Limit of 500 characters</small>
 											<input class="btn btn-primary ml-auto" id="bioSave" type="submit" value="Save Changes">
 										</div>
 									</form>

@@ -18,7 +18,7 @@ from ruqqus.__main__ import app, cache
 
 
 valid_username_regex = re.compile("^[a-zA-Z0-9_]{3,25}$")
-valid_title_regex = re.compile("^((?!<).){3,50}$")
+valid_title_regex = re.compile("^((?!<).){3,100}$")
 valid_password_regex = re.compile("^.{8,100}$")
 
 
@@ -65,7 +65,7 @@ def settings_profile_post(v):
 		v.is_nofollow = request.values.get("nofollow", None) == 'true'
 
 	if request.values.get("bio") is not None:
-		bio = request.values.get("bio")[0:256]
+		bio = request.values.get("bio")[0:500]
 
 		#bio=preprocess(bio)
 

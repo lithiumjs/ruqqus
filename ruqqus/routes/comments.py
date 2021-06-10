@@ -481,7 +481,7 @@ def api_comment(v):
 
 	notify_users = set()
 
-	if len(body) >= 1000 and v.username != "Snappy":
+	if len(body) >= 1000 and v.username != "Snappy" and "</blockquote>" not in body_html:
 		body = random.choice(choices)
 		with CustomRenderer(post_id=parent_id) as renderer: body_md = renderer.render(mistletoe.Document(body))
 		body_html2 = sanitize(body_md, linkgen=True)

@@ -422,24 +422,6 @@ def api_comment(v):
 	g.db.add(c)
 	g.db.flush()
 	
-	if len(body) >= 500 and v.username != "Snappy":
-		c2 = Comment(author_id=1832,
-			parent_submission=parent_submission,
-			parent_fullname=c.fullname,
-			parent_comment_id=c.id,
-			level=level+1,
-			over_18=False,
-			is_nsfl=False,
-			is_offensive=False,
-			original_board_id=parent_post.board_id,
-			is_bot=True,
-			app_id=None,
-			creation_region=request.headers.get("cf-ipcountry")
-			)
-
-		g.db.add(c2)
-		g.db.flush()
-
 	if v.true_score >= 0:
 		if request.files.get("file"):
 			file=request.files["file"]
@@ -482,6 +464,23 @@ def api_comment(v):
 	notify_users = set()
 
 	if len(body) >= 1000 and v.username != "Snappy" and "</blockquote>" not in body_html:
+		c2 = Comment(author_id=1832,
+			parent_submission=parent_submission,
+			parent_fullname=c.fullname,
+			parent_comment_id=c.id,
+			level=level+1,
+			over_18=False,
+			is_nsfl=False,
+			is_offensive=False,
+			original_board_id=parent_post.board_id,
+			is_bot=True,
+			app_id=None,
+			creation_region=request.headers.get("cf-ipcountry")
+			)
+
+		g.db.add(c2)
+		g.db.flush()
+	
 		body = random.choice(choices)
 		with CustomRenderer(post_id=parent_id) as renderer: body_md = renderer.render(mistletoe.Document(body))
 		body_html2 = sanitize(body_md, linkgen=True)
@@ -492,7 +491,8 @@ def api_comment(v):
 		)
 		g.db.add(c_aux)
 		g.db.flush()
-		notify_users.add(v.id)
+		n = Notification(comment_id=c2.id, user_id=v.id)
+		g.db.add(n)
 
 	# queue up notification for parent author
 	if parent.author.id != v.id: notify_users.add(parent.author.id)

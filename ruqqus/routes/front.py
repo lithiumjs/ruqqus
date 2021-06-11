@@ -213,7 +213,7 @@ def frontlist(v=None, sort="hot", page=1, nsfw=False, nsfl=False, hidevotedon=Fa
 
 	posts2 = []
 	for post in posts:
-		if post.voted == 0: posts2 += post
+		if post.voted == 0: posts2.append(post)
 
 	if ids_only:
 		posts = [x.id for x in posts2.offset(25 * (page - 1)).limit(26).all()]

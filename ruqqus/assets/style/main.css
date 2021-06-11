@@ -14078,6 +14078,11 @@ div.deleted.banned {
   transition: opacity 0.3s;
 }
 
+@media (min-width: 576px) {
+.container {
+	margin-left: -65px; } }
+
+
 /* Tooltip arrow */
 .tooltip2 .tooltiptext::after {
   content: "";

@@ -5834,7 +5834,7 @@ a.close.disabled {
 
 @media (min-width: 800px) {
 	.modal-body {
-		padding: 25px 25px !important; }
+		padding: 25px 50px !important; }
 }
 
 .modal-footer {

@@ -14,6 +14,11 @@ from ruqqus.helpers.alerts import *
 
 # take care of misc pages that never really change (much)
 
+@app.route("/oauthhelp", methods=["GET"])
+@auth_desired
+def contact(v):
+	return render_template("oauthhelp.html", v=v)
+
 @app.route("/contact", methods=["GET"])
 @auth_desired
 def contact(v):

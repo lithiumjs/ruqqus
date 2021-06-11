@@ -113,46 +113,5 @@ Python example, presuming that the application has obtained a valid `read` autho
 
 The expected result of this would be a large JSON representation of the submissions that make up the user's personal front page.
 
-## Step 6: Maintain Access
-
-Access tokens expire one hour after they are issued. To maintain ongoing access, you will need to use the refresh token to obtain a new access token.
-
-Make a POST request to `https://rdrama.net/oauth/grant` with the following form parameters:
-
-* `client_id` - Your application's Client ID
-* `client_secret` - Your application's Client Secret
-* `grant_type` - set to the word "refresh"
-* `refresh_token` - the refresh token which you obtained during Step 3
-
-Python example:
-
-<pre>
-	import requests
-	import pprint
-
-	headers={"User-Agent": "Porpl Reader v1 by @captainmeta4"}
-	url="/oauth/grant"
-	data={"client_id": my_client_id,
-			"client_secret": my_client_secret,
-			"grant_type": "refresh",
-			"refresh_token": my_users_refresh_token
-			}
-
-	r=requests.post(url, headers=headers, data=data)
-
-	pprint.pprint(r.json())
-</pre>
-
-A successful refresh will result in the following response:
-
-<pre>
-	{
-	"access_token": 		#Access token
-	"expires_at": 			#Unix epoch integer time at which access token expires
-	}
-</pre>
-
-You should overwrite the previous access code and expiration timestamp with this new information. Continue to use the access token as in Step 5, until it expires.
-
 {% endfilter %}
 {% endblock %}

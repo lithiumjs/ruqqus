@@ -344,7 +344,7 @@ def mod_ban_bid_user(bid, board, v):
 
 	# you can only exile a user who has previously participated in the guild
 	if not board.has_participant(user):
-		return jsonify({"error": f"@{user.username} hasn't participated in +{board.name}."}), 403
+		return jsonify({"error": f"@{user.username} hasn't participated."}), 403
 
 	if item:
 		if isinstance(item, Submission):
@@ -375,7 +375,7 @@ def mod_ban_bid_user(bid, board, v):
 								  is_active=True)
 		g.db.add(new_ban)
 
-		text = f"You have been exiled from +{board.name}.\n\nNone of your existing posts or comments have been removed, however, you will not be able to make any new posts or comments in +{board.name}."
+		text = f"You have been exiled from +{board.name}.\n\nNone of your existing posts or comments have been removed, however, you will not be able to make any new posts or comments."
 		if item:
 			text+= "\n\nYou were exiled for [this "
 			text+= "comment" if isinstance(item, Comment) else "post"

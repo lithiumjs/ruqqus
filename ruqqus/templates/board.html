@@ -184,13 +184,6 @@
 <span id="guild-name-reference" class="d-none">{{b.name}}</span>
 
 <!-- Desktop -->
-<div class="row d-none d-md-block">
-	<div class="col px-0">
-		{% block desktopbanner %}
-		<img src="{{b.banner_url}}" style="width: 100%; height: 250px; object-fit: cover;">
-		{% endblock %}
-	</div>
-</div>
 <div class="row sticky d-none d-md-block" style="overflow: visible;">
 	<div class="col">
 		<div class="d-flex align-items-center">
@@ -305,11 +298,6 @@
 {% block mobileBanner %}
 <!-- Mobile -->
 <div class="container-fluid text-center bg-white d-md-none">
-	<div class="row">
-		<div class="col px-0">
-			<img src="{{b.banner_url}}" style="width: 100%; height: 65px; object-fit: cover;">
-		</div>
-	</div>
 	<div class="row border-bottom">
 		<div class="col">
 			<div style="margin-top: -34px;">

@@ -192,8 +192,8 @@ def edit_post(pid, v):
 
 	p.body = body
 	p.body_html = body_html
-	if request.form.get("title"): p.title = request.form.get("title")	
-	p.edited_utc = int(time.time())
+	if request.form.get("title"): p.title = request.form.get("title")
+	if int(time.time()) - p.created_utc > 60 * 3: p.edited_utc = int(time.time())
 	g.db.add(p)
 	return redirect(p.permalink)
 
@@ -349,7 +349,6 @@ def thumbs(new_post):
 
 	elif x.headers.get("Content-Type","").startswith("image/"):
 		#image is originally loaded fetch_url
-		print("post url is direct image")
 		image_req=x
 		image = PILimage.open(BytesIO(x.content))
 
@@ -366,9 +365,8 @@ def thumbs(new_post):
 			file.write(chunk)
 
 	post.thumburl = aws.upload_from_file(name, tempname, resize=(375, 227))
-	post.has_thumb = True
+	if post.thumburl: post.has_thumb = True
 	g.db.add(post)
-
 	g.db.commit()
 
 	try: remove(tempname)
@@ -886,13 +884,24 @@ def submit_post(v):
 	g.db.commit()
 
     # spin off thumbnail generation and csam detection as  new threads
-	#if (new_post.url or request.files.get('file')) and (v.is_activated or request.headers.get('cf-ipcountry')!="T1"):
-		#thumbs(new_post)
+	if (new_post.url or request.files.get('file')) and (v.is_activated or request.headers.get('cf-ipcountry')!="T1"): thumbs(new_post)
 
 	# expire the relevant caches: front page new, board new
 	cache.delete_memoized(frontlist)
 	g.db.commit()
 	cache.delete_memoized(Board.idlist, board, sort="new")
+
+
+	notify_users = set()
+	
+	soup = BeautifulSoup(body_html, features="html.parser")
+	for mention in soup.find_all("a", href=re.compile("^/@(\w+)"), limit=3):
+		username = mention["href"].split("@")[1]
+		user = g.db.query(User).filter_by(username=username).first()
+		if user and not v.any_block_exists(user) and user.id != v.id: notify_users.add(user.id)
+		
+	for x in notify_users: send_notification(x, f"@{v.username} has mentioned you: https://rdrama.net{new_post.permalink}")
+		
 
 	try:
 		for follow in v.followers:

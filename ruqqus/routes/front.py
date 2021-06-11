@@ -95,8 +95,6 @@ def frontlist(v=None, sort="hot", page=1, nsfw=False, nsfl=False, hidevotedon=Fa
 	if not nsfl:
 		posts = posts.filter_by(is_nsfl=False)
 
-	posts = posts.filter(Submission.voted == 1)
-
 	if (v and v.hide_offensive) or not v:
 		posts = posts.filter_by(is_offensive=False)
 		
@@ -213,11 +211,15 @@ def frontlist(v=None, sort="hot", page=1, nsfw=False, nsfl=False, hidevotedon=Fa
 	else:
 		abort(400)
 
+	posts2 = []
+	for posts in posts:
+		if post.voted() == 1: posts2 += posts
+
 	if ids_only:
-		posts = [x.id for x in posts.offset(25 * (page - 1)).limit(26).all()]
+		posts = [x.id for x in posts2.offset(25 * (page - 1)).limit(26).all()]
 		return posts
 	else:
-		return [x for x in posts.offset(25 * (page - 1)).limit(25).all()]
+		return [x for x in posts2.offset(25 * (page - 1)).limit(25).all()]
 
 def default_cat_cookie():
 

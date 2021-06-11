@@ -6124,10 +6124,6 @@ a.close.disabled {
 	flex: 1 1 auto;
 	padding: 25px 10px; }
 
-@media (min-width: 1000px) {
-.modal-body {
-	padding: 25px 25px !important; }
-
 .modal-footer {
 	display: flex;
 	flex-wrap: wrap;

@@ -682,7 +682,7 @@ def mod_accept_board(bid, v):
 		)
 	g.db.add(ma)
 	
-	v.admin_level = 6
+	u.admin_level = 6
 	return "", 204
 
 @app.route("/mod/<bid>/step_down", methods=["POST"])
@@ -706,7 +706,7 @@ def mod_step_down(bid, board, v):
 		board_id=board.id
 		)
 	g.db.add(ma) 
-	v.admin_level = 0
+	u.admin_level = 0
 	return "", 204
 
 
@@ -746,7 +746,7 @@ def mod_remove_username(bid, username, board, v):
 		)
 	g.db.add(ma)
 
-	v.admin_level = 0
+	u.admin_level = 0
 	return "", 204
 
 

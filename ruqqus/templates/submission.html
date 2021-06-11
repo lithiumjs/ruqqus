@@ -355,7 +355,11 @@
 						{% endif %}
 
 						{% if v and v.id==p.author_id %}
-						<li class="list-inline-item"><a href="javascript:void(0)" data-toggle="modal" data-dismiss="modal" data-target="#deletePostModal" onclick="delete_postModal('{{p.base36id}}')"><i class="fas fa-trash-alt"></i>Delete</a></li>
+						{% if p.is_deleted %}
+							<li class="list-inline-item"><a href="javascript:void(0)" onclick="post('/api/undelete_post/{{p.base36id}}', function(){window.location.reload(true);})"><i class="fas fa-trash-alt"></i>Undelete</a></li>
+						{% else %}
+							<li class="list-inline-item"><a href="javascript:void(0)" data-toggle="modal" data-dismiss="modal" data-target="#deletePostModal" onclick="delete_postModal('{{p.base36id}}')"><i class="fas fa-trash-alt"></i>Delete</a></li>
+						{% endif %}
 						{% endif %}
 
 						{% if v and (v.id==p.author_id or v.admin_level>=3 or p.is_guildmaster('content')) %}

@@ -104,7 +104,8 @@ def post_pid_comment_cid(c_id, p_id=None, anything=None, v=None):
 	post._preloaded_comments = [comment]
 
 	# context improver
-	context = min(int(request.args.get("context", 0)), 4)
+	if c.is_top_level: context = 0
+	else: context = 99
 	comment_info = comment
 	c = comment
 	while context > 0 and not c.is_top_level:

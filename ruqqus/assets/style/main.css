@@ -14082,7 +14082,6 @@ div.deleted.banned {
 .tooltip2 .tooltiptext {
 	margin-left: -72px !important; } }
 
-
 /* Tooltip arrow */
 .tooltip2 .tooltiptext::after {
   content: "";

@@ -14060,7 +14060,7 @@ div.deleted.banned {
 /* Tooltip text */
 .tooltip2 .tooltiptext {
   visibility: hidden;
-  width: 80px;
+  width: 100px;
   background-color: #555;
   color: #fff;
   text-align: center;
@@ -14072,7 +14072,7 @@ div.deleted.banned {
   z-index: 1;
   bottom: 125%;
   left: 50%;
-  margin-left: -60px;
+  margin-left: -70px;
 
   /* Fade in tooltip */
   opacity: 0;

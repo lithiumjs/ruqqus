@@ -263,7 +263,6 @@ def front_all(v):
 					v=v,
 					hide_offensive=(v and v.hide_offensive) or not v,
 					hide_bot=(v and v.hide_bot),
-					=(),
 					gt=int(request.args.get("utc_greater_than", 0)),
 					lt=int(request.args.get("utc_less_than", 0)),
 					filter_words=v.filter_words if v else [],

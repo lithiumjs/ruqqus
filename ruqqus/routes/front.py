@@ -98,6 +98,9 @@ def frontlist(v=None, sort="hot", page=1, nsfw=False, nsfl=False, hidevotedon=Fa
 	if hidevotedon:
 		posts = posts.filter(Submission.voted != 0)
 
+	for post in posts:
+		print(post.voted)
+
 	if (v and v.hide_offensive) or not v:
 		posts = posts.filter_by(is_offensive=False)
 		

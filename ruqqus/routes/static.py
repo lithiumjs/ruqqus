@@ -97,6 +97,12 @@ def leaderboard(v):
 	users1 = users1[:25]
 	return render_template("leaderboard.html", v=v, users1=users1, users2=users2, users3=users3, users4=users4)
 
+@app.route("/banned", methods=["GET"])
+@auth_desired
+def banned(v):
+	users = [x for x in g.db.query(User).filter(User.is_banned != 0).all()]
+	return render_template("banned.html", v=v, users=users)
+
 @app.route("/formatting", methods=["GET"])
 @auth_desired
 def formatting(v):

@@ -411,7 +411,9 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
 
 		if any([x in self.body for x in v.filter_words]):
 			return True
-
+		
+		if self.is_banned: return True
+		
 		return False
 
 	@property

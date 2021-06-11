@@ -1515,12 +1515,7 @@ def mod_unapprove_bid_user(bid, board, v):
 @app.route("/+<guild>/pic/profile")
 @limiter.exempt
 def guild_profile(guild):
-	x = get_guild(guild)
-
-	if x.over_18:
-		return redirect("/assets/images/nsfw_guild_icon.png")
-	else:
-		return redirect(x.profile_url)
+	return redirect("/assets/images/favicon.png")
 
 
 @app.route("/siege_guild", methods=["POST"])

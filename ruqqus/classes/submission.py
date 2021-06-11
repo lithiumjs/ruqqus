@@ -206,9 +206,7 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
 	def rendered_page(self, comment=None, comment_info=None, v=None):
 
 		# check for banned
-		if self.deleted_utc > 0:
-			template = "submission_deleted.html"
-		elif v and v.admin_level >= 3:
+		if v and v.admin_level >= 3:
 			template = "submission.html"
 		elif self.is_banned:
 			template = "submission_banned.html"

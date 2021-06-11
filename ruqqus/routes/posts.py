@@ -980,6 +980,18 @@ def delete_post_pid(pid, v):
 
 	return "", 204
 
+@app.route("/undelete_post/<pid>", methods=["POST"])
+@app.route("/api/v1/undelete_post/<pid>", methods=["POST"])
+@auth_required
+@api("delete")
+@validate_formkey
+def undelete_post_pid(pid, v):
+	post = get_post(pid)
+	if not post.author_id == v.id: abort(403)
+	post.deleted_utc =0
+	g.db.add(post)
+	cache.delete_memoized(frontlist)
+	return "", 204
 
 @app.route("/embed/post/<pid>", methods=["GET"])
 def embed_post_pid(pid):

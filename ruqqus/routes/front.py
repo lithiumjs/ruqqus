@@ -72,9 +72,9 @@ def notifications(v):
 						   render_replies=True,
 						   is_notification_page=True)
 
-@cache.memoize(timeout=1)
+@cache.memoize(timeout=1500)
 
-def frontlist(v=None, sort="hot", page=1, nsfw=False, nsfl=False, hidevotedon=False,
+def frontlist(v=None, sort="hot", page=1, nsfw=False, nsfl=False,
 			  t="all", ids_only=True, filter_words='', **kwargs):
 
 	# cutoff=int(time.time())-(60*60*24*30)
@@ -94,14 +94,6 @@ def frontlist(v=None, sort="hot", page=1, nsfw=False, nsfl=False, hidevotedon=Fa
 	
 	if not nsfl:
 		posts = posts.filter_by(is_nsfl=False)
-
-	if hidevotedon:
-		posts = posts.filter(Submission.voted != 0)
-	
-	if v.id == 1:
-		for post in posts:
-			print(post.title)
-			print(post.voted)
 
 	if (v and v.hide_offensive) or not v:
 		posts = posts.filter_by(is_offensive=False)
@@ -271,7 +263,7 @@ def front_all(v):
 					v=v,
 					hide_offensive=(v and v.hide_offensive) or not v,
 					hide_bot=(v and v.hide_bot),
-					hidevotedon=(v and v.hidevotedon),
+					=(),
 					gt=int(request.args.get("utc_greater_than", 0)),
 					lt=int(request.args.get("utc_less_than", 0)),
 					filter_words=v.filter_words if v else [],
@@ -289,17 +281,23 @@ def front_all(v):
 			for p in sticky: ids = [p.id] + ids
 	# check if ids exist
 	posts = get_posts(ids, sort=sort, v=v)
-
+	
+	posts2 = []
+	if v and v.hidevotedon:
+		for post in posts:
+			if post.voted == 0:
+				posts2 += post
+		
 	return {'html': lambda: render_template("home.html",
 											v=v,
-											listing=posts,
+											listing=posts2,
 											next_exists=next_exists,
 											sort=sort,
 											time_filter=t,
 											page=page,
 											CATEGORIES=CATEGORIES
 											),
-			'api': lambda: jsonify({"data": [x.json for x in posts],
+			'api': lambda: jsonify({"data": [x.json for x in posts2],
 									"next_exists": next_exists
 									}
 								   )

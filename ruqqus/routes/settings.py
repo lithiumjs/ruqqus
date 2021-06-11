@@ -29,6 +29,11 @@ def settings_profile_post(v):
 
 	updated = False
 
+	if request.values.get("hidevotedon", v.hidevotedon) != v.hidevotedon:
+		updated = True
+		v.hidevotedon = request.values.get("hidevotedon", None) == 'true'
+		cache.delete_memoized(User.idlist, v)
+
 	if request.values.get("over18", v.over_18) != v.over_18:
 		updated = True
 		v.over_18 = request.values.get("over18", None) == 'true'

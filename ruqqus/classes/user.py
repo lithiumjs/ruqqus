@@ -46,6 +46,7 @@ class User(Base, Stndrd, Age_times):
 	admin_level = Column(Integer, default=0)
 	is_activated = Column(Boolean, default=False)
 	over_18 = Column(Boolean, default=False)
+	hidevotedon = Column(Boolean, default=False)
 	creation_ip = Column(String, default=None)
 	submissions = relationship(
 		"Submission",

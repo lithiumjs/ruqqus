@@ -59,6 +59,25 @@
 					<h2 class="h5">Content Filters</h2>
 
 						<div class="settings-section rounded">
+						
+							<div class="d-lg-flex border-bottom">
+
+								<div class="title w-lg-25">
+									<label for="hidevotedon">Hide Posts Voted On</label>
+								</div>
+
+								<div class="body w-lg-100">
+
+									<div class="custom-control custom-switch">
+										<input type="checkbox" class="custom-control-input" id="hidevotedon" name="hidevotedon"{% if v.hidevotedon %} checked{% endif %} onchange="post_toast('/settings/profile?hidevotedon='+document.getElementById('hidevotedon').checked);document.getElementById('filter-nsfw-option').classList.toggle('d-none')">
+										<label class="custom-control-label" for="hidevotedon"></label>
+									</div>
+
+									<span class="text-small-extra text-muted">Enable if you would like to automatically hide posts you have voted on from your frontpage.</span>
+
+								</div>
+
+							</div>
 
 							<div class="d-lg-flex border-bottom">
 

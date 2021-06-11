@@ -74,7 +74,7 @@ def notifications(v):
 
 @cache.memoize(timeout=900)
 
-def frontlist(v=None, sort="hot", page=1, nsfw=False, nsfl=False,
+def frontlist(v=None, sort="hot", page=1, nsfw=False, nsfl=False, hidevotedon=False,
 			  t="all", ids_only=True, filter_words='', **kwargs):
 
 	# cutoff=int(time.time())-(60*60*24*30)
@@ -94,6 +94,9 @@ def frontlist(v=None, sort="hot", page=1, nsfw=False, nsfl=False,
 	
 	if not nsfl:
 		posts = posts.filter_by(is_nsfl=False)
+
+	if hidevotedon:
+		posts = posts.filter_by(voted!=0)
 
 	if (v and v.hide_offensive) or not v:
 		posts = posts.filter_by(is_offensive=False)
@@ -263,6 +266,7 @@ def front_all(v):
 					v=v,
 					hide_offensive=(v and v.hide_offensive) or not v,
 					hide_bot=(v and v.hide_bot),
+					hidevotedon=(v and v.hidevotedon),
 					gt=int(request.args.get("utc_greater_than", 0)),
 					lt=int(request.args.get("utc_less_than", 0)),
 					filter_words=v.filter_words if v else [],

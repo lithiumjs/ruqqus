@@ -72,7 +72,7 @@ def notifications(v):
 						   render_replies=True,
 						   is_notification_page=True)
 
-@cache.memoize(timeout=900)
+@cache.memoize(timeout=1)
 
 def frontlist(v=None, sort="hot", page=1, nsfw=False, nsfl=False, hidevotedon=False,
 			  t="all", ids_only=True, filter_words='', **kwargs):

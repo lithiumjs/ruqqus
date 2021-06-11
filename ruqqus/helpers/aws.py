@@ -100,20 +100,26 @@ def upload_file(name, file, resize=None):
 		i = IImage.open(tempname)
 		i = crop_and_resize(i, resize)
 		img = io.BytesIO()
-		i.save(img, format='PNG')
-		resp = requests.post('https://api.imgur.com/3/upload.json', headers = {"Authorization": f"Client-ID {imgurkey}"}, data = {'image': base64.b64encode(img.getvalue())}).json()['data']
+		i.save(img, format='GIF')
+		img = img.getvalue()
 		remove(tempname)
-	else: resp = requests.post('https://api.imgur.com/3/upload.json', headers = {"Authorization": f"Client-ID {imgurkey}"}, data = {'image': base64.b64encode(file.read())}).json()['data']
-	try: url = resp['link'].replace(".png", "_d.png").replace(".jpg", "_d.jpg").replace(".jpeg", "_d.jpeg") + "?maxwidth=9999"
-	except: return
+	else: img = file.read()
 	
-	new_image = Image(
-		text=url,
-		deletehash=resp["deletehash"],
-		)
+	req = requests.post(f'https://api.imgbb.com/1/upload?key={imgurkey}',data = {'image': base64.b64encode(img)})
+	try: url = req.json()['data']['url']
+	except Exception as e:
+		print(e)
+		print(req)
+		print(req.text)
+		return
+
+	# new_image = Image(
+		# text=url,
+		# deletehash=resp["deletehash"],
+		# )
 		
-	g.db.add(new_image)
-	g.db.flush()
+	# g.db.add(new_image)
+	# g.db.flush()
 
 	return(url)
 
@@ -122,25 +128,29 @@ def upload_from_file(name, filename, resize=None):
 
 	tempname = name.replace("/", "_")
 
-	if filename.split('.')[-1] in ['jpg', 'jpeg']:
-		piexif.remove(tempname)
+	if filename.split('.')[-1] in ['jpg', 'jpeg']: piexif.remove(tempname)
 
 	i = IImage.open(tempname)
 	i = crop_and_resize(i, resize)
 	img = io.BytesIO()
 	i.save(img, format='PNG')
-	resp = requests.post('https://api.imgur.com/3/upload.json', headers = {"Authorization": f"Client-ID {imgurkey}"}, data = {'image': base64.b64encode(img.getvalue())}).json()['data']
 	remove(filename)
-	try: url = resp['link'].replace(".png", "_d.png").replace(".jpg", "_d.jpg").replace(".jpeg", "_d.jpeg") + "?maxwidth=9999"
-	except: return
 	
-	new_image = Image(
-		text=url,
-		deletehash=resp["deletehash"],
-		)
+	req = requests.post(f'https://api.imgbb.com/1/upload?key={imgurkey}',data = {'image': base64.b64encode(img.getvalue())})
+	try:  url = req.json()['data']['url']
+	except Exception as e:
+		print(e)
+		print(req)
+		print(req.text)
+		return
+	
+	# new_image = Image(
+		# text=url,
+		# deletehash=resp["deletehash"],
+		# )
 		
-	g.db.add(new_image)
-	g.db.flush()
+	# g.db.add(new_image)
+	# g.db.flush()
 
 	return(url)
 

@@ -13463,12 +13463,16 @@ pre .clo, pre .opn, pre .pun, code .clo, code .opn, code .pun {
     padding-top: 0.5rem; }
 
   .comment .comment-collapse::before {
-    content: "\f056";
-    position: static;
-    font-size: 10px;
-    font-weight: 900;
-    border: none;
-    margin-left: 0.25rem; }
+  content: "";
+  position: absolute;
+  font-family: "Font Awesome 5 Pro";
+  border-left: 2px solid #CBD5E0;
+  font-size: 1rem;
+  color: #FF66AC;
+  display: inline-block;
+  height: 100%;
+  cursor: pointer;
+  width: 10px; }
 
   .comment.collapsed .comment-body:hover {
     opacity: 0.5; }
@@ -13642,3 +13646,20 @@ div.deleted.banned {
 
 .spoiler:hover { 
   color: white; 
+  
+.emoji-columns .emojicard {
+  margin-bottom: 2rem; }
+  .emoji-columns {
+	display: grid;
+    grid-template-columns: auto auto auto auto auto;
+    column-count: 8;
+    column-gap: 1.25rem;
+    orphans: 1;
+    widows: 1; }
+    .emoji-columns .emojicard {
+      display: inline-block;
+      width: 100%; } }
+	  
+.sortingbarmargin {
+	margin-top: 10px !important;
+}

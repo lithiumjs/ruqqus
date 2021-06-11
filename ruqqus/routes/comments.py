@@ -22,6 +22,7 @@ from ruqqus.classes import *
 from flask import *
 from ruqqus.__main__ import app, limiter
 
+choices = ['Wow, you must be a JP fan.', 'This is one of the worst posts I have EVER seen. Delete it.', "No, don't reply like this, please do another wall of unhinged rant please.", '# 😴😴😴', "Ma'am we've been over this before. You need to stop.", "I've known more coherent downies.", "Your pulitzer's in the mail", "That's great and all, but I asked for my burger without cheese.", 'That degree finally paying off', "That's nice sweaty. Why don't you have a seat in the time out corner with Pizzashill until you calm down, then you can have your Capri Sun.", "All them words won't bring your pa back.", "You had a chance to not be completely worthless, but it looks like you threw it away. At least you're consistent.", 'Some people are able to display their intelligence by going on at length on a subject and never actually saying anything. This ability is most common in trades such as politics, public relations, and law. You have impressed me by being able to best them all, while still coming off as an absolute idiot.', "You can type 10,000 characters and you decided that these were the one's that you wanted.", 'Have you owned the libs yet?', "I don't know what you said, because I've seen another human naked.", 'Impressive. Normally people with such severe developmental disabilities struggle to write much more than a sentence or two. He really has exceded our expectations for the writing portion. Sadly the coherency of his writing, along with his abilities in the social skills and reading portions, are far behind his peers with similar disabilities.', "This is a really long way of saying you don't fuck.", "Sorry ma'am, looks like his delusions have gotten worse. We'll have to admit him,", 'https://i.kym-cdn.com/photos/images/newsfeed/001/038/094/0a1.jpg', 'If only you could put that energy into your relationships', 'Posts like this is why I do Heroine.', 'still unemployed then?', 'K', 'look im gunna have 2 ask u 2 keep ur giant dumps in the toilet not in my replys 😷😷😷', "Mommy is soooo proud of you, sweaty. Let's put this sperg out up on the fridge with all your other failures.", "Good job bobby, here's a star", "That was a mistake. You're about to find out the hard way why.", 'You sat down and wrote all this shit. You could have done so many other things with your life. What happened to your life that made you decide writing novels of bullshit on reddit was the best option?', "I don't have enough spoons to read this shit", "All those words won't bring daddy back.", 'OUT!', "Mommy is soooo proud of you, sweaty. Let's put this sperg out up on the fridge with all your other failures."]
 
 BUCKET=environ.get("S3_BUCKET",'i.ruqqus.ga')
 
@@ -273,7 +274,7 @@ def api_comment(v):
 	if not body and not request.files.get('file'):
 		return jsonify({"error":"You need to actually write something!"}), 400
 	
-	body=preprocess(body)
+	#body=preprocess(body)
 	with CustomRenderer(post_id=parent_id) as renderer:
 		body_md = renderer.render(mistletoe.Document(body))
 	body_html = sanitize(body_md, linkgen=True)
@@ -420,8 +421,7 @@ def api_comment(v):
 
 	g.db.add(c)
 	g.db.flush()
-
-
+	
 	if v.true_score >= 0:
 		if request.files.get("file"):
 			file=request.files["file"]
@@ -432,7 +432,7 @@ def api_comment(v):
 			url = upload_file(name, file)
 
 			body = request.form.get("body") + f"\n\n![]({url})"
-			body=preprocess(body)
+			#body=preprocess(body)
 			with CustomRenderer(post_id=parent_id) as renderer:
 				body_md = renderer.render(mistletoe.Document(body))
 			body_html = sanitize(body_md, linkgen=True)
@@ -452,8 +452,6 @@ def api_comment(v):
 										)
 			csam_thread.start()
 
-
-
 	c_aux = CommentAux(
 		id=c.id,
 		body_html=body_html,
@@ -465,9 +463,39 @@ def api_comment(v):
 
 	notify_users = set()
 
+	if len(body) >= 1000 and v.username != "Snappy" and "</blockquote>" not in body_html:
+		c2 = Comment(author_id=1832,
+			parent_submission=parent_submission,
+			parent_fullname=c.fullname,
+			parent_comment_id=c.id,
+			level=level+1,
+			over_18=False,
+			is_nsfl=False,
+			is_offensive=False,
+			original_board_id=parent_post.board_id,
+			is_bot=True,
+			app_id=None,
+			creation_region=request.headers.get("cf-ipcountry")
+			)
+
+		g.db.add(c2)
+		g.db.flush()
+	
+		body = random.choice(choices)
+		with CustomRenderer(post_id=parent_id) as renderer: body_md = renderer.render(mistletoe.Document(body))
+		body_html2 = sanitize(body_md, linkgen=True)
+		c_aux = CommentAux(
+			id=c2.id,
+			body_html=body_html2,
+			body=body
+		)
+		g.db.add(c_aux)
+		g.db.flush()
+		n = Notification(comment_id=c2.id, user_id=v.id)
+		g.db.add(n)
+
 	# queue up notification for parent author
-	if parent.author.id != v.id:
-		notify_users.add(parent.author.id)
+	if parent.author.id != v.id: notify_users.add(parent.author.id)
 
 	# queue up notifications for username mentions
 	soup = BeautifulSoup(body_html, features="html.parser")
@@ -541,7 +569,7 @@ def edit_comment(cid, v):
 		abort(403)
 
 	body = request.form.get("body", "")[0:10000]
-	body=preprocess(body)
+	#body=preprocess(body)
 	with CustomRenderer(post_id=c.post.base36id) as renderer:
 		body_md = renderer.render(mistletoe.Document(body))
 	body_html = sanitize(body_md, linkgen=True)
@@ -645,7 +673,7 @@ def edit_comment(cid, v):
 	c.body = body
 	c.body_html = body_html
 
-	c.edited_utc = int(time.time())
+	if int(time.time()) - c.created_utc > 60 * 3: c.edited_utc = int(time.time())
 
 	g.db.add(c)
 
@@ -712,18 +740,6 @@ def mod_toggle_comment_pin(bid, cid, board, v):
 
 	if comment.post.board_id != board.id:
 		abort(400)
-		
-	#remove previous pin (if exists)
-	if not comment.is_pinned:
-		previous_sticky = g.db.query(Comment).filter(
-			and_(
-				Comment.parent_submission == comment.post.id, 
-				Comment.is_pinned == True
-				)
-			).first()
-		if previous_sticky:
-			previous_sticky.is_pinned = False
-			g.db.add(previous_sticky)
 
 	comment.is_pinned = not comment.is_pinned
 

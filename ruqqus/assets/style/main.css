@@ -14079,8 +14079,8 @@ div.deleted.banned {
 }
 
 @media (min-width: 576px) {
-.container {
-	margin-left: -65px; } }
+.tooltip2 .tooltiptext {
+	margin-left: -68px; } }
 
 
 /* Tooltip arrow */

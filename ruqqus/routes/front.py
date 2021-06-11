@@ -285,7 +285,7 @@ def front_all(v):
 	if v and v.hidevotedon:
 		for post in posts:
 			if post.voted == 0:
-				posts2 += post
+				posts2.append(post)
 		
 	return {'html': lambda: render_template("home.html",
 											v=v,

@@ -14071,7 +14071,7 @@ div.deleted.banned {
   z-index: 1;
   bottom: 125%;
   left: 50%;
-  margin-left: -70px;
+  margin-left: -65px;
 
   /* Fade in tooltip */
   opacity: 0;

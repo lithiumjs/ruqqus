@@ -95,8 +95,7 @@ def frontlist(v=None, sort="hot", page=1, nsfw=False, nsfl=False, hidevotedon=Fa
 	if not nsfl:
 		posts = posts.filter_by(is_nsfl=False)
 
-	if hidevotedon:
-		posts = posts.filter(Submission.voted == 0)
+	posts = posts.filter(Submission.voted == 1)
 
 	if (v and v.hide_offensive) or not v:
 		posts = posts.filter_by(is_offensive=False)

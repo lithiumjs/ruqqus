@@ -199,6 +199,13 @@ class User(Base, Stndrd, Age_times):
 		boards = [
 			x.board for x in self.subscriptions if x.is_active and not x.board.is_banned]
 		return boards
+		
+	@property
+	def nuked(self):
+		submissions = g.db.query(Submission).options(lazyload('*')).filter_by(author_id=self.id)
+		for p in submissions:
+			if not p.is_banned: return False
+		return True
 
 	@property
 	def age(self):
@@ -673,7 +680,7 @@ class User(Base, Stndrd, Age_times):
 		self.del_profile()
 		self.profile_nonce += 1
 
-		self.profileurl = aws.upload_file(name=f"uid/{self.base36id}/profile-{self.profile_nonce}.png", file=file, resize=(100, 100))
+		self.profileurl = aws.upload_file(name=f"uid/{self.base36id}/profile-{self.profile_nonce}.png", file=file)
 		self.has_profile = True
 		self.profile_upload_ip=request.remote_addr
 		self.profile_set_utc=int(time.time())
@@ -686,12 +693,10 @@ class User(Base, Stndrd, Age_times):
 		self.banner_nonce += 1
 
 		self.bannerurl = aws.upload_file(name=f"uid/{self.base36id}/banner-{self.banner_nonce}.png", file=file)
-
 		self.has_banner = True
 		self.banner_upload_ip=request.remote_addr
 		self.banner_set_utc=int(time.time())
 		self.banner_upload_region=request.headers.get("cf-ipcountry")
-
 		g.db.add(self)
 
 	def del_profile(self):

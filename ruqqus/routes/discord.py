@@ -23,7 +23,8 @@ WELCOME_CHANNEL="846509313941700618"
 @auth_required
 def join_discord(v):
 	
-	if v.true_score < 70: return "You must earn +70 dramacoins before entering the Discord server. You earn dramacoins by making posts/comments and getting upvoted."
+	if v.is_banned != 0: return "You're banned"
+	if v.true_score < 100: return "You must earn +100 dramacoins before entering the Discord server. You earn dramacoins by making posts/comments and getting upvoted."
 	
 	now=int(time.time())
 

@@ -18,7 +18,7 @@ from ruqqus.__main__ import app, cache
 
 
 valid_username_regex = re.compile("^[a-zA-Z0-9_]{3,25}$")
-valid_title_regex = re.compile("^[a-zA-Z0-9_]{1,50}$")
+valid_title_regex = re.compile("^((?!<).){3,100}$")
 valid_password_regex = re.compile("^.{8,100}$")
 
 
@@ -65,7 +65,7 @@ def settings_profile_post(v):
 		v.is_nofollow = request.values.get("nofollow", None) == 'true'
 
 	if request.values.get("bio") is not None:
-		bio = request.values.get("bio")[0:256]
+		bio = request.values.get("bio")[0:500]
 
 		#bio=preprocess(bio)
 
@@ -336,6 +336,11 @@ def settings_log_out_others(v):
 @validate_formkey
 def settings_images_profile(v):
 	if v.can_upload_avatar:
+
+		if request.content_length > 16 * 1024 * 1024:
+			g.db.rollback()
+			abort(413)
+
 		v.set_profile(request.files["profile"])
 
 		# anti csam
@@ -359,6 +364,10 @@ def settings_images_profile(v):
 @validate_formkey
 def settings_images_banner(v):
 	if v.can_upload_banner:
+		if request.content_length > 16 * 1024 * 1024:
+			g.db.rollback()
+			abort(413)
+
 		v.set_banner(request.files["banner"])
 
 		# anti csam
@@ -655,7 +664,7 @@ def settings_name_change(v):
 	if not re.match(valid_username_regex, new_name):
 		return render_template("settings_profile.html",
 						   v=v,
-						   error=f"That isn't a valid username.")
+						   error=f"This isn't a valid username.")
 
 	#verify availability
 	name=new_name.replace('_','\_')
@@ -706,13 +715,18 @@ def settings_name_change(v):
 					   v=v,
 					   msg=f"Username changed successfully.")
 
-
 @app.route("/settings/title_change", methods=["POST"])
 @auth_required
 @validate_formkey
 def settings_title_change(v):
 
 	new_name=request.form.get("title").lstrip().rstrip()
+
+	#verify acceptability
+	if not re.match(valid_title_regex, new_name):
+		return render_template("settings_profile.html",
+						   v=v,
+						   error=f"This isn't a valid flair.")
 
 	#make sure name is different
 	if new_name==v.customtitle:
@@ -721,7 +735,6 @@ def settings_title_change(v):
 						   error="You didn't change anything")
 
 	new_name=new_name.replace('_','\_')
-	#new_name=preprocess(new_name)
 	new_name = sanitize(new_name, linkgen=True)
 
 	v=g.db.query(User).with_for_update().options(lazyload('*')).filter_by(id=v.id).first()
@@ -733,8 +746,6 @@ def settings_title_change(v):
 	return render_template("settings_profile.html",
 					   v=v,
 					   msg=f"Title changed successfully.")
-
-
 
 @app.route("/settings/badges", methods=["POST"])
 @auth_required

@@ -104,10 +104,10 @@ def post_pid_comment_cid(c_id, p_id=None, anything=None, v=None):
 	post._preloaded_comments = [comment]
 
 	# context improver
-	if c.is_top_level: context = 0
-	else: context = 99
 	comment_info = comment
 	c = comment
+	if c.is_top_level: context = 0
+	else: context = 99
 	while context > 0 and not c.is_top_level:
 
 		parent = get_comment(c.parent_comment_id, v=v)

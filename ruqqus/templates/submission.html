@@ -166,7 +166,7 @@
 						<button class="btn btn-link btn-block btn-lg text-left text-muted" data-dismiss="modal" onclick="togglePostEdit('{{p.base36id}}')"><i class="far fa-edit text-center text-muted mr-3"></i>Edit</button>
 
 						{% if p.is_deleted %}
-							<button class="btn btn-link btn-block btn-lg text-left text-muted" href="javascript:void(0)" onclick="post('/api/undelete_post/{{p.base36id}}', function(){window.location.reload(true);})"><i class="far fa-trash-alt text-center text-muted mr-3"></i>Undelete</button>
+							<button class="btn btn-link btn-block btn-lg text-left text-muted" href="javascript:void(0)" onclick="post('/undelete_post/{{p.base36id}}', function(){window.location.reload(true);})"><i class="far fa-trash-alt text-center text-muted mr-3"></i>Undelete</button>
 						{% else %}
 							<button class="btn btn-link btn-block btn-lg text-left text-muted" data-toggle="modal" data-dismiss="modal" data-target="#deletePostModal" onclick="delete_postModal('{{p.base36id}}')"><i class="far fa-trash-alt text-center text-muted mr-3"></i>Delete</button>
 						{% endif %}
@@ -357,7 +357,7 @@
 
 						{% if v and v.id==p.author_id %}
 						{% if p.is_deleted %}
-							<li class="list-inline-item"><a href="javascript:void(0)" onclick="post('/api/undelete_post/{{p.base36id}}', function(){window.location.reload(true);})"><i class="fas fa-trash-alt"></i>Undelete</a></li>
+							<li class="list-inline-item"><a href="javascript:void(0)" onclick="post('/undelete_post/{{p.base36id}}', function(){window.location.reload(true);})"><i class="fas fa-trash-alt"></i>Undelete</a></li>
 						{% else %}
 							<li class="list-inline-item"><a href="javascript:void(0)" data-toggle="modal" data-dismiss="modal" data-target="#deletePostModal" onclick="delete_postModal('{{p.base36id}}')"><i class="fas fa-trash-alt"></i>Delete</a></li>
 						{% endif %}

@@ -6123,6 +6123,11 @@ a.close.disabled {
 	position: relative;
 	flex: 1 1 auto;
 	padding: 25px 10px; }
+	
+@media (min-width: 800px) {
+	.modal-body {
+		padding: 25px 25px !important; }
+}
 
 .modal-footer {
 	display: flex;

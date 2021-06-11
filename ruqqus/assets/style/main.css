@@ -6124,9 +6124,11 @@ a.close.disabled {
 	flex: 1 1 auto;
 	padding: 25px 10px; }
 	
-@media (min-width: 800px) {
+@media (min-width: 576px) {
 	.modal-body {
-		padding: 25px 50px !important; }
+		position: relative;
+		flex: 1 1 auto;
+		padding: 25px 0 0 30px !important; }
 }
 
 .modal-footer {

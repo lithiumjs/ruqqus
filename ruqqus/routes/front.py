@@ -286,17 +286,18 @@ def front_all(v):
 		for post in posts:
 			if post.voted == 0:
 				posts2.append(post)
+		posts = post2
 		
 	return {'html': lambda: render_template("home.html",
 											v=v,
-											listing=posts2,
+											listing=posts,
 											next_exists=next_exists,
 											sort=sort,
 											time_filter=t,
 											page=page,
 											CATEGORIES=CATEGORIES
 											),
-			'api': lambda: jsonify({"data": [x.json for x in posts2],
+			'api': lambda: jsonify({"data": [x.json for x in posts],
 									"next_exists": next_exists
 									}
 								   )

@@ -16,7 +16,7 @@ from ruqqus.helpers.alerts import *
 
 @app.route("/oauthhelp", methods=["GET"])
 @auth_desired
-def contact(v):
+def oauthhelp(v):
 	return render_template("oauthhelp.html", v=v)
 
 @app.route("/contact", methods=["GET"])

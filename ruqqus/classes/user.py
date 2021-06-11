@@ -681,24 +681,28 @@ class User(Base, Stndrd, Age_times):
 		self.del_profile()
 		self.profile_nonce += 1
 
-		self.profileurl = aws.upload_file(name=f"uid/{self.base36id}/profile-{self.profile_nonce}.png", file=file)
-		self.has_profile = True
-		self.profile_upload_ip=request.remote_addr
-		self.profile_set_utc=int(time.time())
-		self.profile_upload_region=request.headers.get("cf-ipcountry")
-		g.db.add(self)
+		imageurl = aws.upload_file(name=f"profile.gif", file=file)
+		if imageurl:
+			self.profileurl = imageurl
+			self.has_profile = True
+			self.profile_upload_ip=request.remote_addr
+			self.profile_set_utc=int(time.time())
+			self.profile_upload_region=request.headers.get("cf-ipcountry")
+			g.db.add(self)
 
 	def set_banner(self, file):
 
 		self.del_banner()
 		self.banner_nonce += 1
-
-		self.bannerurl = aws.upload_file(name=f"uid/{self.base36id}/banner-{self.banner_nonce}.png", file=file)
-		self.has_banner = True
-		self.banner_upload_ip=request.remote_addr
-		self.banner_set_utc=int(time.time())
-		self.banner_upload_region=request.headers.get("cf-ipcountry")
-		g.db.add(self)
+		
+		imageurl = aws.upload_file(name=f"banner.gif", file=file)
+		if imageurl:
+			self.bannerurl =imageurl
+			self.has_banner = True
+			self.banner_upload_ip=request.remote_addr
+			self.banner_set_utc=int(time.time())
+			self.banner_upload_region=request.headers.get("cf-ipcountry")
+			g.db.add(self)
 
 	def del_profile(self):
 

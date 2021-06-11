@@ -133,7 +133,7 @@ def upload_from_file(name, filename, resize=None):
 	i = IImage.open(tempname)
 	i = crop_and_resize(i, resize)
 	img = io.BytesIO()
-	i.save(img, format='PNG')
+	i.save(img, format='GIF')
 	remove(filename)
 	
 	req = requests.post(f'https://api.imgbb.com/1/upload?key={imgurkey}',data = {'image': base64.b64encode(img.getvalue())})

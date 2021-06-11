@@ -86,7 +86,7 @@ def api_vote_post(post_id, x, v):
 	g.db.commit()
 		
 	now = int(time.time())
-	cutoff = now - 3600
+	cutoff = now - 3600*24
 	posts = g.db.query(Submission).options(lazyload('*')).filter_by(is_banned=False, deleted_utc=0).filter(Submission.created_utc > cutoff).all()
 
 	for post in posts:

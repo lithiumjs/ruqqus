@@ -40,7 +40,7 @@ def message2(v, username):
 	if user.is_blocked: return jsonify({"error": "This user is blocking you."}), 403
 	message = request.form.get("message", "")
 	send_pm(v.id, user, message)
-	return render_template("privatemessage.html", v=v, username=username, msg="Your message has been sent.")
+	return redirect('/notifications?sent=true')
 
 @app.route("/2faqr/<secret>", methods=["GET"])
 @auth_required

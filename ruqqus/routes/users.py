@@ -325,8 +325,6 @@ def follow_user(username, v):
 	g.db.add(target)
 	g.db.commit()
 
-	cache.delete_memoized(User.idlist, v, kind="user")
-
 	return "", 204
 
 
@@ -344,8 +342,6 @@ def unfollow_user(username, v):
 		abort(409)
 
 	g.db.delete(follow)
-
-	cache.delete_memoized(User.idlist, v, kind="user")
 
 	return "", 204
 

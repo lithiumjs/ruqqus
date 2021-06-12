@@ -550,7 +550,6 @@ def random_user(v):
 	return redirect(user.permalink)
 
 
-@cache.memoize(600)
 def comment_idlist(page=1, v=None, nsfw=False, **kwargs):
 
 	posts = g.db.query(Submission).options(

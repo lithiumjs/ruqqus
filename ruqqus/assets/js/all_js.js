@@ -71,7 +71,7 @@ $('#new_email').on('input', function () {
 		let str = '';
 
 		for (i = 0; i < emojis.length; i++) { 
-			str += `<button class="btn my-2 px-2 py-0" onclick="getEmoji(\'${emojis[i]}\')" style="overflow: hidden;" data-toggle="tooltip" title=":${emojis[i]}:" delay:="0"><img width=25 src="/assets/images/emojis/${emojis[i]}.gif" alt="${emojis[i]}-emoji"/></button>`;
+			str += `<button class="btn my-2 px-2 py-0" onclick="getEmoji(\'${emojis[i]}\')" style="overflow: hidden;" data-toggle="tooltip" title=":${emojis[i]}:" delay:="0"><img width=30 src="/assets/images/emojis/${emojis[i]}.gif" alt="${emojis[i]}-emoji"/></button>`;
 		}
 
 		container.innerHTML = str;

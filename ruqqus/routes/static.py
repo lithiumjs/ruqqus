@@ -108,7 +108,7 @@ def blocks(v):
 	blocks=g.db.query(UserBlock).all()
 	users = []
 	targets = []
-	x in blocks:
+	for x in blocks:
 		users += get_account(x.user_id)
 		targets += get_account(x.target_id)
 

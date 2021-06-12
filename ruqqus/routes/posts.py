@@ -900,7 +900,7 @@ def submit_post(v):
 	for mention in soup.find_all("a", href=re.compile("^/@(\w+)"), limit=3):
 		username = mention["href"].split("@")[1]
 		user = g.db.query(User).filter_by(username=username).first()
-		if user and not v.any_block_exists(user) and user.id != v.id: notify_users.add(user.id)
+		if user and not v.any_block_exists(user) and user.id != v.id: notify_users.add(user)
 		
 	for x in notify_users: send_notification(x, f"@{v.username} has mentioned you: https://rdrama.net{new_post.permalink}")
 		

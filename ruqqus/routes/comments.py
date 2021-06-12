@@ -538,6 +538,9 @@ def api_comment(v):
 	board = get_board(1)
 	nsfw = (v and v.over_18) or session_over18(board)
 	nsfl = (v and v.show_nsfl) or session_isnsfl(board)
+	
+	cache.delete_memoized(comment_idlist)
+
 	return {"html": lambda: jsonify({"html": render_template("comments.html",
 															 v=v,
 															 nsfw=nsfw,

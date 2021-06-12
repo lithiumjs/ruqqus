@@ -53,6 +53,7 @@ class Submission(Base, Stndrd, Age_times, Scores, Fuzzing):
 	created_utc = Column(BigInteger, default=0)
 	thumburl = Column(String, default=None)
 	is_banned = Column(Boolean, default=False)
+	views = Column(Integer, default=0)
 	deleted_utc = Column(Integer, default=0)
 	purged_utc = Column(Integer, default=0)
 	distinguish_level = Column(Integer, default=0)

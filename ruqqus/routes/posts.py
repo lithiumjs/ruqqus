@@ -95,6 +95,8 @@ def post_base36id(base36id, anything=None, v=None):
 	post = get_post_with_comments(
 		base36id, v=v, sort_type=request.args.get(
 			"sort", "top"))
+	
+	post.views += 1
 
 	board = post.board
 

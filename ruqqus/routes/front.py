@@ -74,8 +74,7 @@ def notifications(v):
 
 @cache.memoize(timeout=1500)
 
-def frontlist(v=None, sort="hot", page=1, nsfw=False, nsfl=False,
-			  t="all", ids_only=True, filter_words='', **kwargs):
+def frontlist(v=None, sort="hot", page=1,t="all", ids_only=True, filter_words='', **kwargs):
 
 	# cutoff=int(time.time())-(60*60*24*30)
 
@@ -88,12 +87,6 @@ def frontlist(v=None, sort="hot", page=1, nsfw=False, nsfl=False,
 			stickied=False,
 			private=False,
 		).filter(Submission.deleted_utc == 0)
-
-	if not nsfw:
-		posts = posts.filter_by(over_18=False)
-	
-	if not nsfl:
-		posts = posts.filter_by(is_nsfl=False)
 
 	if (v and v.hide_offensive) or not v:
 		posts = posts.filter_by(is_offensive=False)
@@ -257,8 +250,6 @@ def front_all(v):
 
 	ids = frontlist(sort=sort,
 					page=page,
-					nsfw=(v and v.over_18),
-					nsfl=(v and v.show_nsfl),
 					t=t,
 					v=v,
 					hide_offensive=(v and v.hide_offensive) or not v,
@@ -278,8 +269,6 @@ def front_all(v):
 		sticky = g.db.query(Submission).filter_by(stickied=True).all()
 		if sticky:
 			for p in sticky:
-				if p.over_18 and not (v and v.over_18): continue
-				if p.is_nsfl and not (v and v.show_nsfl): continue
 				ids = [p.id] + ids
 	# check if ids exist
 	posts = get_posts(ids, sort=sort, v=v)

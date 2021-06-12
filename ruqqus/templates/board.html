@@ -199,7 +199,7 @@
 						{% endif %}
 					</span>
 						{% if b.over_18 %}
-						<span class="badge badge-danger text-small ml-2" data-toggle="tooltip" data-placement="bottom" title="This guild contains adult content">nsfw</span>
+						<span class="badge badge-danger text-small ml-2" data-toggle="tooltip" data-placement="bottom" title="This guild contains adult content">+18</span>
 						{% endif %}
 						{% if b.is_nsfl %}
 						<span class="badge badge-black text-small ml-2" data-toggle="tooltip" data-placement="bottom" title="This guild contains adult content">nsfl</span>
@@ -307,7 +307,7 @@
 				<a href="{{b.permalink}}" class="text-black">
 					<h1 class="h5 d-inline-block">+{{b.name}}
 						{% if b.over_18 %}
-						<span class="badge badge-danger text-small align-top">nsfw</span>
+						<span class="badge badge-danger text-small align-top">+18</span>
 						{% endif %}
 					{% if b.is_nsfl %}
 						<span class="badge badge-black text-small align-top">nsfl</span>

@@ -252,7 +252,7 @@
 						{% if p.is_exiled_for %} <i class="fad fa-gavel text-danger" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="User was exiled from +{{p.original_board.name}} for this post."></i>{% endif %}
 						{% if p.is_bot %} <i class="fad fa-robot text-info" data-toggle="tooltip" data-placement="bottom"	data-original-title="Bot"></i>
 						{% endif %}
-						{% if p.distinguish_level %} <i class="fad fa-shield text-admin" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Drama Badmin, speaking officially"></i>{% endif %}{% if p.gm_distinguish %} <i class="fad fa-crown {% if p.gm_distinguish==p.board_id %}text-warning{% else %}text-muted{% endif %}" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Badmin of +{{p.distinguished_board.name}}"></i>{% endif %}&nbsp;({% if p.url %}<a href="/search?q=domain%3A{{p.domain}}&sort=new&t=all" target="_blank">{{p.domain}}</a>{% else %}text post{% endif %})&nbsp;&nbsp;{% if not p.is_public %}<i class="fas fa-eye-slash text-warning" data-toggle="tooltip" data-placement="bottom" title="Private post, visible because {{p.visibility_reason(v)}}"></i>{% endif %}{% if p.edited_utc %}&nbsp;Edited <span data-toggle="tooltip" data-placement="bottom"  title="{{edited_datetime}}">{{p.edited_string}}</span>{% endif %}{% if p.over_18 %}<span class="badge badge-danger text-small-extra mr-1">nsfw</span>{% endif %} {% if p.is_nsfl %}<span class="badge text-black border-danger border-1 text-small-extra">nsfl</span>{% endif %}{% if p.private %}<span class="badge border-warning border-1 text-small-extra">unlisted</span>{% endif %}{% if p.is_repost %}<span class="badge border-warning border-1 text-small-extra"><a class="text-warning" href="{{p.reposts.permalink}}">repost</a></span>{% endif %}&nbsp;{{p.views}} views
+						{% if p.distinguish_level %} <i class="fad fa-shield text-admin" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Drama Badmin, speaking officially"></i>{% endif %}{% if p.gm_distinguish %} <i class="fad fa-crown {% if p.gm_distinguish==p.board_id %}text-warning{% else %}text-muted{% endif %}" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Badmin of +{{p.distinguished_board.name}}"></i>{% endif %}&nbsp;({% if p.url %}<a href="/search?q=domain%3A{{p.domain}}&sort=new&t=all" target="_blank">{{p.domain}}</a>{% else %}text post{% endif %})&nbsp;&nbsp;{% if not p.is_public %}<i class="fas fa-eye-slash text-warning" data-toggle="tooltip" data-placement="bottom" title="Private post, visible because {{p.visibility_reason(v)}}"></i>{% endif %}{% if p.edited_utc %}&nbsp;Edited <span data-toggle="tooltip" data-placement="bottom"  title="{{edited_datetime}}">{{p.edited_string}}</span>{% endif %}{% if p.over_18 %}<span class="badge badge-danger text-small-extra mr-1">+18</span>{% endif %} {% if p.is_nsfl %}<span class="badge text-black border-danger border-1 text-small-extra">nsfl</span>{% endif %}{% if p.private %}<span class="badge border-warning border-1 text-small-extra">unlisted</span>{% endif %}{% if p.is_repost %}<span class="badge border-warning border-1 text-small-extra"><a class="text-warning" href="{{p.reposts.permalink}}">repost</a></span>{% endif %}&nbsp;{{p.views}} views
 					</div>
 
 					{% if p.url %}
@@ -276,7 +276,7 @@
 						{% if p.stickied %}<i class="fas fa-thumbtack fa-fw text-admin fa-rotate--45" data-toggle="tooltip" data-placement="bottom" title="Pinned post"></i>&nbsp;{% endif %}
 						{% if p.is_pinned %}<i class="fas fa-thumbtack fa-fw text-info fa-rotate--45" data-toggle="tooltip" data-placement="bottom" title="Pinned to +{{p.board.name}}"></i>&nbsp;{% endif %}
 						{% if p.is_archived %}<i class="fas fa-archive text-warning" data-toggle="tooltip" data-placement="bottom" title="Archived post"></i>&nbsp;{% endif %}	
-						{% if p.over_18 %}<span class="badge badge-danger text-small-extra mr-1">nsfw</span>{% endif %}
+						{% if p.over_18 %}<span class="badge badge-danger text-small-extra mr-1">+18</span>{% endif %}
 						{% if p.is_nsfl %}<span class="badge text-black border-danger border-1 text-small-extra">nsfl</span>&nbsp;{% endif %}
 						{% if p.private %}<span class="text-warning"><i class="far fa-eye-slash text-small mr-1"></i>unlisted</span>&nbsp;{% endif %}
 						{% if p.is_repost %}<span class="text-warning"><i class="far fa-sync text-small mr-1"></i><a class="text-warning" href="{{p.reposts.permalink}}">repost</a></span>&nbsp;{% endif %}
@@ -560,7 +560,7 @@
 <!-- 				<p>&nbsp;&nbsp;</p>
 				<div class="custom-control custom-checkbox">
 					<input type="checkbox" class="custom-control-input" id="nsfwCheck-{{p.fullname}}" name="over_18" form="reply-to-{{p.fullname}}">
-					<label class="custom-control-label" for="nsfwCheck">NSFW</label>
+					<label class="custom-control-label" for="nsfwCheck">+18</label>
 				</div>
 				<p>&nbsp;&nbsp;</p>
 				<div class="custom-control custom-checkbox">

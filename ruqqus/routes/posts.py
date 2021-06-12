@@ -1057,7 +1057,6 @@ def toggle_post_nsfw(pid, v):
 			user_id=v.id,
 			target_submission_id=post.id,
 			board_id=post.board.id,
-			note = None if mod else "admin action"
 			)
 		g.db.add(ma)
 
@@ -1090,7 +1089,6 @@ def toggle_post_nsfl(pid, v):
 			user_id=v.id,
 			target_submission_id=post.id,
 			board_id=post.board.id,
-			note = None if mod else "admin action"
 			)
 		g.db.add(ma)
 

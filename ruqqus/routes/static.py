@@ -106,7 +106,7 @@ def leaderboard(v):
 @auth_desired
 def blocks(v):
 	blocks=g.db.query(UserBlock).all()
-	blockslist = []
+	users = []
 	targets = []
 	x in blocks:
 		users += get_account(x.user_id)

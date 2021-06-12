@@ -1006,7 +1006,7 @@ def board_about_appearance(boardname, board, v):
 	return render_template("guild/appearance.html", v=v, b=board)
 
 
-@app.route("/mod/mods", methods=["GET"])
+@app.route("/badmins", methods=["GET"])
 @app.route("/api/vue/mod/mods",  methods=["GET"])
 @app.route("/api/v1/<boardname>/mod/mods", methods=["GET"])
 @auth_desired
@@ -1840,7 +1840,7 @@ def change_guild_category(v, board, bid, category):
 
 
 
-@app.route("/mod/log", methods=["GET"])
+@app.route("/log", methods=["GET"])
 @app.route("/api/v1/mod_log/<boardname>", methods=["GET"])
 @auth_desired
 @api("read")

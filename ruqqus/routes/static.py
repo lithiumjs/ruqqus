@@ -129,7 +129,7 @@ def formatting(v):
 def brave():
 	with open(".well-known/brave-rewards-verification.txt", "r") as f: return Response(f.read(), mimetype='text/plain')
 
-@app.route("/admins", methods=["GET"])
+@app.route("/badmins", methods=["GET"])
 @auth_desired
 def help_admins(v):
 

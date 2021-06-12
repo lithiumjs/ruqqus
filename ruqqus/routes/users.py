@@ -94,6 +94,12 @@ def user_uid(uid):
 
 	return redirect(user.permalink)
 
+@app.route("/id/<uid>", methods=["GET"])
+def user_uid(uid):
+
+	user = get_account2(uid)
+	return redirect(user.permalink)
+
 # Allow Id of user to be queryied, and then redirect the bot to the
 # actual user api endpoint.
 # So they get the data and then there will be no need to reinvent

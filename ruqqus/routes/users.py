@@ -331,6 +331,7 @@ def follow_user(username, v):
 	g.db.add(target)
 	g.db.commit()
 
+	send_notification(target, f"@{v.username} has followed you!")
 	return "", 204
 
 

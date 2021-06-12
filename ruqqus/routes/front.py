@@ -275,7 +275,7 @@ def front_all(v):
    # If page 1, check for sticky
 	if page == 1:
 		sticky = []
-		sticky = g.db.query(Submission.id).filter_by(stickied=True)
+		sticky = g.db.query(Submission).filter_by(stickied=True).all()
 		if sticky:
 			for p in sticky:
 				if p.over_18 and not (v and v.over_18): continue

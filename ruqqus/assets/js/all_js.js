@@ -401,9 +401,6 @@ function autoExpand (field) {
 	xpos=window.scrollX;
 	ypos=window.scrollY;
 
-	// Reset field height
-	field.style.height = 'inherit';
-
 	// Get the computed styles for the element
 	var computed = window.getComputedStyle(field);
 

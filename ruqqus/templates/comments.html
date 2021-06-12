@@ -42,11 +42,9 @@
 				{% endfor %}
 			</div>
 		{% else %}
-			{% if c.replies %}
-				<div id="morecomment-{{c.base36id}}" class="mt-2 more-comments text-small">
-					<a href="{{c.permalink}}"{% if c.author.is_private %} rel="nofollow"{% endif %}>More comments <i class="fas fa-long-arrow-right ml-1"></i></a>
-				</div>
-			{% endif %}
+			<div id="morecomment-{{c.base36id}}" class="mt-2 more-comments text-small">
+				<a href="{{c.permalink}}"{% if c.author.is_private %} rel="nofollow"{% endif %}>More comments <i class="fas fa-long-arrow-right ml-1"></i></a>
+			</div>
 		{% endif %}
 	{% endif %}
 </div>
@@ -391,11 +389,9 @@
 					{% endfor %}
 				</div>
 		{% else %}
-			{% if c.replies %}
-				<div id="morecomment-{{c.base36id}}" class="mt-2 more-comments text-small">
-					<a href="{{c.permalink}}"{% if c.author.is_private %} rel="nofollow"{% endif %}>More comments <i class="fas fa-long-arrow-right ml-1"></i></a>
-				</div>
-			{% endif %}
+			<div id="morecomment-{{c.base36id}}" class="mt-2 more-comments text-small">
+				<a href="{{c.permalink}}"{% if c.author.is_private %} rel="nofollow"{% endif %}>More comments <i class="fas fa-long-arrow-right ml-1"></i></a>
+			</div>
 		{% endif %}
 	{% endif %}
 

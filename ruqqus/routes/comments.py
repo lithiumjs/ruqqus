@@ -19,6 +19,8 @@ from ruqqus.helpers.session import *
 from ruqqus.helpers.alerts import *
 from ruqqus.helpers.aws import *
 from ruqqus.classes import *
+from ruqqus.routes.front import comment_idlist
+
 from flask import *
 from ruqqus.__main__ import app, limiter
 

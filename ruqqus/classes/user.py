@@ -892,7 +892,7 @@ class User(Base, Stndrd, Age_times):
 			add_role(self, "banned")
 			delete_role(self, "member")
 
-		self.is_banned = admin.id if admin else 1
+		self.is_banned = admin.id if admin else 1046
 		if reason:
 			self.ban_reason = reason
 

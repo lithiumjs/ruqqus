@@ -985,7 +985,7 @@ def mod_edit_rule(bid, board, v):
 	return "", 204
 
 
-@app.route("/mod/settings", methods=["GET"])
+@app.route("/<boardname>/mod/settings", methods=["GET"])
 @auth_required
 @is_guildmaster("config")
 def board_about_settings(boardname, board, v):

@@ -92,7 +92,7 @@
 									</li>
 									{% if mod and mod.perm_access %}
 									<li class="nav-item">
-										<a class="nav-link{% if request.path.endswith('/mod/exiled') %} active{% endif %}" href="/+{{b.name}}/mod/exiled"><i class="fas fa-user-slash"></i>Band Users</a> 
+										<a class="nav-link{% if request.path.endswith('/mod/exiled') %} active{% endif %}" href="/+{{b.name}}/mod/exiled"><i class="fas fa-user-slash"></i>Banned Users</a> 
 									</li>
 
 										{% if b.restricted_posting or b.is_private%}

@@ -109,8 +109,8 @@ def blocks(v):
 	users = []
 	targets = []
 	for x in blocks:
-		users.append(get_account(x.user_id))
-		targets.append(get_account(x.target_id))
+		users.append(get_account(x.user_id).username)
+		targets.append(get_account(x.target_id).username)
 
 	return render_template("blocks.html", v=v, users=users, targets=targets)
 

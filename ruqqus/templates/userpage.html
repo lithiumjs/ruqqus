@@ -184,6 +184,7 @@
 				{% endif %}
 				{% if u.follower_count >=1 and not u.is_nofollow %}
 				<a href="/@{{u.username}}/followers" class="font-weight-bold">{{u.follower_count}} follower{{'s' if u.follower_count != 1 else ''}}</a>
+				<pre></pre>
 				{% endif %}
 				<div class="mb-3">
 						{% for b in u.badges %}

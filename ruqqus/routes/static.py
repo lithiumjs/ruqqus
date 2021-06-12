@@ -102,6 +102,18 @@ def leaderboard(v):
 	users1 = users1[:25]
 	return render_template("leaderboard.html", v=v, users1=users1, users2=users2, users3=users3, users4=users4)
 
+@app.route("/blocks", methods=["GET"])
+@auth_desired
+def blocks(v):
+	blocks=g.db.query(UserBlock).all()
+	blockslist = []
+	targets = []
+	x in blocks:
+		users += get_account(x.user_id)
+		targets += get_account(x.target_id)
+
+	return render_template("blocks.html", v=v, users=users, targets=targets)
+
 @app.route("/banned", methods=["GET"])
 @auth_desired
 def banned(v):

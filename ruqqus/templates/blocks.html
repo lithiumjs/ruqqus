@@ -13,7 +13,7 @@
 {% for user in users %}
 	<tr>
 		<td style="font-weight:bold;">{{user}}</td>
-		<td style="font-weight:bold;; text-align:right;">{{targets[users.index(user)]}}</td>
+		<td style="font-weight:bold;; text-align:right;">{{targets[loop.index]}}</td>
 	</tr>
 {% endfor %}
 </table>

@@ -342,10 +342,8 @@ class User(Base, Stndrd, Age_times):
 		if v and v.hide_bot:
 			submissions = submissions.filter_by(is_bot=False)
 
-		if not (v and (v.admin_level >= 3)):
-			submissions = submissions.filter_by(deleted_utc=0)
-
 		if not (v and (v.admin_level >= 3 or v.id == self.id)):
+			submissions = submissions.filter_by(deleted_utc=0)
 			submissions = submissions.filter_by(is_banned=False)
 
 		if v and v.admin_level >= 4:
@@ -369,8 +367,7 @@ class User(Base, Stndrd, Age_times):
 		else:
 			submissions = submissions.filter(Submission.post_public == True)
 
-		listing = [x[0] for x in submissions.order_by(
-			Submission.created_utc.desc()).offset(25 * (page - 1)).limit(26)]
+		listing = [x[0] for x in submissions.order_by(Submission.created_utc.desc()).offset(25 * (page - 1)).limit(26)]
 
 		return listing
 

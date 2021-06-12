@@ -18,7 +18,7 @@ SCOPES = {
 	'update': 'Edit your posts and comments',
 	'delete': 'Delete your posts and comments',
 	'vote': 'Cast votes as you',
-	'guildmaster': 'Perform Guildmaster actions'
+	'guildmaster': 'Perform Badmin actions'
 }
 
 

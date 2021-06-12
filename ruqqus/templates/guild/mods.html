@@ -1,10 +1,10 @@
 {% extends "guild/guild_settings.html" %}
 
-{% block pagetitle %}+{{b.name}} Guildmasters - Drama Guildmaster Tools{% endblock %}
+{% block pagetitle %}+{{b.name}} Badmins - Drama Badmin Tools{% endblock %}
 
 {% block scripts %}
 		<script>
-			// Guildmaster Step Down Function
+			// Badmin Step Down Function
 			step_downModal = function(mod) {
 				document.getElementById("stepDownButton").onclick = function() {
 					this.innerHTML='<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Stepping down';
@@ -20,7 +20,7 @@
 
 		{% if b.has_invite(v) %}
 		<script>
-		// Guildmaster Invitation Modal
+		// Badmin Invitation Modal
 		$(window).on('load', function(){
 			$('#gmInvitationModal').modal('show');
 		});
@@ -70,7 +70,7 @@
 					 <div class="d-md-flex justify-content-between mb-3">
 
 				<div>
-				 <h2 class="h5" name="guild_name">Guildmasters of +{{b.name}}</h2>
+				 <h2 class="h5" name="guild_name">Badmins of +{{b.name}}</h2>
 			 </div>
 
 			 <div class="mt-auto">
@@ -89,7 +89,7 @@
 				<thead class="thead-dark">
 					<tr>
 						<th scope="col">User</th>
-						<th scope="col">Guildmaster Since</th>
+						<th scope="col">Badmin Since</th>
 						<th scope="col">Permissions</th>
 						<th scope="col"></th>
 					</tr>
@@ -190,7 +190,7 @@
 
 </div>
 
-<!-- Guildmaster Invite User Modal -->
+<!-- Badmin Invite User Modal -->
 <div class="modal fade" id="guildmasterInviteModal" tabindex="-1" role="dialog" aria-labelledby="guildmasterInviteModalTitle" aria-hidden="true">
 	<div class="modal-dialog modal-dialog-centered" role="document">
 		<form action="/mod/invite_mod/{{b.base36id}}" id="invite-form" method="post" onsubmit="return false;">
@@ -215,7 +215,7 @@
 	</div>
 </div>
 
-<!-- Guildmaster Step Down Modal -->
+<!-- Badmin Step Down Modal -->
 <div class="modal fade" id="stepDownModal" tabindex="-1" role="dialog" aria-labelledby="stepDownModalTitle" aria-hidden="true">
 	<div class="modal-dialog modal-dialog-centered" role="document">
 		<div class="modal-content">
@@ -237,7 +237,7 @@
 	</div>
 </div>
 
-<!-- Guildmaster Perms Edit Modal -->
+<!-- Badmin Perms Edit Modal -->
 <div class="modal fade" id="editPermsModal" tabindex="-1" role="dialog" aria-labelledby="stepDownModalTitle" aria-hidden="true">
 	<div class="modal-dialog modal-dialog-centered" role="document">
 		<div class="modal-content">

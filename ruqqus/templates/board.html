@@ -49,7 +49,7 @@
 
 		<div class="text-small font-weight-bold text-muted text-uppercase mb-1" style="letter-spacing: 0.025rem;">Founded</div>
 		<p>{{b.created_date}}</p>
-		<div class="text-small font-weight-bold text-muted text-uppercase mb-2" style="letter-spacing: 0.025rem;">Guildmasters</div>
+		<div class="text-small font-weight-bold text-muted text-uppercase mb-2" style="letter-spacing: 0.025rem;">Badmins</div>
 		<div class="d-flex align-items-center">
 			{% for mod in b.mods_list[0:3] %}
 			<a href="{{mod.user.permalink}}">
@@ -81,13 +81,13 @@
 
 {% if b.has_mod(v, 'config') %}
 <div class="sidebar-section sidebar-info">
-	<div class="title"><i class="fas fa-crown mr-2"></i>Guildmaster Tools</div>
+	<div class="title"><i class="fas fa-crown mr-2"></i>Badmin Tools</div>
 	<div class="body">
 		<ul class="list-unstyled mb-0">
 
 			{% if b.has_mod(v, 'config') %}<li class="mb-2"><a class="text-muted" href="/+{{b.name}}/mod/settings"><i class="fas fa-cog fa-fw text-center mr-2"></i>Settings</a></li>{% endif %}
 			{% if b.has_mod(v, 'appearance') %}<li class="mb-2"><a class="text-muted" href="/+{{b.name}}/mod/appearance"><i class="fas fa-palette fa-fw text-center mr-2"></i>Appearance</a></li>{% endif %}
-			<li class="mb-2"><a class="text-muted" href="/+{{b.name}}/mod/mods"><i class="fas fa-crown fa-fw text-center mr-2"></i>Guildmasters</a></li>
+			<li class="mb-2"><a class="text-muted" href="/+{{b.name}}/mod/mods"><i class="fas fa-crown fa-fw text-center mr-2"></i>Badmins</a></li>
 			<li class="mb-2"><a class="text-muted" href="/+{{b.name}}/mod/log"><i class="fas fa-scroll-old fa-fw text-center mr-2"></i>Mod Log</a></li>
 			{% if b.has_mod(v, 'access') %}<li class="mb-2"><a class="text-muted" href="/+{{b.name}}/mod/exiled"><i class="fas fa-user-slash fa-fw text-center mr-2"></i>Bans</a></li>{% endif %}
 			{% if b.has_mod(v, 'content') %}<li class="mb-2"><a class="text-muted" href="/+{{b.name}}/mod/queue"><i class="fas fa-flag fa-fw text-center mr-2"></i>Reports</a></li>{% endif %}
@@ -212,7 +212,7 @@
 
 			{% block infobar %}
 			<div class="border-right py-3 px-3">
-				<a href="{{b.permalink+'/mod/mods'}}" class="text-black" style="text-decoration: none;">Guildmasters<span class="text-primary"> {{b.mods_count}}</span></a>
+				<a href="{{b.permalink+'/mod/mods'}}" class="text-black" style="text-decoration: none;">Badmins<span class="text-primary"> {{b.mods_count}}</span></a>
 			</div>
 			<div class="border-right p-3">
 				Member{{'s' if b.stored_subscriber_count != 1 else ''}}<span class="text-primary"> {{[b.stored_subscriber_count, 0] | max}}</span>

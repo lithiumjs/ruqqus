@@ -95,7 +95,7 @@ def user_uid(uid):
 	return redirect(user.permalink)
 
 @app.route("/id/<uid>", methods=["GET"])
-def user_uid(uid):
+def user_uid2(uid):
 
 	user = get_account2(uid)
 	return redirect(user.permalink)

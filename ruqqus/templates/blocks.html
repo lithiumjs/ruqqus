@@ -12,8 +12,8 @@
 </thead>
 {% for user in users %}
 	<tr>
-		<td style="font-weight:bold;">{{user}}</td>
-		<td style="font-weight:bold;">{{targets[loop.index]}}</td>
+		<td style="font-weight:bold;color:#{{user.namecolor}};">{{user}}</td>
+		<td style="font-weight:bold;color:#{{targets[loop.index].namecolor}};">{{targets[loop.index]}}</td>
 	</tr>
 {% endfor %}
 </table>

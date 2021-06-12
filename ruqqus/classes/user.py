@@ -536,7 +536,7 @@ class User(Base, Stndrd, Age_times):
 
 	@property
 	def uid_permalink(self):
-		return f"/uid/{self.base36id}"
+		return f"/uid/{self.id}"
 
 	@property
 	def original_link(self):

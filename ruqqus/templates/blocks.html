@@ -13,7 +13,7 @@
 {% for user in users %}
 	<tr>
 		<td style="font-weight:bold;color:#{{user.namecolor}};">{{user.username}}</td>
-		<td style="font-weight:bold;">{{targets[loop.index].username}}</td>
+		<td style="font-weight:bold;">{{targets[loop.index-1].username}}</td>
 	</tr>
 {% endfor %}
 </table>

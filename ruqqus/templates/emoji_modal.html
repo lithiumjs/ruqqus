@@ -1,17 +1,53 @@
 <!-- Emoji Selection Modal -->
 <div class="modal fade" id="emojiModal" tabindex="-1" role="dialog" aria-labelledby="emojiModalTitle" aria-hidden="true">
 	<div class="modal-dialog modal-dialog-scrollable modal-dialog-centered p-5" role="document">
-		<div class="modal-content">
+		<div class="modal-content" id="emojiTabs">
+			<div class="modal-header">
+				<div>
+					<h5 class="modal-title">
+						Select an emoji
+					</h5>
+					<ul class="nav nav-pills py-2">
+						<li class="nav-item">
+							<a class="nav-link active btn-sm" data-toggle="tab" href="#emoji-tab-ruqqus">Ruqqus</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link btn-sm" data-toggle="tab" href="#emoji-tab-memes">Meme</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link btn-sm" data-toggle="tab" href="#emoji-tab-gaming">Gaming</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link btn-sm" data-toggle="tab" href="#emoji-tab-tv">TV</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link btn-sm" data-toggle="tab" href="#emoji-tab-other">Other</a>
+						</li>
+					</ul>
+				</div>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<i class="fal fa-times text-muted"></i>
+				</button>
+			</div>
 			<div style="overflow-y: scroll;">
-				<div class="modal-body" style="overflow: hidden;" id="emoji-modal-body">
-
-					<div id="no-emojis-found">
+				<div class="modal-body p-0" id="emoji-modal-body">
+					<div id="no-emojis-found"></div>
+					<div class="tab-content">
+						<div class="tab-pane fade show active" id="emoji-tab-ruqqus">
+							<div class="d-flex flex-wrap p-3" id="EMOJIS_platy"></div>
+						</div>
+						<div class="tab-pane fade" id="emoji-tab-memes">
+							<div class="d-flex flex-wrap p-3" id="EMOJIS_marsey"></div>
+						</div>
+						<div class="tab-pane fade" id="emoji-tab-gaming">
+							<div class="d-flex flex-wrap p-3" id="EMOJIS_tay"></div>
+						</div>
+						<div class="tab-pane fade" id="emoji-tab-tv">
+							<div class="d-flex flex-wrap p-3" id="EMOJIS_classic"></div>
+						</div>
 					</div>
-
-					<div class="emoji-columns pt-3 px-3 pb-0" id="EMOJIS"></div>
 				</div>
 			</div>
 		</div>
 	</div>
-
 </div>

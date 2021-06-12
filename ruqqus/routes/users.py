@@ -148,13 +148,6 @@ def u_username(username, v=None):
 				'api': lambda: {"error": f"That username is reserved for: {u.reserved}"}
 				}
 
-	if u.is_suspended and (not v or v.admin_level < 3):
-		return {'html': lambda: render_template("userpage_banned.html",
-												u=u,
-												v=v),
-				'api': lambda: {"error": "That user is banned"}
-				}
-
 	if u.is_deleted and (not v or v.admin_level < 3):
 		return {'html': lambda: render_template("userpage_deleted.html",
 												u=u,
@@ -229,13 +222,6 @@ def u_username_comments(username, v=None):
 												u=u,
 												v=v),
 				'api': lambda: {"error": f"That username is reserved for: {u.reserved}"}
-				}
-
-	if u.is_suspended and (not v or v.admin_level < 3):
-		return {'html': lambda: render_template("userpage_banned.html",
-												u=u,
-												v=v),
-				'api': lambda: {"error": "That user is banned"}
 				}
 
 	if u.is_deleted and (not v or v.admin_level < 3):

@@ -55,7 +55,7 @@ def get_account(base36id, v=None, nSession=None, graceful=False):
 	if not nSession:
 		nSession = g.db
 
-	id = base36decode(base36id)
+	#id = base36decode(base36id)
 
 	user = nSession.query(User
 						  ).filter(

@@ -1008,12 +1008,12 @@ def board_about_appearance(boardname, board, v):
 
 @app.route("/badmins", methods=["GET"])
 @app.route("/api/vue/mod/mods",  methods=["GET"])
-@app.route("/api/v1/<boardname>/mod/mods", methods=["GET"])
+@app.route("/api/v1/mod/mods", methods=["GET"])
 @auth_desired
 @api("read")
-def board_about_mods(boardname, v):
+def board_about_mods(v):
 
-	board = get_guild(boardname)
+	board = get_guild("general")
 
 	if board.is_banned:
 		return {
@@ -1841,13 +1841,13 @@ def change_guild_category(v, board, bid, category):
 
 
 @app.route("/log", methods=["GET"])
-@app.route("/api/v1/mod_log/<boardname>", methods=["GET"])
+@app.route("/api/v1/mod_log", methods=["GET"])
 @auth_desired
 @api("read")
-def board_mod_log(boardname, v):
+def board_mod_log(v):
 
 	page=int(request.args.get("page",1))
-	board=get_guild(boardname)
+	board=get_guild("general")
 
 	if board.is_banned:
 		return {

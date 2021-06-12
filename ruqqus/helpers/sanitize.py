@@ -223,6 +223,6 @@ def sanitize(text, bio=False, linkgen=False):
 	
 	for i in re.finditer(':(.{1,30}?):', sanitized):
 		if os.path.isfile(f'/d/ruqqus/assets/images/emojis/{i.group(1)}.gif'):
-			sanitized = sanitized.replace(f':{i.group(1)}:', f'<a class="tooltip2"><img height="20" src="/assets/images/emojis/{i.group(1)}.gif"><span class="tooltiptext">:{i.group(1)}:</span></a>')
+			sanitized = sanitized.replace(f':{i.group(1)}:', f'<a class="tooltip2"><img height="20" src="/assets/images/emojis/{i.group(1)}.gif"><span class="tooltiptext">:‎{i.group(1)}‎:</span></a>')
 
 	return sanitized

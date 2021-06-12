@@ -14081,8 +14081,7 @@ div.deleted.banned {
   margin-left: -50px;
 
   /* Fade in tooltip */
-  opacity: 0;
-  transition: opacity 0.3s;
+  opacity: 1;
 }
 
 @media (min-width: 800px) {
@@ -14104,5 +14103,5 @@ div.deleted.banned {
 /* Show the tooltip text when you mouse over the tooltip container */
 .tooltip2:hover .tooltiptext {
   visibility: visible;
-  opacity: 1;
+  opacity: 1 !important;
 }

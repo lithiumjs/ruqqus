@@ -277,7 +277,10 @@ def front_all(v):
 		sticky = []
 		sticky = g.db.query(Submission.id).filter_by(stickied=True)
 		if sticky:
-			for p in sticky: ids = [p.id] + ids
+			for p in sticky:
+				if p.over_18 and not (v and v.over_18): continue
+				if p.is_nsfl and not (v and v.show_nsfl): continue
+				ids = [p.id] + ids
 	# check if ids exist
 	posts = get_posts(ids, sort=sort, v=v)
 	

@@ -274,7 +274,7 @@ $('.comment-box').blur(function () {
 toggleEdit=function(id){
 	comment=document.getElementById("comment-text-"+id);
 	form=document.getElementById("comment-edit-"+id);
-	box=document.getElementById('edit-box-comment-'+id);
+	box=document.getElementById('comment-edit-body-'+id);
 	actions = document.getElementById('comment-' + id +'-actions');
 
 	comment.classList.toggle("d-none");

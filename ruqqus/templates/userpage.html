@@ -163,21 +163,15 @@
 				<a href="{{u.profile_url}}"><img src="{{u.profile_url}}" class="profile-pic-65 bg-white border-2 border-white mb-2"></a>
 			</div>
 			<div class="mt-n3 py-3">
-				<a href="{{u.permalink}}" class="text-black">
-					<h1 class="h5 d-inline-block">{{u.username}}
-						{% if u.username != u.original_username %}
-							<span>
-								<i class="fad fa-user-tag text-info align-middle ml-2" data-toggle="tooltip" data-placement="bottom" title="Original Username: @{{u.original_username}}"></i>
-							</span>
-						{% endif %}
-						<!--{% if u.over_18 %}
-						<span class="badge badge-danger text-small align-middle mx-1">nsfw</span>
-						{% endif %}-->
-						{% if v and v.has_follower(u) and not v.is_nofollow %}
-						<span class="badge badge-secondary text-small align-middle mx-1">Follows you</span>
-						{% endif %}
-					</h1>
-				</a>
+				<a href="{{u.permalink}}" class="text-black"><h1 class="h5 d-inline-block">{{u.username}}</h1></a>
+				{% if u.username != u.original_username %}
+					<span>
+						<i class="fad fa-user-tag text-info align-middle ml-2" data-toggle="tooltip" data-placement="bottom" title="Original Username: @{{u.original_username}}"></i>
+					</span>
+				{% endif %}
+				{% if v and v.has_follower(u) and not v.is_nofollow %}
+				<span class="badge badge-secondary text-small align-middle mx-1">Follows you</span>
+				{% endif %}
 				<div class="text-small mb-2">{{u.true_score}} Dramacoins</div>
 				{% if u.bio_html %}
 				<p class="text-muted text-break">{{u.bio_html | safe}}</p>

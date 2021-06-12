@@ -5830,12 +5830,7 @@ a.close.disabled {
 .modal-body {
 	position: relative;
 	flex: 1 1 auto;
-	padding: 25px 10px; }
-
-@media (min-width: 800px) {
-	.modal-body {
-		padding: 25px 0 0 35px !important; }
-}
+	padding: 0 0; }
 
 .modal-footer {
 	display: flex;

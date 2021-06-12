@@ -8057,6 +8057,11 @@ button.bg-reddit:focus {
 .pr-2,
 .px-2 {
 	padding-right: 0.5rem !important; }
+	
+.pr-25,
+.px-25 {
+	padding-right: 0.75rem !important; }
+
 
 .pb-2,
 .py-2 {

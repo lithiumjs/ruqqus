@@ -985,7 +985,7 @@ def mod_edit_rule(bid, board, v):
 	return "", 204
 
 
-@app.route("/+<boardname>/mod/settings", methods=["GET"])
+@app.route("/mod/settings", methods=["GET"])
 @auth_required
 @is_guildmaster("config")
 def board_about_settings(boardname, board, v):
@@ -998,7 +998,7 @@ def board_about_settings(boardname, board, v):
 		)
 
 
-@app.route("/+<boardname>/mod/appearance", methods=["GET"])
+@app.route("/mod/appearance", methods=["GET"])
 @auth_required
 @is_guildmaster("appearance")
 def board_about_appearance(boardname, board, v):
@@ -1006,8 +1006,8 @@ def board_about_appearance(boardname, board, v):
 	return render_template("guild/appearance.html", v=v, b=board)
 
 
-@app.route("/+<boardname>/mod/mods", methods=["GET"])
-@app.route("/api/vue/+<boardname>/mod/mods",  methods=["GET"])
+@app.route("/mod/mods", methods=["GET"])
+@app.route("/api/vue/mod/mods",  methods=["GET"])
 @app.route("/api/v1/<boardname>/mod/mods", methods=["GET"])
 @auth_desired
 @api("read")
@@ -1029,7 +1029,7 @@ def board_about_mods(boardname, v):
 		}
 
 
-@app.route("/+<boardname>/mod/exiled", methods=["GET"])
+@app.route("/mod/exiled", methods=["GET"])
 @app.route("/api/v1/<boardname>/mod/exiled", methods=["GET"])
 @auth_required
 @is_guildmaster("access")
@@ -1059,7 +1059,7 @@ def board_about_exiled(boardname, board, v):
 
 
 
-@app.route("/+<boardname>/mod/contributors", methods=["GET"])
+@app.route("/mod/contributors", methods=["GET"])
 @auth_required
 @is_guildmaster("access")
 def board_about_contributors(boardname, board, v):
@@ -1148,7 +1148,7 @@ def unsubscribe_board(boardname, v):
 	return jsonify({"message": f"Left +{board.name}"}), 200
 
 
-@app.route("/+<boardname>/mod/queue", methods=["GET"])
+@app.route("/mod/queue", methods=["GET"])
 @auth_required
 @is_guildmaster("content")
 def board_mod_queue(boardname, board, v):
@@ -1840,7 +1840,7 @@ def change_guild_category(v, board, bid, category):
 
 
 
-@app.route("/+<boardname>/mod/log", methods=["GET"])
+@app.route("/mod/log", methods=["GET"])
 @app.route("/api/v1/mod_log/<boardname>", methods=["GET"])
 @auth_desired
 @api("read")
@@ -1873,7 +1873,7 @@ def board_mod_log(boardname, v):
 		"api":lambda:jsonify({"data":[x.json for x in actions]})
 		}
 
-@app.route("/+<boardname>/mod/log/<aid>", methods=["GET"])
+@app.route("/mod/log/<aid>", methods=["GET"])
 @auth_desired
 def mod_log_item(boardname, aid, v):
 
@@ -1894,7 +1894,7 @@ def mod_log_item(boardname, aid, v):
 		action=action
 		)
 
-@app.route("/+<boardname>/mod/edit_perms", methods=["POST"])
+@app.route("/mod/edit_perms", methods=["POST"])
 @auth_required
 @is_guildmaster("full")
 @validate_formkey

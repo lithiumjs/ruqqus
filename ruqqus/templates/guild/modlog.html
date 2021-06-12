@@ -1,6 +1,6 @@
 {% extends "guild/guild_settings.html" %}
 
-{% block pagetitle %}{% if action %}(+{{b.name}}) {{action.title_text}}{% else %}+{{b.name}} Moderation Log{% endif %}{% endblock %}
+{% block pagetitle %}{% if action %}(+{{b.name}}) {{action.title_text}}{% else %}Moderation Log{% endif %}{% endblock %}
 
 {% block stylesheets %}
 
@@ -20,8 +20,7 @@
 		<div class="d-md-flex justify-content-between mb-3">
 
 			<div>
-				<h2 class="h5" name="guild_name">+{{b.name}} Moderation Log</h2>
-				<p class="text-small text-muted mb-md-0">This is a log of moderator actions performed in +{{b.name}}.</p>
+				<p class="text-small text-muted mb-md-0">This is a log of badmin actions performed.</p>
 			</div>
 
 		</div>

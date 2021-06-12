@@ -59,7 +59,7 @@
 					<img src="/assets/images/nsfw.png" class="post-img border-0" alt="generic link post thumbnail">
 				</a>
 
-				{% if p.thumb_url and p.is_image %}
+				{% elif p.thumb_url and p.is_image %}
 				<a href="javascript:void(0)" rel="nofollow noopener" class="expandable-image" data-toggle="modal" data-target="#expandImageModal" data-url="{{p.url}}">
 					<img src="{{p.thumb_url}}" class="post-img">
 				</a>

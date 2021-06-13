@@ -542,6 +542,7 @@ def api_comment(v):
 	nsfl = (v and v.show_nsfl) or session_isnsfl(board)
 	
 	cache.delete_memoized(comment_idlist)
+	cache.delete_memoized(User.commentlisting, v)
 
 	return {"html": lambda: jsonify({"html": render_template("comments.html",
 															 v=v,

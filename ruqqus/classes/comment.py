@@ -6,8 +6,9 @@ from sqlalchemy.ext.associationproxy import association_proxy
 from random import randint
 import math
 from .mix_ins import *
-from ruqqus.helpers.wrappers import *
-from ruqqus.helpers.get import *
+#from ruqqus.helpers.wrappers import *
+from .classes import *
+from ruqqus.helpers.get import get_board
 from ruqqus.helpers.base36 import *
 from ruqqus.helpers.lazy import lazy
 from ruqqus.__main__ import Base, cache

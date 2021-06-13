@@ -83,18 +83,18 @@ def incoming_post_shortlink(base36id=None):
 	post = get_post(base36id)
 	return redirect(post.permalink)
 
-@app.route("/post/<base36id>", methods=["GET"])
-@app.route("/post/<base36id>/", methods=["GET"])
-@app.route("/post/<base36id>/<anything>", methods=["GET"])
-@app.route("/api/v1/post/<base36id>", methods=["GET"])
-@app.route("/test/post/<base36id>", methods=["GET"])
+@app.route("/post/<pid>", methods=["GET"])
+@app.route("/post/<pid>/", methods=["GET"])
+@app.route("/post/<pid>/<anything>", methods=["GET"])
+@app.route("/api/v1/post/<pid>", methods=["GET"])
+@app.route("/test/post/<pid>", methods=["GET"])
 @auth_desired
 @api("read")
-def post_base36id(base36id, anything=None, v=None):
-	
-	post = get_post_with_comments(
-		int(base36id), v=v, sort_type=request.args.get(
-			"sort", "top"))
+def post_base36id(pid, anything=None, v=None):
+	try: pid = int(pid)
+	except: abort(404)
+		
+	post = get_post_with_comments(pid, v=v, sort_type=request.args.get("sort", "top"))
 	
 	post.views += 1
 

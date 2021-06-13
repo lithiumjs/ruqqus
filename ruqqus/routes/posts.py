@@ -890,7 +890,7 @@ def submit_post(v):
 
 	# expire the relevant caches: front page new, board new
 	cache.delete_memoized(frontlist)
-	cache.delete_memoized(User.userpagelisting, v)
+	cache.delete_memoized(userpagelisting)
 	g.db.commit()
 
 	notify_users = set()
@@ -960,7 +960,7 @@ def delete_post_pid(pid, v):
 	g.db.add(post)
 
 	# clear cache
-	cache.delete_memoized(User.userpagelisting, v, sort="new")
+	cache.delete_memoized(userpagelisting)
 
 	if post.age >= 3600 * 6:
 		cache.delete_memoized(frontlist, sort="new")

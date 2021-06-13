@@ -100,7 +100,7 @@ def api_vote_post(post_id, x, v):
 		g.db.add(post)
 	g.db.commit()
 	
-	if True:
+	if "100" in str(now):
 		posts = g.db.query(Submission).options(lazyload('*')).filter_by(is_banned=False, deleted_utc=0).all()
 		for post in posts:
 			post.upvotes = post.ups

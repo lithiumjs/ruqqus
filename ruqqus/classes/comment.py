@@ -400,7 +400,8 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
 
 	def collapse_for_user(self, v):
 
-		if self.over_18 and not (v and v.over_18):
+		board = get_board(1)
+		if self.over_18 and not (v and v.over_18) and not session_over18(board):
 			return True
 
 		if self.is_nsfl and not (v and v.show_nsfl):

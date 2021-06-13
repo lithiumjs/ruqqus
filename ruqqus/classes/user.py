@@ -333,15 +333,6 @@ class User(Base, Stndrd, Age_times):
 		submissions = g.db.query(Submission.id).options(
 			lazyload('*')).filter_by(author_id=self.id)
 
-		if not (v and v.over_18):
-			submissions = submissions.filter_by(over_18=False)
-
-		if v and v.hide_offensive:
-			submissions = submissions.filter_by(is_offensive=False)
-			
-		if v and v.hide_bot:
-			submissions = submissions.filter_by(is_bot=False)
-
 		if not (v and (v.admin_level >= 3 or v.id == self.id)):
 			submissions = submissions.filter_by(deleted_utc=0)
 			submissions = submissions.filter_by(is_banned=False)

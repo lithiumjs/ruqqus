@@ -782,7 +782,7 @@ def get_from_permalink(link, v=None):
 	except: abort(400)
 
 	if comment_id:
-		return get_comment(comment_id, v=v)
+		return get_comment(int(comment_id), v=v)
 
 	else:
 		return get_post(int(post_id), v=v)

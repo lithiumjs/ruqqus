@@ -7,7 +7,7 @@ from random import randint
 import math
 from .mix_ins import *
 #from ruqqus.helpers.wrappers import *
-from .classes import *
+from ruqqus.classes import *
 from ruqqus.helpers.get import get_board
 from ruqqus.helpers.base36 import *
 from ruqqus.helpers.lazy import lazy

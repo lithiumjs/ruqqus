@@ -6,8 +6,9 @@ from sqlalchemy.ext.associationproxy import association_proxy
 from random import randint
 import math
 from .mix_ins import *
+from ruqqus.classes import *
 #from ruqqus.helpers.wrappers import *
-from . import *
+from ruqqus.helpers.get import get_board
 from ruqqus.helpers.base36 import *
 from ruqqus.helpers.lazy import lazy
 from ruqqus.__main__ import Base, cache
@@ -402,8 +403,7 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
 
 	def collapse_for_user(self, v):
 
-		board = g.db.query(Board).filter_by(id=1).first()
-		
+		board = get_board(1)
 		if self.over_18 and not (v and v.over_18) and not session_over18(board):
 			return True
 

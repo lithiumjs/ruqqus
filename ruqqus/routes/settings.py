@@ -436,53 +436,6 @@ def update_announcement(v):
 	return "", 204
 
 
-@app.route("/settings/delete_account", methods=["POST"])
-@is_not_banned
-@no_negative_balance("html")
-@validate_formkey
-def delete_account(v):
-
-	if not v.verifyPass(request.form.get("password", "")) or (
-			v.mfa_secret and not v.validate_2fa(request.form.get("twofactor", ""))):
-		return render_template("settings_security.html", v=v,
-							   error="Invalid password or token" if v.mfa_secret else "Invalid password")
-
-
-	remove_user(v)
-
-	v.discord_id=None
-	v.is_deleted = True
-	v.login_nonce += 1
-	v.delete_reason = request.form.get("delete_reason", "")
-	v.patreon_id=None
-	v.patreon_pledge_cents=0
-	v.del_banner()
-	v.del_profile()
-	g.db.add(v)
-
-	mods = g.db.query(ModRelationship).filter_by(user_id=v.id).all()
-	for mod in mods:
-		g.db.delete(mod)
-
-	bans = g.db.query(BanRelationship).filter_by(user_id=v.id).all()
-	for ban in bans:
-		g.db.delete(ban)
-
-	contribs = g.db.query(ContributorRelationship).filter_by(
-		user_id=v.id).all()
-	for contrib in contribs:
-		g.db.delete(contrib)
-
-	blocks = g.db.query(UserBlock).filter_by(target_id=v.id).all()
-	for block in blocks:
-		g.db.delete(block)
-
-	session.pop("user_id", None)
-	session.pop("session_id", None)
-
-	return redirect('/')
-
-
 @app.route("/settings/blocks", methods=["GET"])
 @auth_required
 def settings_blockedpage(v):
@@ -555,52 +508,6 @@ def settings_unblock_user(v):
 	return jsonify({"message": f"@{user.username} unblocked."})
 
 
-@app.route("/settings/block_guild", methods=["POST"])
-@auth_required
-@validate_formkey
-def settings_block_guild(v):
-
-	board = get_guild(request.values.get("board"), graceful=True)
-
-	if not board:
-		return jsonify({"error": "That guild doesn't exist."}), 404
-
-	if v.has_blocked_guild(board):
-		return jsonify({"error": f"You have already blocked +{board.name}."}), 409
-
-	new_block = BoardBlock(user_id=v.id,
-						   board_id=board.id,
-						   created_utc=int(time.time())
-						   )
-	g.db.add(new_block)
-
-	cache.delete_memoized(v.idlist)
-	#cache.delete_memoized(Board.idlist, v=v)
-	cache.delete_memoized(frontlist, v=v)
-
-	return jsonify({"message": f"+{board.name} added to filter"})
-
-
-@app.route("/settings/unblock_guild", methods=["POST"])
-@auth_required
-@validate_formkey
-def settings_unblock_guild(v):
-
-	board = get_guild(request.values.get("board"), graceful=True)
-
-	x = v.has_blocked_guild(board)
-	if not x:
-		abort(409)
-
-	g.db.delete(x)
-
-	cache.delete_memoized(v.idlist)
-	#cache.delete_memoized(Board.idlist, v=v)
-	cache.delete_memoized(frontlist, v=v)
-
-	return jsonify({"message": f"+{board.name} removed from filter"})
-
-
 @app.route("/settings/apps", methods=["GET"])
 @auth_required
 def settings_apps(v):
@@ -629,12 +536,6 @@ def settings_remove_discord(v):
 def settings_content_get(v):
 
 	return render_template("settings_filters.html", v=v)
-
-@app.route("/settings/purchase_history", methods=["GET"])
-@auth_required
-def settings_purchase_history(v):
-
-	return render_template("settings_txnlist.html", v=v)
 
 @app.route("/settings/name_change", methods=["POST"])
 @auth_required
@@ -736,6 +637,19 @@ def settings_title_change(v):
 	v.customtitle=new_name
 
 	g.db.add(v)
+	g.db.commit()
+
+	posts = g.db.query(Submission).options(lazyload('*')).filter_by(is_banned=False, deleted_utc=0).all()
+
+	for post in posts:
+		post.upvotes = post.ups
+		post.downvotes = post.downs
+		g.db.add(post)
+		g.db.flush()
+		post.score_disputed = post.rank_fiery
+		post.score_top = post.score
+		post.score_best = post.rank_best
+		g.db.add(post)
 	g.db.commit()
 
 	return render_template("settings_profile.html",

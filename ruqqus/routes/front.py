@@ -15,7 +15,6 @@ from ruqqus.classes.categories import CATEGORIES
 def slash_post():
 	return redirect("/")
 
-
 @app.route("/notifications", methods=["GET"])
 @auth_required
 def notifications(v):
@@ -73,7 +72,6 @@ def notifications(v):
 						   is_notification_page=True)
 
 @cache.memoize(timeout=1500)
-
 def frontlist(v=None, sort="hot", page=1,t="all", ids_only=True, filter_words='', **kwargs):
 
 	# cutoff=int(time.time())-(60*60*24*30)
@@ -295,155 +293,6 @@ def front_all(v):
 								   )
 			}
 
-@cache.memoize(600)
-def guild_ids(sort="subs", page=1, nsfw=False, cats=[]):
-	# cutoff=int(time.time())-(60*60*24*30)
-
-	guilds = g.db.query(Board).filter_by(is_banned=False)
-
-	if not nsfw:
-		guilds = guilds.filter_by(over_18=False)
-
-	if cats:
-		guilds=guilds.filter(Board.subcat.in_(tuple(cats)))
-
-	if sort == "subs":
-		guilds = guilds.order_by(Board.stored_subscriber_count.desc())
-	elif sort == "new":
-		guilds = guilds.order_by(Board.created_utc.desc())
-	elif sort == "trending":
-		guilds = guilds.order_by(Board.rank_trending.desc())
-
-	else:
-		abort(400)
-
-	guilds = [x.id for x in guilds.offset(25 * (page - 1)).limit(26).all()]
-
-	return guilds
-
-
-@app.route("/browse", methods=["GET"])
-@app.route("/api/v1/guilds")
-@auth_desired
-@api("read")
-def browse_guilds(v):
-
-	page = int(request.args.get("page", 1))
-
-	# prevent invalid paging
-	page = max(page, 1)
-
-	sort = request.args.get("sort", "trending")
-
-	# get list of ids
-	ids = guild_ids(
-		sort=sort, 
-		page=page, 
-		nsfw=(v and v.over_18),
-		cats=request.args.get("cats").split(',') if request.args.get("cats") else None
-		)
-
-	# check existence of next page
-	next_exists = (len(ids) == 26)
-	ids = ids[0:25]
-
-	# check if ids exist
-	if ids:
-		# assemble list of tuples
-		i = 1
-		tups = []
-		for x in ids:
-			tups.append((x, i))
-			i += 1
-
-		# tuple string
-		tups = str(tups).lstrip("[").rstrip("]")
-
-		# hit db for entries
-
-		boards = g.db.query(
-			Board).options(
-			lazyload(
-				'*'
-			)).filter(
-			Board.id.in_(ids)
-			).all()
-
-		boards=sorted(boards, key=lambda x: ids.index(x.id))
-	else:
-		boards = []
-
-	return {"html": lambda: render_template("boards.html",
-											v=v,
-											boards=boards,
-											page=page,
-											next_exists=next_exists,
-											sort=sort
-											),
-			"api": lambda: jsonify({"data": [board.json for board in boards]})
-			}
-
-
-@app.route('/mine', methods=["GET"])
-@auth_required
-def my_subs(v):
-
-	kind = request.args.get("kind", "guilds")
-	page = max(int(request.args.get("page", 1)), 1)
-
-	if kind == "guilds":
-
-		b = g.db.query(Board)
-		contribs = g.db.query(ContributorRelationship.board_id).filter_by(user_id=v.id).subquery()
-		m = g.db.query(ModRelationship.board_id).filter_by(user_id=v.id, accepted=True).subquery()
-		s = g.db.query(Subscription.board_id).filter_by(user_id=v.id, is_active=True).subquery()
-
-		content = b.filter(
-			or_(
-				Board.id.in_(contribs),
-				Board.id.in_(m),
-				Board.id.in_(s)
-				)
-			)
-		content = content.order_by(Board.name.asc())
-
-		content = [x for x in content.offset(25 * (page - 1)).limit(26)]
-		next_exists = (len(content) == 26)
-		content = content[0:25]
-
-		return render_template("mine/boards.html",
-							   v=v,
-							   boards=content,
-							   next_exists=next_exists,
-							   page=page,
-							   kind="guilds")
-
-	elif kind == "users":
-
-		u = g.db.query(User)
-		follows = g.db.query(Follow).filter_by(user_id=v.id).subquery()
-
-		content = u.join(follows,
-						 User.id == follows.c.target_id,
-						 isouter=False)
-
-		content = content.order_by(User.follower_count.desc())
-
-		content = [x for x in content.offset(25 * (page - 1)).limit(26)]
-		next_exists = (len(content) == 26)
-		content = content[0:25]
-
-		return render_template("mine/users.html",
-							   v=v,
-							   users=content,
-							   next_exists=next_exists,
-							   page=page,
-							   kind="users")
-
-	else:
-		abort(400)
-
-
 @app.route("/random/post", methods=["GET"])
 @auth_desired
 def random_post(v):
@@ -482,29 +331,6 @@ def random_post(v):
 
 	post = x.order_by(Submission.id.asc()).offset(n).limit(1).first()
 	return redirect(post.permalink)
-
-
-@app.route("/random/guild", methods=["GET"])
-@auth_desired
-def random_guild(v):
-
-	x = g.db.query(Board).filter_by(
-		is_banned=False,
-		is_private=False,
-		over_18=False,
-		is_nsfl=False)
-
-	if v:
-		bans = g.db.query(BanRelationship.id).filter_by(user_id=v.id).all()
-		x = x.filter(Board.id.notin_([i[0] for i in bans]))
-
-	total = x.count()
-	n = random.randint(0, total - 1)
-
-	board = x.order_by(Board.id.asc()).offset(n).limit(1).first()
-
-	return redirect(board.permalink)
-
 
 @app.route("/random/comment", methods=["GET"])
 @auth_desired
@@ -621,8 +447,6 @@ def all_comments(v):
 
 	idlist = comment_idlist(v=v,
 							page=page,
-							nsfw=v and v.over_18,
-							nsfl=v and v.show_nsfl,
 							hide_offensive=v and v.hide_offensive,
 							hide_bot=v and v.hide_bot)
 
@@ -633,26 +457,10 @@ def all_comments(v):
 	idlist = idlist[0:25]
 
 	board = get_board(1)
-	nsfw = (v and v.over_18) or session_over18(board)
-	nsfl = (v and v.show_nsfl) or session_isnsfl(board)
 	return {"html": lambda: render_template("home_comments.html",
 											v=v,
-											nsfw=nsfw,
-											nsfl=nsfl,
 											page=page,
 											comments=comments,
 											standalone=True,
 											next_exists=next_exists),
 			"api": lambda: jsonify({"data": [x.json for x in comments]})}
-
-
-@app.route("/api/v1/categories", methods=["GET"])
-@auth_desired
-@api()
-def categories(v):
-
-	return make_response(
-		jsonify(
-			{"data":[x.json for x in CATEGORIES]}
-			)
-		)

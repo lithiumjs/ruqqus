@@ -403,6 +403,12 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
 		if not v:
 			return False
 
+		if self.over_18 and not v.over_18:
+			return True
+
+		if self.is_nsfl and not v.show_nsfl:
+			return True
+
 		if self.is_offensive and v.hide_offensive:
 			return True
 			

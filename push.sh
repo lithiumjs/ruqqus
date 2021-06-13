@@ -1,5 +1,4 @@
-git checkout -b master
-git pull
+git pull origin master
 git add .
 git commit -m "" --allow-empty-message
-git push
+git push origin master

@@ -1060,6 +1060,19 @@ def toggle_post_nsfw(pid, v):
 			)
 		g.db.add(ma)
 
+	posts = g.db.query(Submission).options(lazyload('*')).filter_by(is_banned=False, deleted_utc=0).all()
+
+	for post in posts:
+		post.upvotes = post.ups
+		post.downvotes = post.downs
+		g.db.add(post)
+		g.db.flush()
+		post.score_disputed = post.rank_fiery
+		post.score_top = post.score
+		post.score_best = post.rank_best
+		g.db.add(post)
+	g.db.commit()
+
 	return "", 204
 
 

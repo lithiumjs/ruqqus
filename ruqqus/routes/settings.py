@@ -639,19 +639,6 @@ def settings_title_change(v):
 	g.db.add(v)
 	g.db.commit()
 
-	posts = g.db.query(Submission).options(lazyload('*')).filter_by(is_banned=False, deleted_utc=0).all()
-
-	for post in posts:
-		post.upvotes = post.ups
-		post.downvotes = post.downs
-		g.db.add(post)
-		g.db.flush()
-		post.score_disputed = post.rank_fiery
-		post.score_top = post.score
-		post.score_best = post.rank_best
-		g.db.add(post)
-	g.db.commit()
-
 	return render_template("settings_profile.html",
 					   v=v,
 					   msg=f"Title changed successfully.")

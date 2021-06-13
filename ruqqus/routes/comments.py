@@ -45,24 +45,26 @@ def comment_cid(cid, pid=None):
 		abort(403)
 	return redirect(comment.permalink)
 
-@app.route("/api/v1/post/<p_id>/comment/<c_id>", methods=["GET"])
-def comment_cid_api_redirect(c_id=None, p_id=None):
-	redirect(f'/api/v1/comment/<c_id>')
+@app.route("/api/v1/post/<pid>/comment/<cid>", methods=["GET"])
+def comment_cid_api_redirect(cid=None, pid=None):
+	redirect(f'/api/v1/comment/<cid>')
 
-@app.route("/api/v1/comment/<c_id>", methods=["GET"])
-@app.route("/post/<p_id>/<anything>/<c_id>", methods=["GET"])
-@app.route("/api/vue/comment/<c_id>")
+@app.route("/api/v1/comment/<cid>", methods=["GET"])
+@app.route("/post/<pid>/<anything>/<cid>", methods=["GET"])
+@app.route("/api/vue/comment/<cid>")
 @auth_desired
 @api("read")
-def post_pid_comment_cid(c_id, p_id=None, anything=None, v=None):
+def post_pid_comment_cid(cid, pid=None, anything=None, v=None):
 
-	comment = get_comment(c_id, v=v)
+	comment = get_comment(cid, v=v)
 	
 	# prevent api shenanigans
-	if not p_id:
-		p_id = base36encode(comment.parent_submission)
+	if not pid: pid = comment.parent_submission
 	
-	post = get_post(p_id, v=v)
+	try: pid = int(pid)
+	except: abort(404)
+	
+	post = get_post(pid, v=v)
 	board = post.board
 		
 	if post.over_18 and not (
@@ -75,21 +77,6 @@ def post_pid_comment_cid(c_id, p_id=None, anything=None, v=None):
 													t),
 												board=comment.board
 												),
-				'api': lambda: {'error': f'This content is not suitable for some users and situations.'}
-
-				}
-
-	if post.is_nsfl and not (
-			v and v.show_nsfl) and not session_isnsfl(comment.board):
-		t = int(time.time())
-		return {'html': lambda: render_template("errors/nsfl.html",
-												v=v,
-												t=t,
-												lo_formkey=make_logged_out_formkey(
-													t),
-												board=comment.board
-												),
-
 				'api': lambda: {'error': f'This content is not suitable for some users and situations.'}
 
 				}

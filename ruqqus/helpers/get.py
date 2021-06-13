@@ -785,7 +785,7 @@ def get_from_permalink(link, v=None):
 		return get_comment(comment_id, v=v)
 
 	else:
-		return get_post(post_id, v=v)
+		return get_post(int(post_id), v=v)
 
 
 def get_from_fullname(fullname, v=None, graceful=False):

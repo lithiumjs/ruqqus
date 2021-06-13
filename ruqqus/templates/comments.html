@@ -201,7 +201,7 @@
 
 					{% endif %}
 
-					<li class="list-inline-item text-muted d-none d-md-inline-block"><a href="/admin/vote_info?link=https://rdrama.net{{c.permalink}}"><i class="fas fa-arrows-v"></i>Votes</a></li>
+					<li class="list-inline-item text-muted d-none d-md-inline-block"><a href="votes?link=https://rdrama.net{{c.permalink}}"><i class="fas fa-arrows-v"></i>Votes</a></li>
 
 					{% if v %}
 					{% if standalone or is_allowed_to_comment %}
@@ -409,7 +409,7 @@
 			<div class="modal-body">
 				<ul class="list-group comment-actions">
 
-					<li class="list-group-item"><a href="/admin/vote_info?link=https://rdrama.net{{c.permalink}}"><i class="fas fa-arrows-v"></i>Votes</a></li>
+					<li class="list-group-item"><a href="votes?link=https://rdrama.net{{c.permalink}}"><i class="fas fa-arrows-v"></i>Votes</a></li>
 
 					<li class="list-group-item"><a href="javascript:void(0);" role="button" class="d-block copy-link" data-dismiss="modal" data-clipboard-text="{{c.permalink | full_link}}"><i class="fas fa-copy"></i><span>Copy link</span></a></li>
 

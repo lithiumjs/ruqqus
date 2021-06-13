@@ -47,10 +47,6 @@ def settings_profile_post(v):
 		updated = True
 		v.hide_bot = request.values.get("hide_bot", None) == 'true'
 
-	if request.values.get("show_nsfl", v.show_nsfl) != v.show_nsfl:
-		updated = True
-		v.show_nsfl = request.values.get("show_nsfl", None) == 'true'
-
 	if request.values.get("filter_nsfw", v.filter_nsfw) != v.filter_nsfw:
 		updated = True
 		v.filter_nsfw = not request.values.get("filter_nsfw", None) == 'true'

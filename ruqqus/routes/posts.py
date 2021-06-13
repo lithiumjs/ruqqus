@@ -890,7 +890,6 @@ def submit_post(v):
 
 	# expire the relevant caches: front page new, board new
 	cache.delete_memoized(frontlist)
-	cache.delete_memoized(frontlist, sort="hot")
 	cache.delete_memoized(User.userpagelisting)
 	g.db.commit()
 
@@ -913,8 +912,16 @@ def submit_post(v):
 		print(e)
 		pass
 
-	# print(f"Content Event: @{new_post.author.username} post
-	# {new_post.base36id}")
+	new_post.upvotes = new_post.ups
+	new_post.downvotes = new_post.downs
+	g.db.add(new_post)
+	try: g.db.flush()
+	except: pass
+	new_post.score_disputed = new_post.rank_fiery
+	new_post.score_top = new_post.score
+	new_post.score_best = new_post.rank_best
+	g.db.add(new_post)
+	g.db.commit()
 
 	send_message(f"https://rdrama.net{new_post.permalink}")
 	return {"html": lambda: redirect(new_post.permalink),

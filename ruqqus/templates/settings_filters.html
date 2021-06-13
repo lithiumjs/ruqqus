@@ -79,25 +79,6 @@
 
 							</div>
 
-							<div class="d-lg-flex border-bottom">
-
-								<div class="title w-lg-25">
-									<label for="over18">View +18 Content</label>
-								</div>
-
-								<div class="body w-lg-100">
-
-									<div class="custom-control custom-switch">
-										<input type="checkbox" class="custom-control-input" id="over18" name="over18"{% if v.over_18 %} checked{% endif %} onchange="post_toast('/settings/profile?over18='+document.getElementById('over18').checked);document.getElementById('filter-nsfw-option').classList.toggle('d-none')">
-										<label class="custom-control-label" for="over18"></label>
-									</div>
-
-									<span class="text-small-extra text-muted">Enable if you are 18+ and are ok with viewing +18 content.</span>
-
-								</div>
-
-							</div>
-
 							<div class="d-lg-flex">
 
 								<div class="title w-lg-25">

@@ -401,7 +401,7 @@ class Comment(Base, Age_times, Scores, Stndrd, Fuzzing):
 
 	def collapse_for_user(self, v):
 
-		board = g.db.query(Board).options(.filter_by(id=1).first()
+		board = g.db.query(Board).filter_by(id=1).first()
 		
 		if self.over_18 and not (v and v.over_18) and not session_over18(board):
 			return True

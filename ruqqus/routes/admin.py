@@ -292,7 +292,7 @@ def money_stats(v):
 	return render_template("admin/content_stats.html", v=v, title="Financial Statistics", data=data)
 
 
-@app.route("votes", methods=["GET"])
+@app.route("/votes", methods=["GET"])
 @auth_desired
 def admin_vote_info_get(v):
 

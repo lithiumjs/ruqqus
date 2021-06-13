@@ -93,7 +93,8 @@ def api_vote_post(post_id, x, v):
 		post.upvotes = post.ups
 		post.downvotes = post.downs
 		g.db.add(post)
-		g.db.flush()
+		try: g.db.flush()
+		except: pass
 		post.score_disputed = post.rank_fiery
 		post.score_top = post.score
 		post.score_best = post.rank_best

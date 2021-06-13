@@ -1015,19 +1015,6 @@ def toggle_comment_nsfw(cid, v):
 	g.db.add(comment)
 	return "", 204
 	
-@app.route("/api/toggle_comment_nsfl/<cid>", methods=["POST"])
-@app.route("/api/v1/toggle_comment_nsfl/<cid>", methods=["POST"])
-@is_not_banned
-@api("update")
-@validate_formkey
-def toggle_comment_nsfl(cid, v):
-
-	comment = g.db.query(Comment).filter_by(id=base36decode(cid)).first()
-	if not comment.author_id == v.id and not v.admin_level >= 3: abort(403)
-	comment.is_nsfl = not comment.is_nsfl
-	g.db.add(comment)
-	return "", 204
-
 @app.route("/api/toggle_post_nsfw/<pid>", methods=["POST"])
 @app.route("/api/v1/toggle_post_nsfw/<pid>", methods=["POST"])
 @is_not_banned
@@ -1059,50 +1046,6 @@ def toggle_post_nsfw(pid, v):
 
 	return "", 204
 
-
-@app.route("/api/toggle_post_nsfl/<pid>", methods=["POST"])
-@app.route("/api/v1/toggle_post_nsfl/<pid>", methods=["POST"])
-@is_not_banned
-@api("update")
-@validate_formkey
-def toggle_post_nsfl(pid, v):
-
-	post = get_post(pid)
-
-	mod=post.board.has_mod(v)
-
-	if not post.author_id == v.id and not v.admin_level >= 3 and not mod:
-		abort(403)
-
-	if post.board.is_nsfl and post.is_nsfl:
-		abort(403)
-
-	post.is_nsfl = not post.is_nsfl
-	g.db.add(post)
-
-	if post.author_id!=v.id:
-		ma=ModAction(
-			kind="set_nsfl" if post.is_nsfl else "unset_nsfl",
-			user_id=v.id,
-			target_submission_id=post.id,
-			board_id=post.board.id,
-			)
-		g.db.add(ma)
-
-	return "", 204
-
-
-@app.route("/retry_thumb/<pid>", methods=["POST"])
-@is_not_banned
-@validate_formkey
-def retry_thumbnail(pid, v):
-
-	post = get_post(pid, v=v)
-
-	if post.author_id != v.id and v.admin_level < 3:
-		abort(403)
-	return jsonify({"message": "Thumbnail Retry Queued"})
-
 @app.route("/save_post/<pid>", methods=["POST"])
 @auth_required
 @validate_formkey
@@ -1122,7 +1065,6 @@ def save_post(pid, v):
 		abort(422)
 
 	return "", 204
-
 
 @app.route("/unsave_post/<pid>", methods=["POST"])
 @auth_required

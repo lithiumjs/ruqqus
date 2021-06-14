@@ -1,17 +1,3 @@
-{% extends "guild/guild_settings.html" %}
-
-{% block pagetitle %}{% if action %}(+{{b.name}}) {{action.title_text}}{% else %}Moderation Log{% endif %}{% endblock %}
-
-{% block stylesheets %}
-
-{% if v and v.referral_count and session.get("dark_mode_enabled") %}
-<link id="css-link" rel="stylesheet" href="/+{{p.board.name}}/dark.css">
-{% else %}
-<link id="css-link" rel="stylesheet" href="/+{{p.board.name}}/main.css">
-{% endif %}
-
-{% endblock %}
-
 {% block content %}
 <pre class="d-none d-md-inline-block"></pre>
 <h1>Top 25 dramatards by dramacoins</h1>
@@ -26,8 +12,8 @@
 </thead>
 {% for user in users1 %}
 	<tr>
-			<td style="font-weight:bold;">{{users1.index(user)+1}}</td>
-				<td><a style="color:#{{user.namecolor}}; font-weight:bold;;" href="/@{{user.username}}">{{user.username}}</a></td>
+		<td style="font-weight:bold;">{{users1.index(user)+1}}</td>
+		<td><a style="color:#{{user.namecolor}}; font-weight:bold;;" href="/@{{user.username}}">{{user.username}}</a></td>
 		<td style="font-weight:bold;; text-align:right;">{{user.true_score}}</td>
 	</tr>
 {% endfor %}

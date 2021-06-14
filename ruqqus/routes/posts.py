@@ -204,7 +204,7 @@ def edit_post(pid, v):
 	notify_users = set()
 	
 	soup = BeautifulSoup(body_html, features="html.parser")
-	for mention in soup.find_all("a", href=re.compile("^/@(\w+)"), limit=3):
+	for mention in soup.find_all("a", href=re.compile("^/@(\w+)"), limit=20):
 		username = mention["href"].split("@")[1]
 		user = g.db.query(User).filter_by(username=username).first()
 		if user and not v.any_block_exists(user) and user.id != v.id: notify_users.add(user)
@@ -910,7 +910,7 @@ def submit_post(v):
 	notify_users = set()
 	
 	soup = BeautifulSoup(body_html, features="html.parser")
-	for mention in soup.find_all("a", href=re.compile("^/@(\w+)"), limit=3):
+	for mention in soup.find_all("a", href=re.compile("^/@(\w+)"), limit=20):
 		username = mention["href"].split("@")[1]
 		user = g.db.query(User).filter_by(username=username).first()
 		if user and not v.any_block_exists(user) and user.id != v.id: notify_users.add(user)
@@ -938,6 +938,7 @@ def submit_post(v):
 	g.db.commit()
 
 	c = Comment(author_id=261,
+		distinguish_level=6,
 		parent_submission=new_post.id,
 		parent_fullname=new_post.fullname,
 		level=1,

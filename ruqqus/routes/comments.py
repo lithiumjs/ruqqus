@@ -453,8 +453,6 @@ def api_comment(v):
 	g.db.add(c_aux)
 	g.db.flush()
 
-	notify_users = set()
-
 	if len(body) >= 1000 and v.username != "Snappy" and "</blockquote>" not in body_html:
 		c2 = Comment(author_id=1832,
 			parent_submission=parent_submission,
@@ -487,6 +485,8 @@ def api_comment(v):
 		g.db.add(n)
 
 	# queue up notification for parent author
+	notify_users = set()
+
 	if parent.author.id != v.id: notify_users.add(parent.author.id)
 
 	# queue up notifications for username mentions
@@ -504,8 +504,7 @@ def api_comment(v):
 				notify_users.add(user.id)
 
 	for x in notify_users:
-		n = Notification(comment_id=c.id,
-						 user_id=x)
+		n = Notification(comment_id=c.id, user_id=x)
 		g.db.add(n)
 
 
@@ -555,22 +554,14 @@ def edit_comment(cid, v):
 
 	c = get_comment(cid, v=v)
 
-	if not c.author_id == v.id:
-		abort(403)
+	if not c.author_id == v.id: abort(403)
 
-	if c.is_banned or c.deleted_utc > 0:
-		abort(403)
-
-	if c.board.has_ban(v):
-		abort(403)
+	if c.is_banned or c.deleted_utc > 0: abort(403)
 
 	body = request.form.get("body", "")[0:10000]
-	#body=preprocess(body)
-	with CustomRenderer(post_id=c.post.base36id) as renderer:
-		body_md = renderer.render(mistletoe.Document(body))
+	with CustomRenderer(post_id=c.post.base36id) as renderer: body_md = renderer.render(mistletoe.Document(body))
 	body_html = sanitize(body_md, linkgen=True)
 
-	# Run safety filter
 	bans = filter_comment_html(body_html)
 
 	if bans:
@@ -676,6 +667,25 @@ def edit_comment(cid, v):
 	g.db.commit()
 
 	path = request.form.get("current_page", "/")
+	
+	# queue up notifications for username mentions
+	notify_users = set()
+	soup = BeautifulSoup(body_html, features="html.parser")
+	mentions = soup.find_all("a", href=re.compile("^/@(\w+)"), limit=3)
+	for mention in mentions:
+		username = mention["href"].split("@")[1]
+
+		user = g.db.query(User).filter_by(username=username).first()
+
+		if user:
+			if v.any_block_exists(user):
+				continue
+			if user.id != v.id:
+				notify_users.add(user.id)
+
+	for x in notify_users:
+		n = Notification(comment_id=c.id, user_id=x)
+		g.db.add(n)
 
 	return jsonify({"html": c.body_html})
 

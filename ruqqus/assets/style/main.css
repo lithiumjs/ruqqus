@@ -1,3 +1,8 @@
+a[href$="https://twitter.com"]:before{
+    content:url(
+        "/assets/images/site_icons/twitter.ico");
+}
+
 .bd-callout-primary {
 	border-left-color: #FF66AC; }
 

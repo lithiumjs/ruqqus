@@ -1,6 +1,6 @@
 a[href$="https://twitter.com"]:before{
     content:url(
-        "https://rdrama.net/assets/images/site_icons/twitter.ico");
+        "https://rdrama.net/assets/images/site_icons/twitter.png");
 }
 
 .bd-callout-primary {

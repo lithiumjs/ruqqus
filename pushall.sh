@@ -1,2 +1,2 @@
-. devpush.sh
-. push,sh
+. pushdev.sh
+. pushmaster,sh

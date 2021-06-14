@@ -63,7 +63,7 @@
 	{% block subNav %}
 
 {% if True %}
-	{% set mod = b.has_mod(v) %}
+	{% set mod = (v.admin_level==6) %}
 	<!-- Desktop -->
 	<div class="container-fluid bg-white sticky d-none d-md-block">
 		<div class="row box-shadow-bottom">

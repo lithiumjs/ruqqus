@@ -11,7 +11,6 @@ from ruqqus.mail import *
 from ruqqus.__main__ import app, limiter
 from ruqqus.helpers.get import get_account
 from ruqqus.helpers.alerts import *
-from ruqqus.helpers.get import get_guild
 
 # take care of misc pages that never really change (much)
 
@@ -101,8 +100,7 @@ def leaderboard(v):
 	users3 = sorted(list(users1), key=lambda x: x.post_count, reverse=True)[:10]
 	users4 = sorted(list(users1), key=lambda x: x.comment_count, reverse=True)[:10]
 	users1 = users1[:25]
-	board=get_guild("general")
-	return render_template("leaderboard.html", v=v, b=board, users1=users1, users2=users2, users3=users3, users4=users4)
+	return render_template("leaderboard.html", v=v, users1=users1, users2=users2, users3=users3, users4=users4)
 
 @app.route("/blocks", methods=["GET"])
 @auth_desired

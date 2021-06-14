@@ -170,12 +170,6 @@ def settings_premium(v):
 						   msg=request.args.get("msg") or None
 						   )
 
-#@app.route("/my_info", methods=["GET"])
-#@auth_required
-#def my_info(v):
-#	return render_template("my_info.html", v=v)
-
-
 @app.route("/about/<path:path>")
 def about_path(path):
 	return redirect(f"/{path}")

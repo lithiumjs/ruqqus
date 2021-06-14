@@ -1,2 +1,0 @@
-. pushdev.sh
-. pushmaster.sh

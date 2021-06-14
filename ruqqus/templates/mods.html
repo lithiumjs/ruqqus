@@ -1,4 +1,4 @@
-{% extends "guild/guild_settings.html" %}
+{% extends "guild_settings.html" %}
 
 {% block pagetitle %}Badmins{% endblock %}
 
@@ -306,6 +306,6 @@
 
 {% block invitationModal %}
 {% if b.has_invite(v) %}
-{% include "guild/gm_invitation_modal.html" %}
+{% include "gm_invitation_modal.html" %}
 {% endif %}
 {% endblock %}

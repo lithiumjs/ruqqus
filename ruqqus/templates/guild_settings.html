@@ -74,10 +74,19 @@
 							<div class="d-flex flex-row-reverse justify-content-end">
 								<ul class="nav settings-nav" style="margin-left: -15px;">
 									<li class="nav-item">
+										<a class="nav-link{% if request.path.endswith('/leaderboard') %} active{% endif %}" href="/log"><i class="fas fa-scroll-old"></i>Leaderboard</a> 
+									</li>
+									<li class="nav-item">
 										<a class="nav-link{% if request.path.endswith('/badmins') %} active{% endif %}" href="/badmins"><i class="fas fa-crown"></i>Badmins</a>
 									</li>
 									<li class="nav-item">
 										<a class="nav-link{% if request.path.endswith('/log') %} active{% endif %}" href="/log"><i class="fas fa-scroll-old"></i>Moderation Log</a> 
+									</li>
+									<li class="nav-item">
+										<a class="nav-link{% if request.path.endswith('/banned') %} active{% endif %}" href="/log"><i class="fas fa-scroll-old"></i>Banned</a> 
+									</li>
+									<li class="nav-item">
+										<a class="nav-link{% if request.path.endswith('/blocks') %} active{% endif %}" href="/log"><i class="fas fa-scroll-old"></i>Blocks</a> 
 									</li>
 								</ul>
 							</div>

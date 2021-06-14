@@ -257,7 +257,7 @@ def board_about_mods(v):
 	me = board.has_mod(v)
 
 	return {
-		"html":lambda:render_template("guild/mods.html", v=v, b=board, me=me),
+		"html":lambda:render_template("mods.html", v=v, b=board, me=me),
 		"api":lambda:jsonify({"data":[x.json for x in board.mods_list]})
 		}
 
@@ -353,7 +353,7 @@ def board_mod_log(v):
 
 	return {
 		"html":lambda:render_template(
-			"guild/modlog.html",
+			"modlog.html",
 			v=v,
 			b=board,
 			actions=actions,
@@ -375,7 +375,7 @@ def mod_log_item(boardname, aid, v):
 	if request.path != action.permalink:
 		return redirect(action.permalink)
 
-	return render_template("guild/modlog.html",
+	return render_template("modlog.html",
 		v=v,
 		b=action.board,
 		actions=[action],

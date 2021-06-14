@@ -491,7 +491,7 @@ def api_comment(v):
 
 	# queue up notifications for username mentions
 	soup = BeautifulSoup(body_html, features="html.parser")
-	mentions = soup.find_all("a", href=re.compile("^/@(\w+)"), limit=1)
+	mentions = soup.find_all("a", href=re.compile("^/@(\w+)"), limit=3)
 	for mention in mentions:
 		username = mention["href"].split("@")[1]
 
@@ -671,7 +671,7 @@ def edit_comment(cid, v):
 	# queue up notifications for username mentions
 	notify_users = set()
 	soup = BeautifulSoup(body_html, features="html.parser")
-	mentions = soup.find_all("a", href=re.compile("^/@(\w+)"), limit=1)
+	mentions = soup.find_all("a", href=re.compile("^/@(\w+)"), limit=3)
 	for mention in mentions:
 		username = mention["href"].split("@")[1]
 

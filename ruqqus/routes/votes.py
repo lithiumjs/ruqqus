@@ -93,12 +93,13 @@ def api_vote_post(post_id, x, v):
 		post.upvotes = post.ups
 		post.downvotes = post.downs
 		g.db.add(post)
-		try: g.db.flush()
+		try: 
+			g.db.flush()
+			post.score_disputed = post.rank_fiery
+			post.score_top = post.score
+			post.score_best = post.rank_best
+			g.db.add(post)
 		except: pass
-		#post.score_disputed = post.rank_fiery
-		post.score_top = post.score
-		post.score_best = post.rank_best
-		g.db.add(post)
 	g.db.commit()
 	
 	if "100" in str(now):

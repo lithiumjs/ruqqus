@@ -1,13 +1,11 @@
 {% extends "guild/guild_settings.html" %}
 
-{% block pagetitle %}{% if action %}(+{{b.name}}) {{action.title_text}}{% else %}Moderation Log{% endif %}{% endblock %}
-
 {% block stylesheets %}
 
 {% if v and v.referral_count and session.get("dark_mode_enabled") %}
-<link id="css-link" rel="stylesheet" href="/+{{p.board.name}}/dark.css">
+<link id="css-link" rel="stylesheet" href="/+general/dark.css">
 {% else %}
-<link id="css-link" rel="stylesheet" href="/+{{p.board.name}}/main.css">
+<link id="css-link" rel="stylesheet" href="/+general/main.css">
 {% endif %}
 
 {% endblock %}

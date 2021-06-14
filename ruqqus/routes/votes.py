@@ -171,7 +171,8 @@ def api_vote_comment(comment_id, x, v):
 	g.db.add(comment)
 	g.db.flush()
 
-	# comment.score_disputed=comment.rank_fiery
+	try: comment.score_disputed=comment.rank_fiery
+	except: pass
 	comment.score_hot = comment.rank_hot
 	comment.score_top = comment.score
 

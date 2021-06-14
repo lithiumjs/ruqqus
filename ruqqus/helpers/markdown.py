@@ -17,19 +17,10 @@ enter_re=re.compile("(\n\r?\w+){3,}")
 
 class UserMention(SpanToken):
 
-	pattern = re.compile("(^|\s|\n)@(\w{3,25})")
+	pattern = re.compile("(^|\s|\n)@(\w{1,25})")
 	parse_inner = False
 
 	def __init__(self, match_obj):
-		self.target = (match_obj.group(1), match_obj.group(2))
-
-class BoardMention(SpanToken):
-
-	pattern = re.compile("(^|\s|\n)\+(\w{3,25})")
-	parse_inner = False
-
-	def __init__(self, match_obj):
-
 		self.target = (match_obj.group(1), match_obj.group(2))
 		
 class SubMention(SpanToken):
@@ -81,7 +72,6 @@ class CustomRenderer(HTMLRenderer):
 
 	def __init__(self, **kwargs):
 		super().__init__(UserMention,
-						 BoardMention,
 						 SubMention,
 						 RedditorMention,
 						 SubMention2,
@@ -109,17 +99,6 @@ class CustomRenderer(HTMLRenderer):
 			return f"{space}@{target}"
 
 		return f'{space}<a href="{user.permalink}" class="d-inline-block mention-user" data-original-name="{user.original_username}"><img src="/uid/{user.base36id}/pic/profile" class="profile-pic-20 mr-1">@{user.username}</a>'
-
-	def render_board_mention(self, token):
-		space = token.target[0]
-		target = token.target[1]
-
-		board = get_guild(target, graceful=True)
-
-		if not board or board.is_banned:
-			return f"{space}+{target}"
-		else:
-			return f'{space}<a href="{board.permalink}" class="d-inline-block"><img src="/+{board.name}/pic/profile" class="profile-pic-20 mr-1">+{board.name}</a>'
 			
 	def render_sub_mention(self, token):
 		space = token.target[0]

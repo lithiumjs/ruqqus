@@ -67,6 +67,7 @@
 
 {% if standalone and level==1 %}
 <div class="post-info mt-5 mb-1">
+	{% if c.parent_submission and c.parent_submission.over_18 %}<span class="badge badge-danger text-small-extra mr-1">+18</span>{% endif %}
 	<span class="align-top">
 	{% if c.parent_submission %}
 		{% if c.author_id==v.id and c.replies and is_notification_page%}

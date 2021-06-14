@@ -35,6 +35,9 @@ BAN_REASONS = ['',
 
 BUCKET = "i.ruqqus.ga"
 
+with open("snappy.txt", "r") as f:
+	snappyquotes = f.read().split("{[para]}")
+
 @app.route("/api/publish/<pid>", methods=["POST"])
 @is_not_banned
 @validate_formkey
@@ -934,7 +937,35 @@ def submit_post(v):
 	g.db.add(new_post)
 	g.db.commit()
 
-	send_message(f"https://rdrama.net{new_post.permalink}")
+	c = Comment(author_id=261,
+		parent_submission=new_post.id,
+		parent_fullname=new_post.fullname,
+		level=1,
+		over_18=False,
+		is_nsfl=False,
+		is_offensive=False,
+		original_board_id=1,
+		is_bot=True,
+		app_id=None,
+		creation_region=request.headers.get("cf-ipcountry")
+		)
+
+	g.db.add(c)
+	g.db.flush()
+
+	body = random.choice(snappyquotes)
+	with CustomRenderer(post_id=new_post.id) as renderer: body_md = renderer.render(mistletoe.Document(body))
+	body_html = sanitize(body_md, linkgen=True)
+	c_aux = CommentAux(
+		id=c.id,
+		body_html=body_html,
+		body=body
+	)
+	g.db.add(c_aux)
+	g.db.flush()
+	n = Notification(comment_id=c.id, user_id=v.id)
+	g.db.add(n)
+
 	return {"html": lambda: redirect(new_post.permalink),
 			"api": lambda: jsonify(new_post.json)
 			}

@@ -9,6 +9,7 @@ import requests
 import re
 import bleach
 import time
+import gevent
 
 from ruqqus.helpers.wrappers import *
 from ruqqus.helpers.base36 import *
@@ -387,6 +388,9 @@ def thumbs(new_post):
 
 	try: remove(tempname)
 	except FileNotFoundError: pass
+
+def archiveorg(url):
+	requests.get(f'https://web.archive.org/save/{url}', timeout=100)
 
 @app.route("/submit", methods=['POST'])
 @app.route("/api/v1/submit", methods=["POST"])
@@ -955,6 +959,9 @@ def submit_post(v):
 	g.db.flush()
 
 	body = random.choice(snappyquotes)
+	if new_post.url:
+		body += f"\n\n[[snapshot]](https://web.archive.org/{new_post.url})"
+		gevent.spawn(archiveorg,new_post.url)
 	with CustomRenderer(post_id=new_post.id) as renderer: body_md = renderer.render(mistletoe.Document(body))
 	body_html = sanitize(body_md, linkgen=True)
 	c_aux = CommentAux(
